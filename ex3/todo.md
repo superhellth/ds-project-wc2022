@@ -12,6 +12,7 @@
 
 ## part 3
 - [ ] Do exercise
+  - [ ] subpart2, current regex is not enough to find valid(!) urls
 - [ ] Add to solution pdf
 
 ## part 4
