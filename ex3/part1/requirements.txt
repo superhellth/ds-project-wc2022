@@ -1,3 +1,4 @@
 ### REQUIREMENTS ###
-PyPDF2
-pdfminer
+PyPDF2==2.11.1
+pdfminer==20191125
+validator==0.7.1
