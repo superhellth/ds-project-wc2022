@@ -32,6 +32,7 @@ class Tweet {
     }
 
     public static fromJson(json: any): Tweet {
+        json = json._source
         const attachments: any = json.attachments;
         const author: TwitterUser = TwitterUser.fromJson(json.author);
         const created_at: Date = new Date(json.created_at);
