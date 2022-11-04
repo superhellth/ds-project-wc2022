@@ -1,0 +1,36 @@
+{
+  "name": "test-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@smui-extra/badge": "^7.0.0-beta.0",
+    "@smui/banner": "^7.0.0-beta.0",
+    "@smui/button": "^7.0.0-beta.0",
+    "@smui/card": "^7.0.0-beta.0",
+    "@smui/layout-grid": "^7.0.0-beta.0",
+    "@smui/textfield": "^7.0.0-beta.0",
+    "@smui/top-app-bar": "^7.0.0-beta.0",
+    "@sveltejs/vite-plugin-svelte": "^1.1.0",
+    "@tsconfig/svelte": "^3.0.0",
+    "@types/mark.js": "^8.11.8",
+    "mark.js": "^8.11.1",
+    "svelte": "^3.52.0",
+    "svelte-check": "^2.9.2",
+    "svelte-preprocess": "^4.10.7",
+    "tslib": "^2.4.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.2.0"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "~7.17.0",
+    "jquery": "^3.6.1",
+    "svelte-material-ui": "^7.0.0-beta.0"
+  }
+}
