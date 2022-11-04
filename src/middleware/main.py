@@ -51,7 +51,8 @@ def get_stream_status():
 @app.get("/query/")
 async def get_tweets():
     """Returns all tweets from the connected elasticsearch instance"""
-    resp = es_client.search(index="tweets")
+    resp = es_client.search(index="tweets", size=50,
+                            sort={"created_at": "desc"})
     return resp["hits"]["hits"]
 
 

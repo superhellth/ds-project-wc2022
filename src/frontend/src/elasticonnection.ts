@@ -2,7 +2,7 @@ import Tweet from "./tweet_management/tweet";
 
 class ElasticHelper {
 
-  private static FASTAPI_URL: string = "http://localhost:8000";
+  private static FASTAPI_URL: string = "http://45.13.59.173:8000";
 
   public async getTweets(): Promise<Array<Tweet>> {
     // async request
@@ -14,8 +14,7 @@ class ElasticHelper {
       tweetList.push(Tweet.fromJson(data[i]));
     }
 
-    tweetList.reverse();
-    console.log(tweetList)
+    tweetList.sort(function(tweetA, tweetB) {return tweetA.getCreatedAt() - tweetB.getCreatedAt()});
 
     return tweetList;
   }

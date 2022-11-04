@@ -4,9 +4,7 @@
   import LayoutGrid, { Cell } from "@smui/layout-grid";
   import Switch from "@smui/switch";
   import Textfield from "@smui/textfield";
-  import { Row, Title } from "@smui/top-app-bar";
-  import Section from "@smui/top-app-bar/src/Section.svelte";
-  import TopAppBar from "@smui/top-app-bar/src/TopAppBar.svelte";
+  import TopAppBar, { Row, Section, Title } from "@smui/top-app-bar";
   import ElasticHelper from "./elasticonnection";
   import TweetComp from "./TweetComp.svelte";
   import type Tweet from "./tweet_management/tweet";
@@ -58,13 +56,10 @@
         class="material-icons"
         disabled={isRunning}
         on:click={onSendRule}
-        style="float: left;">send</IconButton
+        style="float: left;"
       >
-    {/await}
-    {#await rulePromise}
-      <p>fetching rule...</p>
-    {:then rule}
-      <p>Current rule: {rule == null ? "invalid" : rule}</p>
+        send
+      </IconButton>
     {/await}
   </div>
 
@@ -88,6 +83,13 @@
     {/await}
   </div>
   <div style="clear: left;" />
+  <FormField>
+    {#await rulePromise}
+    <p>fetching rule...</p>
+    {:then rule}
+    <p style="clear: left">Current rule: {rule == null ? "invalid" : rule}</p>
+    {/await}
+  </FormField>
 </div>
 
 <div class="tweet-list-container" style="float:left;">
