@@ -2,11 +2,11 @@ import Tweet from "./tweet_management/tweet";
 
 class ElasticHelper {
 
-  private static FASTAPI_URL: string = "http://45.13.59.173:8000";
+  private static FASTAPI_URL: string = "http://localhost:8000";
 
   public async getTweets(): Promise<Array<Tweet>> {
     // async request
-    let data = await fetch(ElasticHelper.FASTAPI_URL + "/tweets").then((response) => response.json());
+    let data = await fetch(ElasticHelper.FASTAPI_URL + "/query").then((response) => response.json());
 
     // convert to classes
     const tweetList = new Array<any>();
@@ -15,25 +15,26 @@ class ElasticHelper {
     }
 
     tweetList.reverse();
+    console.log(tweetList)
 
     return tweetList;
   }
 
   public async setRule(rule: string): Promise<string> {
     const encodedRule = rule.replaceAll("#", "hashtag");
-    const data = await fetch(ElasticHelper.FASTAPI_URL + "/query/setRule/?query=" + encodedRule).then((response) => response.json());
+    const data = await fetch(ElasticHelper.FASTAPI_URL + "/stream/setRule/?rule=" + encodedRule).then((response) => response.json());
 
     return data.rule;
   }
 
   public async startStream(): Promise<boolean> {
-    const data = await fetch(ElasticHelper.FASTAPI_URL + "/query/start").then((response) => response.json());
+    const data = await fetch(ElasticHelper.FASTAPI_URL + "/stream/start").then((response) => response.json());
 
     return data.running;
   }
 
   public async stopStream(): Promise<boolean> {
-    const data = await fetch(ElasticHelper.FASTAPI_URL + "/query/stop").then((response) => response.json());
+    const data = await fetch(ElasticHelper.FASTAPI_URL + "/stream/stop").then((response) => response.json());
 
     return data.running;
   }
@@ -53,12 +54,12 @@ class ElasticHelper {
   }
 
   public async getRule(): Promise<string> {
-    const data = await fetch(ElasticHelper.FASTAPI_URL + "/query/status").then((response) => response.json());
+    const data = await fetch(ElasticHelper.FASTAPI_URL + "/stream/status").then((response) => response.json());
     return data.rule;
   }
 
   public async isStreamRunning(): Promise<boolean> {
-    const data = await fetch(ElasticHelper.FASTAPI_URL + "/query/status").then((response) => response.json());
+    const data = await fetch(ElasticHelper.FASTAPI_URL + "/stream/status").then((response) => response.json());
     return data.running;
   }
 }
