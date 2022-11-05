@@ -2,8 +2,8 @@
 VALID_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖß0123456789"
 VALID_SPECIAL = "^|*+?"
 VALID_BRACKETS = "()"
-TEST_EXPR_TRUE = ['Hallo mein Name ist (^)', u'\x46', 'Is THi5 tru3?', 'alpha']
-TEST_EXPR_FALSE = ['+-=005', u'\u2764', r'{}()[]', '<!=(`{mep']
+TEST_EXPR_TRUE = ['Hallo mein Name ist (^)', u'\x46', 'Is THi5 tru3?', 'alpha', 'ne(nu(un)e)n']
+TEST_EXPR_FALSE = ['+-=005', u'\u2764', r'{}()[]', '<!=(`{mep', '(123(te)']
 
 
 def split_string(string):
