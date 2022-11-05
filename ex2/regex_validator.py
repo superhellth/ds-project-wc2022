@@ -42,14 +42,14 @@ def verify_regex(expr):
         regex_array = upper_string(expr)
         flag_special = False
         for char in regex_array:
-            if VALID_CHARS.__contains__(char):
+            if char in VALID_CHARS:
                 flag_special = False
-            elif VALID_SPECIAL.__contains__(char):
+            elif char in VALID_SPECIAL:
                 if not flag_special:
                     flag_special = True
                 else:
                     return valid
-            elif VALID_BRACKETS.__contains__(char):
+            elif char in VALID_BRACKETS:
                 if char == "(":
                     stack.append("a")
                 elif char == ")" and len(stack) > 0:
