@@ -4,10 +4,11 @@
         "editor.defaultFormatter": "ms-python.autopep8",
         "editor.formatOnSave": true
     },
-    "python.linting.enabled": true,
-    "python.linting.pylintEnabled": false,
-    "python.linting.pep8Enabled": true,
-    "python.linting.lintOnTextChange": true,
-    "python.linting.lintOnSave": true,
-    "python.analysis.extraPaths": []
+    "python.analysis.extraPaths": [],
+//     "python.linting.enabled": true,
+//     "python.linting.pylintEnabled": false,
+//     "python.linting.pep8Enabled": true,
+//     "python.linting.lintOnTextChange": true,
+//     "python.linting.lintOnSave": true,
+//     "python.analysis.extraPaths": []
 }
