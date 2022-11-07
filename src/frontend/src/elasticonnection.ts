@@ -14,7 +14,7 @@ class ElasticHelper {
       tweetList.push(Tweet.fromJson(data[i]));
     }
 
-    tweetList.sort(function(tweetA, tweetB) {return tweetA.getCreatedAt() - tweetB.getCreatedAt()});
+    tweetList.sort(function(tweetA, tweetB) {return tweetB.getCreatedAt() - tweetA.getCreatedAt()});
 
     return tweetList;
   }
