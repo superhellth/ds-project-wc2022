@@ -42,7 +42,7 @@ def verify_regex(expr):
     if expr is None:
         return False
 
-    # Handle potential unicode
+    # Handle non-ascii unicode
     expr = expr.encode('ascii', errors='backslashreplace')
     expr = expr.decode('ascii')
 
