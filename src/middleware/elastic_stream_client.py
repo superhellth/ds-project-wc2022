@@ -13,6 +13,7 @@ class ElasticStreamClient(tweepy.StreamingClient):
 
     def on_tweet(self, tweet):
         """This is how we process tweets"""
+        print("Tweet received!")
         tweet_ = twitter_tweet.Tweet(tweet)
         resp = self.es_client.index(
             index=self.index_name, document=tweet_.get_as_es_doc(), id=tweet_.get_id())
