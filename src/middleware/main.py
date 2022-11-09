@@ -82,7 +82,12 @@ async def start_stream():
     """Starts the stream"""
     stream_client.filter(tweet_fields=["attachments", "author_id", "context_annotations", "conversation_id",
                                        "created_at", "edit_controls", "entities", "in_reply_to_user_id", "lang",
-                                       "possibly_sensitive", "public_metrics", "referenced_tweets", "reply_settings", "source", "withheld"], threaded=True)
+                                       "possibly_sensitive", "public_metrics", "referenced_tweets", "reply_settings", "source", "withheld"],
+                         user_fields=["created_at", "description", "entities", "location",
+                                                    "pinned_tweet_id", "profile_image_url", "protected",
+                                      "public_metrics", "url", "verified", "withheld"],
+                         expansions="author_id",
+                         threaded=True)
     return get_stream_status()
 
 

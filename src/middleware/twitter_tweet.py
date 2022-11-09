@@ -4,25 +4,28 @@ import twitter_user
 class Tweet:
     """A class to store and manage all available data about a tweet."""
 
-    def __init__(self, tweet):
-        self.attachments = tweet["attachments"]
-        self.author = twitter_user.User(tweet["author_id"])
-        self.context_annotations = tweet["context_annotations"]
-        self.conversation_id = tweet["conversation_id"]
-        self.created_at = tweet["created_at"]
-        self.edit_controls = tweet["edit_controls"]
-        self.edit_history_tweet_ids = tweet["edit_history_tweet_ids"]
-        self.entities = tweet["entities"]
-        self.id = tweet["id"]
-        self.in_reply_to_user_id = tweet["in_reply_to_user_id"]
-        self.lang = tweet["lang"]
-        self.possibly_sensitive = tweet["possibly_sensitive"]
-        self.public_metrics = tweet["public_metrics"]
-        self.referenced_tweets = tweet["referenced_tweets"]
-        self.reply_settings = tweet["reply_settings"]
-        self.source = tweet["source"]
-        self.text = tweet["text"]
-        self.withheld = tweet["withheld"]
+    def __init__(self, raw_data):
+        tweet = raw_data["data"]
+        user = raw_data["includes"]["users"][0]
+
+        self.attachments = tweet.get("attachments", None)
+        self.author = twitter_user.User(user)
+        self.context_annotations = tweet.get("context_annotations", None)
+        self.conversation_id = tweet.get("conversation_id", None)
+        self.created_at = tweet.get("created_at", None)
+        self.edit_controls = tweet.get("edit_controls", None)
+        self.edit_history_tweet_ids = tweet.get("edit_history_tweet_ids", None)
+        self.entities = tweet.get("entities", None)
+        self.id = tweet.get("id", None)
+        self.in_reply_to_user_id = tweet.get("in_reply_to_user_id", None)
+        self.lang = tweet.get("lang", None)
+        self.possibly_sensitive = tweet.get("possibly_sensitive", None)
+        self.public_metrics = tweet.get("public_metrics", None)
+        self.referenced_tweets = tweet.get("referenced_tweets", None)
+        self.reply_settings = tweet.get("reply_settings", None)
+        self.source = tweet.get("source", None)
+        self.text = tweet.get("text", None)
+        self.withheld = tweet.get("withheld", None)
 
     def get_as_es_doc(self):
         """Returns the tweet object as a json object"""

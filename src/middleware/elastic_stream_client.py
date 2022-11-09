@@ -1,6 +1,7 @@
 import tweepy
 import elasticsearch
 import twitter_tweet
+import json
 
 
 class ElasticStreamClient(tweepy.StreamingClient):
@@ -9,12 +10,15 @@ class ElasticStreamClient(tweepy.StreamingClient):
     def __init__(self, bearer_token, elastic_client: elasticsearch.Elasticsearch, index_name: str):
         self.es_client = elastic_client
         self.index_name = index_name
-        super().__init__(bearer_token)
+        self.count = 0
+        super().__init__(bearer_token=bearer_token, wait_on_rate_limit=True)
 
-    def on_tweet(self, tweet):
+    def on_data(self, raw_data):
         """This is how we process tweets"""
-        print("Tweet received!")
-        tweet_ = twitter_tweet.Tweet(tweet)
+        self.count += 1
+        print(f"Tweet received! This is number {self.count}")
+        raw_data = json.loads(raw_data)
+        tweet = twitter_tweet.Tweet(raw_data)
         resp = self.es_client.index(
-            index=self.index_name, document=tweet_.get_as_es_doc(), id=tweet_.get_id())
-        return super().on_tweet(tweet)
+            index=self.index_name, document=tweet.get_as_es_doc(), id=tweet.get_id())
+        return super().on_tweet(raw_data)
