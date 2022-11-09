@@ -13,7 +13,7 @@
         <Fab style="max-width: 3em; max-height: 3em; float: left">
             <Image
                 style="-webkit-border-radius: 10em; shape-radius: 5em "
-                src={tweet.getAuthor().getProfileImageURL()}
+                src={tweet.getAuthor().getProfileImageURL()} stand in image
             />
         </Fab>
         <h4>
@@ -22,7 +22,7 @@
             <span class="username">- {tweet.getAgeInHours()}</span>
         </h4>
         <p class="tweet">{tweet.getText()}</p>
-        <!-- <Image src={tweet.getAttachments().media_keys[0]}/> -->
+        <Image src={tweet.getAttachments().media_keys[0]}/>
     </Content>
 </Card>
 

@@ -4,30 +4,20 @@ import tweepy
 class User:
     """A class representing a twitter user. Stores all available data concerning the user. Fetches data on init"""
 
-    def __init__(self, user_id):
-        # Gather user data from the twitter api
-        token_file = open('../twitter-api-bearer-token.txt',
-                          'r', encoding="utf_8")
-        bearer_token = token_file.readline()
-        twitter_client = tweepy.Client(bearer_token=bearer_token)
-        user = twitter_client.get_user(id=user_id, user_fields=["created_at", "description", "entities", "location",
-                                                                "pinned_tweet_id", "profile_image_url", "protected",
-                                                                "public_metrics", "url", "verified", "withheld"]).data
-
-        # Assign attributes
-        self.created_at = user["created_at"]
-        self.description = user["description"]
-        self.entities = user["entities"]
-        self.id = user["id"]
-        self.location = user["location"]
-        self.name = user["name"]
-        self.pinned_tweet_id = user["pinned_tweet_id"]
-        self.profile_image_url = user["profile_image_url"]
-        self.protected = user["protected"]
-        self.public_metrics = user["public_metrics"]
-        self.url = user["url"]
-        self.username = user["username"]
-        self.verified = user["verified"]
+    def __init__(self, user):
+        self.created_at = user.get("created_at", None)
+        self.description = user.get("description", None)
+        self.entities = user.get("entities", None)
+        self.id = user.get("id", None)
+        self.location = user.get("location", None)
+        self.name = user.get("name", None)
+        self.pinned_tweet_id = user.get("pinned_tweet_id", None)
+        self.profile_image_url = user.get("profile_image_url", None)
+        self.protected = user.get("protected", None)
+        self.public_metrics = user.get("public_metrics", None)
+        self.url = user.get("url", None)
+        self.username = user.get("username", None)
+        self.verified = user.get("verified", None)
 
     def get_as_json(self):
         """Returns the author as a json object"""
@@ -46,6 +36,7 @@ class User:
             "username": self.username,
             "verified": self.verified
         }
+        return {}
 
     # Getter
     def get_created_at(self):
