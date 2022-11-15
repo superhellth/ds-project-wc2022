@@ -1,4 +1,9 @@
+# IDEs
+.idea
 .vscode
+
+# Frontend
+.svelte-kit
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
