@@ -8,6 +8,7 @@
     import ElasticHelper from "../api_connections/elasticonnection";
     import TweetComp from "./TweetComp.svelte";
     import type Tweet from "../tweet_management/tweet";
+    import Button from "@smui/button/src/Button.svelte";
   
     const elasticHelper = new ElasticHelper();
     let rulePromise: Promise<string> = elasticHelper.getRule();

@@ -11,7 +11,7 @@ bearer_token = token_file.readline()
 INDEX_NAME = "tweets"
 
 # elasticsearch instancing: 9200 standard port
-es_client = elasticsearch.Elasticsearch("http://45.13.59.173:9200")
+es_client = elasticsearch.Elasticsearch("http://45.13.59.173:9200", basic_auth=("elastic", "sicheristsicher"))
 stream_client = elastic_stream_client.ElasticStreamClient(
     bearer_token, es_client, INDEX_NAME)
 
