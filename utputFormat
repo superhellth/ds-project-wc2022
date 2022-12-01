@@ -1,7 +1,0 @@
-HTTP/1.1 400 Bad Request
-X-elastic-product: Elasticsearch
-Warning: 299 Elasticsearch-7.17.6-f65e9d338dc1d07b642e14a27f338990148ee5b6 "Elasticsearch built-in security features are not enabled. Without authentication, your cluster could be accessible to anyone. See https://www.elastic.co/guide/en/elasticsearch/reference/7.17/security-minimal-setup.html to enable security."
-content-type: application/json; charset=UTF-8
-content-length: 327
-
-{"error":{"root_cause":[{"type":"illegal_argument_exception","reason":"request [/dishes/_search] contains unrecognized parameter: [pretty?q] -> did you mean [pretty]?"}],"type":"illegal_argument_exception","reason":"request [/dishes/_search] contains unrecognized parameter: [pretty?q] -> did you mean [pretty]?"},"status":400}
