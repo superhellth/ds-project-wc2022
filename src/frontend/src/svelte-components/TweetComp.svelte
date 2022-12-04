@@ -2,7 +2,7 @@
     import Card, { Content } from "@smui/card";
     import Fab from "@smui/fab";
     import { Image } from "@smui/image-list";
-    import type Tweet from "../tweet_management/tweet";
+    import type Tweet from "../typescript/tweet_management/tweet";
 
     export let tweet: Tweet;
 
