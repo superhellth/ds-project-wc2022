@@ -1,5 +1,8 @@
 import TwitterUser from "./twitter-user";
 
+/**
+ * Our ts class for Tweets. Stores and provied all data we have about a tweet. (Not yet though -_-)
+ */
 class Tweet {
 
     private attachments: any;
@@ -31,6 +34,11 @@ class Tweet {
         this.text = text;
     }
 
+    /**
+     * Parse Tweet from json format to ts object.
+     * @param json json file to parse to tweet.
+     * @returns the parsed tweet object.
+     */
     public static fromJson(json: any): Tweet {
         json = json._source
         const attachments: any = json.attachments;

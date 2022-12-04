@@ -1,3 +1,6 @@
+/**
+ * Our ts class for Twitter User. Stores and provied all data we have about a twitter user.
+ */
 class TwitterUser {
 
     private created_at: Date;
