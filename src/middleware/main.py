@@ -7,7 +7,7 @@ import elastic_stream_client
 # twitter api access using tweepy client
 # working with current permissions
 token_file = open('../twitter-api-bearer-token.txt', 'r', encoding="utf_8")
-bearer_token = token_file.readline()
+bearer_token = token_file.readline().replace("\n", "")
 INDEX_NAME = "tweets"
 
 # elasticsearch instancing: 9200 standard port
