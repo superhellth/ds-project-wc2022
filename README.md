@@ -12,9 +12,21 @@
 - nicolas.hellthaler@stud.uni-heidelberg.de
 - bastian.mueller@stud.uni-heidelberg.de
 
+## How to run our Dashboard
+- Navigate to the `frontend` folder in Terminal, then
+- `npm install`
+- (These next 2 steps will be handled by a script later on. They are necessary because of a bug in the sveltestrap UI framework.)
+  - Go to `src/frontend/node_module/@popperjs/`
+  - Open `package.json` and append after line 4 ('description'): `  "type": "module",`
+- `npm run dev`
+- Enjoy :)
+
+
 ## Existing Code Fragments
 
-- We're not using any preexisting template/fragments in our code (*as of: 08. Dec. 22*).
+- For our dashboard we made use of this template (https://github.com/GeekyAnts/sb-admin-svelte)
+  - Except for the SideBar, we did not "copy and paste" anything, but wrote our own implementation
+- We also use Bootstrap CSS and Icons
 
 ## Utilized Libraries
 
@@ -25,8 +37,7 @@
   - elasticsearch
 
 - List of required node.js/svelte libraries to run our system (frontend), so far:
-  - handled automatically by running (in the frontend folder in terminal):
-    - `npm install` and then `npm run dev`
+  - see `package.json` in `frontend` folder for dependencies
 
 ## Contributions
 *In case some team members contributed to the project in a way that is not clear from the commit history, you can mention their contributions here.*
