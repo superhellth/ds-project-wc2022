@@ -7,8 +7,7 @@
   import ElasticHelper from "../typescript/api_connections/elasticonnection";
   import TweetComp from "../svelte-components/TweetComp.svelte";
   import type Tweet from "../typescript/tweet_management/tweet";
-  import TopBar from "../svelte-components/TopBar.svelte";
-  import NavDrawer from "../svelte-components/NavDrawer.svelte";
+  import Layout from "../svelte-components/Layout.svelte";
 
   // This gets called whenever the user clicks the image button next to the text field
   // sends rule to middleware and resets the text inside the text field
@@ -39,14 +38,9 @@
 
   // This variable keeps track of the string in the rule textfield
   let typedRule: string = "";
-
-  // we need this to toggle the drawer with the button
-  let navDrawerIsOpen: boolean = false;
 </script>
 
-<body>
-  <TopBar bind:open={navDrawerIsOpen} path="/" />
-  <NavDrawer bind:open={navDrawerIsOpen} />
+<Layout>
 
   <div class="query-management">
     <div class="query-part" style="float: left;">
@@ -113,7 +107,7 @@
       </LayoutGrid>
     {/await}
   </div>
-</body>
+</Layout>
 
 <style>
   .query-management {

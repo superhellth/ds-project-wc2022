@@ -26,7 +26,7 @@
 		"@sveltejs/kit": "next",
 		"i": "^0.3.7",
 		"smui-theme": "^7.0.0-beta.0",
-		"svelte": "^3.44.0",
+		"svelte": "^3.54.0",
 		"svelte-check": "^2.7.1",
 		"svelte-preprocess": "^4.10.6",
 		"tslib": "^2.3.1",
@@ -35,6 +35,9 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"svelte-material-ui": "^7.0.0-beta.0"
+		"chart.js": "^4.0.1",
+		"@popperjs/core": "^2.11.6",
+		"svelte-material-ui": "^7.0.0-beta.0",
+		"sveltestrap": "^5.10.0"
 	}
 }
