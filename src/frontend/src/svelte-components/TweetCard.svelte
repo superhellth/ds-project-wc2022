@@ -1,6 +1,6 @@
 <script lang="ts">
     import Tweet from "../typescript/tweet_management/tweet";
-    import {Card, CardBody, CardFooter, CardHeader, CardImg, Col, Row} from "sveltestrap";
+    import {Card, CardBody, CardFooter, CardHeader, CardImg, Col, Icon, Row} from "sveltestrap";
 
     export let data: Tweet;
 
@@ -19,8 +19,8 @@
 
 
 <div class="h-100">
-    <Card color="info" outline class="mt-4 mb-4" >
-        <div on:mouseover={() => {onOver()}} class={shadow} on:mouseleave={() => {onLeave()}}>
+    <Card color="dark" outline class="mt-4 mb-4" >
+        <div on:mouseover={() => {onOver()}} class="{shadow} bg-tweet" on:mouseleave={() => {onLeave()}}>
             <CardHeader>
                 <Row>
                     <Col xs="2">
@@ -30,7 +30,7 @@
                     </Col>
                     <Col xs="10">
                         <h5>
-                            {data.getAuthor().getName()} (@{data.getAuthor().getUsername()})
+                            {data.getAuthor().getName()} (<a href="https://www.twitter.com/{data.getAuthor().getUsername()}">@{data.getAuthor().getUsername()}</a>)
                         </h5>
                     </Col>
                 </Row>
@@ -39,7 +39,7 @@
                 {data.getText()}
             </CardBody>
             <CardFooter>
-                - {data.getAgeInHours()} minutes ago
+                <Icon name="twitter"/> {data.getAgeInHours()} minutes ago
             </CardFooter>
         </div>
     </Card>
