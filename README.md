@@ -5,12 +5,14 @@
 - Raphael Ebner, 4170420, B.Sc. Informatik
 - Nicolas Hellthaler, 4164933, B.Sc. Informatik
 - Bastian Müller, 4138763, B.Sc. Angewandte Informatik
+- chatGPT by OpenAI
 
 ## Mail Addresses
 
 - ve257@stud.uni-heidelberg.de
 - nicolas.hellthaler@stud.uni-heidelberg.de
 - bastian.mueller@stud.uni-heidelberg.de
+- Reachable at https://chat.openai.com/chat
 
 ## How to run our Dashboard
 - Navigate to the `frontend` folder in Terminal, then
@@ -25,8 +27,8 @@
 ## Existing Code Fragments
 
 - For our dashboard we made use of this template (https://github.com/GeekyAnts/sb-admin-svelte)
-  - Except for the SideBar, we did not "copy and paste" anything, but wrote our own implementation
-- We also use Bootstrap CSS and Icons
+  - We rewrote most of the code but copied some pieces that we liked a lot about the template
+- We also use Bootstrap CSS for styling and Icons
 
 ## Utilized Libraries
 
@@ -42,14 +44,13 @@
 ## Contributions
 *In case some team members contributed to the project in a way that is not clear from the commit history, you can mention their contributions here.*
 
-Nothing yet.
+chatGPT helped us a lot so far, therefore we welcome the AI as an unofficial member of our Team.
 
 ## Uploading for Other Team Members
 
 *If you are pushing code for another team member, you should indicate their name in the commit message.*
 
 Noting yet.
-
 
 
 # Project Log
@@ -63,4 +64,5 @@ Noting yet.
 
 - After our first meeting with our supervisor, we decided to each take on work for the upcoming assignments to contribute more equally to the project.
 - We brainstormed ideas to implement such that each person will contribute something for the milestone.
-- In the first two weeks of december we will each implement some kind of text analytics task so that we will have some kind of preview that we can show at our 'milestone' meeting mid December.
+- In the first two weeks of december we will implement some kind of text analytics tasks so that we will have a preview that we can show at our 'milestone' meeting mid December.
+- Bastian changed the UI of the frontend from materials UI to sveltestrap. He also added the ability to create graphs/diagrams/etc. using the `chart.js` library.

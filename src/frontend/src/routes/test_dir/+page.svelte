@@ -17,9 +17,8 @@
     <div>
     {#await tweets}
         <div class="d-flex justify-content-center mt-4">
-            <strong>Loading Tweets...</strong>
-            <div class="spinner-border ml-4" role="status">
-                <span class="visually-hidden">Loading...</span>
+            <strong class="text-info">Loading Tweets...</strong>
+            <div class="spinner-border ml-4 text-info" >
             </div>
         </div>
     {:then tweets}

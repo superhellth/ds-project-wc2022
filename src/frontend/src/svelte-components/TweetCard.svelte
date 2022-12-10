@@ -19,7 +19,7 @@
 
 
 <div class="h-100">
-    <Card color="primary" outline class="mt-4 mb-4" >
+    <Card color="info" outline class="mt-4 mb-4" >
         <div on:mouseover={() => {onOver()}} class={shadow} on:mouseleave={() => {onLeave()}}>
             <CardHeader>
                 <Row>
