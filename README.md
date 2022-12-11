@@ -9,7 +9,7 @@
 
 ## Mail Addresses
 
-- ve257@stud.uni-heidelberg.de
+- raphael.ebner@stud.uni-heidelberg.de
 - nicolas.hellthaler@stud.uni-heidelberg.de
 - bastian.mueller@stud.uni-heidelberg.de
 - Reachable at https://chat.openai.com/chat
