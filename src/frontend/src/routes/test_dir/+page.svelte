@@ -15,10 +15,13 @@
 
 <Layout>
     <div>
+        <!-- TODO: Add rule stuff (IF we want to use it) -->
+    </div>
+    <div>
     {#await tweets}
         <div class="d-flex justify-content-center mt-4">
-            <strong class="text-info">Loading Tweets...</strong>
-            <div class="spinner-border ml-4 text-info" >
+            <strong class="text-twitter-color">Loading Tweets...</strong>
+            <div class="spinner-border ml-4 text-twitter-color" >
             </div>
         </div>
     {:then tweets}

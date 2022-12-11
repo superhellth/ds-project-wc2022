@@ -8,3 +8,11 @@ button.bg-tweet:hover,
 button.bg-tweet:focus {
     background-color: #aad6f2 !important;
 }
+
+.bg-twitter-color {
+    background-color: #1DA1F2 !important;
+}
+
+.text-twitter-color {
+    color: #1DA1F2 !important;
+}
