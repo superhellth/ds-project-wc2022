@@ -1,0 +1,3 @@
+tweepy
+elasticsearch
+fastapi[all]
