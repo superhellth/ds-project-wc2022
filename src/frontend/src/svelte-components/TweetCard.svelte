@@ -39,7 +39,7 @@
                 {data.getText()}
             </CardBody>
             <CardFooter>
-                <Icon name="twitter"/> {data.getAgeInHours()} minutes ago
+                <Icon name="twitter"/> {data.getAgeInHours()}
             </CardFooter>
         </div>
     </Card>
