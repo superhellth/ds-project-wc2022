@@ -2,7 +2,8 @@
     import Layout from "../../svelte-components/Layout.svelte";
     import Chart from 'chart.js/auto';
     import {onMount} from "svelte";
-    import {Card, CardBody, CardFooter, CardHeader, Col, Container, Icon, Row} from 'sveltestrap';
+    import {Button, Card, CardBody, CardFooter, CardHeader, Col, Container, Icon, Input, Row} from 'sveltestrap';
+    import ChartCard from "../../svelte-components/ChartCard.svelte";
 
 
     const data = {
@@ -16,9 +17,12 @@
     };
 
     let myChart;
+    const chart_canvas_id = 'chart';
+    let header = "Bar Chart Example"
+    let footer = "Some additional information"
 
     function setupChart() {
-        myChart = new Chart('bar-chart', {
+        myChart = new Chart(chart_canvas_id, {
             type: 'bar',
             data: data
         });
@@ -30,28 +34,22 @@
 
 <Layout>
     <Container>
-    <Row>
-        <Col>
-            <Card>
-                <CardHeader>
-                    Some Header Text <Icon name="globe2" />
-                </CardHeader>
-                <CardBody>
-                    <div>
-                        <canvas id="bar-chart"></canvas>
+        <Row>
+            <Col>
+                <ChartCard {header} {footer} chart_id={chart_canvas_id}>
+                    <div slot="card-header-controls">
+                        <Button>
+                            I'm a button!
+                        </Button>
+                        <Input>
+                            ...
+                        </Input>
                     </div>
-                </CardBody>
-                <CardFooter>Some Text as Footer</CardFooter>
-            </Card>
-        </Col>
-    </Row>
-    <Row>
-        <Col>.col</Col>
-        <Col>.col</Col>
-        <Col>.col</Col>
-        <Col>.col</Col>
-    </Row>
-</Container>
+                </ChartCard>
+            </Col>
+            <Col>
+                Some Text.
+            </Col>
+        </Row>
+    </Container>
 </Layout>
-
-

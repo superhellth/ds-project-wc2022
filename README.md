@@ -14,16 +14,6 @@
 - bastian.mueller@stud.uni-heidelberg.de
 - Reachable at https://chat.openai.com/chat
 
-## How to run our Dashboard
-- Navigate to the `frontend` folder in Terminal, then
-- `npm install`
-- (These next 2 steps will be handled by a script later on. They are necessary because of a bug in the sveltestrap UI framework.)
-  - Go to `src/frontend/node_module/@popperjs/`
-  - Open `package.json` and append after line 4 ('description'): `  "type": "module",`
-- `npm run dev`
-- Enjoy :)
-
-
 ## Existing Code Fragments
 
 - For our dashboard we made use of this template (https://github.com/GeekyAnts/sb-admin-svelte)
@@ -52,24 +42,63 @@ chatGPT helped us a lot so far, therefore we welcome the AI as an unofficial mem
 
 Noting yet.
 
-#Planned text analytic features
 
-## Basic statistics
+# Project state
 
--Number of tweets posted over the course of time
--Share of tweets posted with the hashtags #lgtbq and #humanrights etc.
--OverView about tweets which are filtered out
+## How to run our Dashboard
+- Navigate to the `frontend` folder in Terminal, then
+- `npm install`
+- (These next step will be handled by a script later on. It is necessary because of a bug in the `sveltestrap` UI framework.)
+  - Go to `src/frontend/node_module/@popperjs/`
+  - Open `package.json` and append after line 4 ('description'): `  "type": "module",`
+- `npm run dev`
+- Enjoy :)
 
-## Textanalytic from the lecture
+## Planning State
+Our project currently features a fully functioning elasticsearch server that captures tweets about the ongoing FIFA World Cup in Qatar.
+Additionally, we have a dashboard prototype. We agreed on a design and text analytics features we want to implement.
+We will start working on the text analytics tasks in the second half of December since we now have then necessary understanding from the lectures as well as some data to use it on.
+We are currently working on a template for all (interactive) charts. (Likely not ready yet)
 
--Most common words displayed as wordcloud
--Topic modeling based on the collected tweets via NNMF or SVD
--Word respectively Entity Graph
+### Future planning
+Moving forward, we plan to implement text analytics tasks of our data as well as improve our dashboard to make it more visually appealing.
+Below are some features we want to implement specifically.
 
-## Textanalytics inspired by further research
+### High-level Architecture Description
+We split our project code into two parts. `frontend` for the dashboard based on svelte and `middleware` for connection to elasticsearch that runs on our server as backend.
+Like we said in our proposal, we saved several attributes of tweets, that are connected (by a specific hashtag or topic or linked user) to the World Cup.
+We also saved aspects certain attributes of the user such as the age of the account, the username and the name.
 
--Modeling hashtags which appearing most common in combination
+The analysis will be done in the middleware as well. We plan to have some interactive graphs that will be generated on the users machine and getting data directly from our server.
+Other graphs will be based on an analysis/data that comes with the projects code because generating it would take too much time.
+We'll use json files for storing our data.
 
+### Experiments
+Since we focused on building a dashboard we can work with and an elasticsearch pipeline, we did not experiment with our data yet.
+We'll start to explore it more over the coming weeks, when we build our text analytics tasks.
+
+### Basic statistics
+
+- Number of tweets posted over the course of time
+- Share of tweets posted with the hashtags #lgtbq and #humanrights etc.
+- OverView about tweets which are filtered out
+
+### Text analytics from lecture
+
+- Most common words displayed as wordcloud
+- Topic modeling based on the collected tweets via NNMF or SVD
+- Word respectively Entity Graph
+
+### Text analytics inspired by further research
+
+- Modeling hashtags that appear often in combination with each other
+
+### Examples
+Please start our dashboard and click on 'Graph 1' to see the 50 most current tweets that our elasticsearch server captured.
+
+## Current Code State
+The code is not documented perfectly yet. We will improve our documentation over the coming weeks.
+We plan to use docstrings.
 
 # Project Log
 ## November 2022
@@ -81,6 +110,5 @@ Noting yet.
 ## December 2022
 
 - After our first meeting with our supervisor, we decided to each take on work for the upcoming assignments to contribute more equally to the project.
-- We brainstormed ideas to implement such that each person will contribute something for the milestone.
-- In the first two weeks of december we will implement some kind of text analytics tasks so that we will have a preview that we can show at our 'milestone' meeting mid December.
-- Bastian changed the UI of the frontend from materials UI to sveltestrap. He also added the ability to create graphs/diagrams/etc. using the `chart.js` library.
+- We brainstormed ideas to implement such that each person will contribute equally to the project.
+- Bastian changed the UI of the frontend from `materials UI` to `sveltestrap`. He also added the ability to create graphs/diagrams/etc. using the `chart.js` library.
