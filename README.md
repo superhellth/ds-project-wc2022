@@ -54,19 +54,19 @@ Noting yet.
 
 #Planned text analytic features
 
-##Basic statistics
+## Basic statistics
 
 -Number of tweets posted over the course of time
 -Share of tweets posted with the hashtags #lgtbq and #humanrights etc.
 -OverView about tweets which are filtered out
 
-##Textanalytic from the lecture
+## Textanalytic from the lecture
 
 -Most common words displayed as wordcloud
 -Topic modeling based on the collected tweets via NNMF or SVD
 -Word respectively Entity Graph
 
-##Textanalytics inspired by further research
+## Textanalytics inspired by further research
 
 -Modeling hashtags which appearing most common in combination
 
