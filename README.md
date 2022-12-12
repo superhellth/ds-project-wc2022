@@ -45,6 +45,11 @@ Noting yet.
 
 # Project state
 
+## Our data
+- Our twitter-api query string looks like this: `#Qatar2022 OR #QatarWorldCup2022 OR  #fifaworldcup2022 OR #Roadto2022 OR @FIFAWorldCup OR @roadto2022en OR (#qatar #lgbtq) OR (#qatar #humanrights) OR context:29.1275806388367720450 OR context:6.1275806388367720450) -is:retweet -is:reply -is:quote lang:en`
+- During the K.O. stage of the World Cup there are some time periods for which we don't have any data since even 3 elevated twitter-api accounts are not enough to capture every tweet.
+- (12.12.2022) Our data consists of about 4.5 million tweets
+
 ## How to run our Dashboard
 - Navigate to the `frontend` folder in Terminal, then
 - `npm install`
@@ -112,3 +117,4 @@ We plan to use docstrings.
 - After our first meeting with our supervisor, we decided to each take on work for the upcoming assignments to contribute more equally to the project.
 - We brainstormed ideas to implement such that each person will contribute equally to the project.
 - Bastian changed the UI of the frontend from `materials UI` to `sveltestrap`. He also added the ability to create graphs/diagrams/etc. using the `chart.js` library.
+- We now have a Docker infrastructure set up for the middleware. We still have to figure out a workflow for Docker though.
