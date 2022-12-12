@@ -1,9 +1,11 @@
 <script>
+  // Adds a footer to the webpage
     import {Container} from "sveltestrap";
 
     export let color = "";
     let bg_color = "bg-" + color;
 </script>
+
 
 <footer class="py-4 {bg_color} mt-auto">
   <Container fluid={true}>

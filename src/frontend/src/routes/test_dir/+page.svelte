@@ -2,20 +2,19 @@
     import Layout from "../../svelte-components/Layout.svelte";
     import ElasticHelper from "../../typescript/api_connections/elasticonnection";
     import Tweet from "../../typescript/tweet_management/tweet";
-    import {Row, Spinner} from "sveltestrap";
+    import {Row} from "sveltestrap";
     import TweetCard from "../../svelte-components/TweetCard.svelte";
 
     // Our connection to the middleware
     const elasticHelper: ElasticHelper = new ElasticHelper();
 
-    // We get the stream rule, stream status and a list of the 50 most recent tweets asynchronously,
-    // thus the data type is Promise
+    // We get  a list of the 50 most recent tweets asynchronously, thus the data type is Promise
     const tweets: Promise<Array<Tweet>> = elasticHelper.getTweets();
 </script>
 
 <Layout>
     <div>
-        <!-- TODO: Add rule stuff (IF we want to use it) -->
+        <!-- TODO: Add rule/query management/overview like in the old layout (IF we want to use it) -->
     </div>
     <div>
     {#await tweets}

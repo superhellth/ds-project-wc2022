@@ -1,4 +1,9 @@
 <script>
+    // READ:
+    // The commented code is not used currently, but we want to keep a copy of how to implement subpages in the
+    // sidebar because they will probably be used in the future.
+
+
     // import Collapse from "sveltestrap/src/Collapse.svelte";
     import Nav from "sveltestrap/src/Nav.svelte";
 
@@ -12,11 +17,11 @@
     let isPageOpen = false;
     let isAuthenticationOpen = false;
     let isErrorOpen = false;
-    let activeLink = "Dashboard";*/
+    let activeLink = "Dashboard";
     let footerName = "SB Admin Svelte";
     let footerText = "Logged in as:";
 
-    /*const updateActiveLink = linkName => (activeLink = linkName);
+    const updateActiveLink = linkName => (activeLink = linkName);
 
     const toggleLayout = () => {
         isLayoutOpen = !isLayoutOpen;
