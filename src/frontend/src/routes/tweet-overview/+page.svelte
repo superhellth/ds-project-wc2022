@@ -1,8 +1,11 @@
 <script lang="ts">
+    // This is just a test if we can use chart.js charts inside this application
+    // It makes use of the new ChartCart.svelte template for Charts/Graphs.
+
     import Layout from "../../svelte-components/Layout.svelte";
     import Chart from 'chart.js/auto';
     import {onMount} from "svelte";
-    import {Button, Card, CardBody, CardFooter, CardHeader, Col, Container, Icon, Input, Row} from 'sveltestrap';
+    import {Button, Col, Container, Input, Row} from 'sveltestrap';
     import ChartCard from "../../svelte-components/ChartCard.svelte";
 
 
