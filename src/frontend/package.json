@@ -7,7 +7,8 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"postinstall": "node -e \"const fs = require('fs'); const data = fs.readFileSync('node_modules/@popperjs/core/package.json', 'utf8'); const lines = data.split('\\n'); lines.splice(3, 0, '    \\\"type\\\": \\\"module\\\",'); fs.writeFileSync('node_modules/@popperjs/core/package.json', lines.join('\\n'));\""
 	},
 	"devDependencies": {
 		"@smui/button": "^7.0.0-beta.0",
