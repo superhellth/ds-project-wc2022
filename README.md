@@ -53,9 +53,6 @@ Noting yet.
 ## How to run our Dashboard
 - Navigate to the `frontend` folder in Terminal, then
 - `npm install`
-- (These next step will be handled by a script later on. It is necessary because of a bug in the `sveltestrap` UI framework.)
-  - Go to `src/frontend/node_module/@popperjs/`
-  - Open `package.json` and append after line 4 ('description'): `  "type": "module",`
 - `npm run dev`
 - Enjoy :)
 
