@@ -1,11 +1,15 @@
 <script lang="ts">
-    // Adds a NavigationBar on top of the webpage
+    // Import the Navbar and NavbarBrand components from the svelte-strap library
     import Navbar from "sveltestrap/src/Navbar.svelte";
     import NavbarBrand from "sveltestrap/src/NavbarBrand.svelte";
 
+    // Import the FormGroup and Input components from the svelte-strap library
     import {FormGroup, Input} from "sveltestrap";
 
+    // Define a variable for the color of the Navbar
     export let color;
+
+    // Define a variable for the title of the NavbarBrand
     export let title;
 </script>
 
