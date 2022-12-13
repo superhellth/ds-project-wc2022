@@ -1,6 +1,6 @@
 import tweepy
 import elasticsearch
-import twitter_tweet
+from middleware.tweet_management import twitter_tweet
 import json
 
 

@@ -1,6 +1,3 @@
-import tweepy
-
-
 class User:
     """A class representing a twitter user. Stores all available data concerning the user. Fetches data on init"""
 
