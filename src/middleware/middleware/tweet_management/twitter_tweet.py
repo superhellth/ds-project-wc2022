@@ -1,5 +1,4 @@
-import twitter_user
-
+from middleware.tweet_management import twitter_user
 
 class Tweet:
     """A class to store and manage all available data about a tweet."""
