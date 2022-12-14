@@ -5,7 +5,8 @@ import Tweet from "../tweet_management/tweet";
  */
 class ElasticHelper {
 
-  private static FASTAPI_URL: string = "http://45.13.59.173:8000";
+  private static DATA_RETRIEVAL_URL: string = "http://127.0.0.1:8000";
+  private static DATA_COLLECTION_URL: string = "http://45.13.59.173:8000";
 
   /**
    * 
@@ -13,7 +14,7 @@ class ElasticHelper {
    */
   public async getTweets(): Promise<Array<Tweet>> {
     // async request
-    let data = await fetch(ElasticHelper.FASTAPI_URL + "/query").then((response) => response.json());
+    let data = await fetch(ElasticHelper.DATA_RETRIEVAL_URL + "/query").then((response) => response.json());
 
     // convert to classes
     const tweetList = new Array<any>();
@@ -33,7 +34,7 @@ class ElasticHelper {
    */
   public async setRule(rule: string): Promise<string> {
     const encodedRule = rule.replaceAll("#", "hashtag");
-    const data = await fetch(ElasticHelper.FASTAPI_URL + "/stream/setRule/?rule=" + encodedRule).then((response) => response.json());
+    const data = await fetch(ElasticHelper.DATA_COLLECTION_URL + "/stream/setRule/?rule=" + encodedRule).then((response) => response.json());
 
     return data.rule;
   }
@@ -43,7 +44,7 @@ class ElasticHelper {
    * @returns the new running state of the stream.
    */
   public async startStream(): Promise<boolean> {
-    const data = await fetch(ElasticHelper.FASTAPI_URL + "/stream/start").then((response) => response.json());
+    const data = await fetch(ElasticHelper.DATA_COLLECTION_URL + "/stream/start").then((response) => response.json());
 
     return data.running;
   }
@@ -53,7 +54,7 @@ class ElasticHelper {
    * @returns the new running state of the stream.
    */
   public async stopStream(): Promise<boolean> {
-    const data = await fetch(ElasticHelper.FASTAPI_URL + "/stream/stop").then((response) => response.json());
+    const data = await fetch(ElasticHelper.DATA_COLLECTION_URL + "/stream/stop").then((response) => response.json());
 
     return data.running;
   }
@@ -83,7 +84,7 @@ class ElasticHelper {
    * @returns the current rule of the stream.
    */
   public async getRule(): Promise<string> {
-    const data = await fetch(ElasticHelper.FASTAPI_URL + "/stream/status").then((response) => response.json());
+    const data = await fetch(ElasticHelper.DATA_COLLECTION_URL + "/stream/status").then((response) => response.json());
     return data.rule;
   }
 
@@ -92,7 +93,7 @@ class ElasticHelper {
    * @returns the current running state of the stream
    */
   public async isStreamRunning(): Promise<boolean> {
-    const data = await fetch(ElasticHelper.FASTAPI_URL + "/stream/status").then((response) => response.json());
+    const data = await fetch(ElasticHelper.DATA_COLLECTION_URL + "/stream/status").then((response) => response.json());
     return data.running;
   }
 }

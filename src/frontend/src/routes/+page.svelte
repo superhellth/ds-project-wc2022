@@ -93,20 +93,6 @@
       {/await}
     </FormField>
   </div>
-
-  <div class="tweet-list-container" style="float:left;">
-    {#await tweets}
-      <p>loading tweets...</p>
-    {:then tweets}
-      <LayoutGrid>
-        {#each tweets as aTweet}
-          <Cell>
-            <TweetComp tweet={aTweet} />
-          </Cell>
-        {/each}
-      </LayoutGrid>
-    {/await}
-  </div>
 </Layout>
 
 <style>
