@@ -1,12 +1,9 @@
 <script lang="ts">
   import FormField from "@smui/form-field";
   import IconButton from "@smui/icon-button";
-  import LayoutGrid, { Cell } from "@smui/layout-grid";
   import Switch from "@smui/switch";
   import Textfield from "@smui/textfield";
   import ElasticHelper from "../typescript/api_connections/elasticonnection";
-  import TweetComp from "../svelte-components/TweetComp.svelte";
-  import type Tweet from "../typescript/tweet_management/tweet";
   import Layout from "../svelte-components/Layout.svelte";
 
   // This gets called whenever the user clicks the image button next to the text field
@@ -34,7 +31,6 @@
   // thus the data type is Promise
   let rulePromise: Promise<string> = elasticHelper.getRule();
   let isRunningPromise: Promise<boolean> = elasticHelper.isStreamRunning();
-  const tweets: Promise<Array<Tweet>> = elasticHelper.getTweets();
 
   // This variable keeps track of the string in the rule textfield
   let typedRule: string = "";
