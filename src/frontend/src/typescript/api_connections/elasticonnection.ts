@@ -33,10 +33,8 @@ class ElasticHelper {
    * @returns a list of the queried tweets.
    */
   public async getTweetsThat(query: string): Promise<Array<Tweet>> {
-    let query_str = query.replaceAll('{','OPEN_CURLY').replaceAll('}','CLOSE_CURLY').replaceAll('"', 'QUOTE_SIGN');
-    query_str = query_str.replaceAll(/(\r\n|\n|\t|\r|\s)/gm,"");
     // async request
-      const data = await fetch(ElasticHelper.DATA_RETRIEVAL_URL + "/general?query=" + query_str).
+      const data = await fetch(ElasticHelper.DATA_RETRIEVAL_URL + "/general?query=" + query).
       then((response) => response.json());
 
     // convert to classes
