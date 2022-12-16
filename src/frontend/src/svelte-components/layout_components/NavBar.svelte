@@ -7,10 +7,10 @@
     import {FormGroup, Input} from "sveltestrap";
 
     // Define a variable for the color of the Navbar
-    export let color;
+    export let color: any;
 
     // Define a variable for the title of the NavbarBrand
-    export let title;
+    export let title: string;
 </script>
 
 <Navbar class="sb-topnav navbar-expand" {color} dark expand="md">
