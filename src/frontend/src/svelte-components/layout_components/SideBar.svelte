@@ -56,30 +56,42 @@
                 <div class="sb-sidenav-menu-heading">Basic Overview</div>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
                              text="Twitter Feed "
-                             href="/"
-                             iconName="house-heart-fill">
-                </SidebarItem>
-                <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Twitter User Feed"
-                             href="/"
+                             href="/tweet-overview"
                              iconName="house-heart-fill">
                 </SidebarItem>
 
-                <div class="sb-sidenav-menu-heading">Graphs</div>
+                <div class="sb-sidenav-menu-heading">Statistics</div>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
                              text="Graph 1"
-                             href="/test_dir"
+                             href="/statistics"
                              iconName="graph-up">
                 </SidebarItem>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
                              text="Graph 2"
-                             href="/test_dir"
+                             href="/statistics"
                              iconName="graph-up">
                 </SidebarItem>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
                              text="Graph 3"
-                             href="/test_dir"
+                             href="/statistics"
                              iconName="graph-up">
+                </SidebarItem>
+                <div class="sb-sidenav-menu-heading">Text Analytics</div>
+                <SidebarItem on:press={() => { theme = 'dark'; }}
+                             text="Generate Random Tweet"
+                             href="/tweet-overview"
+                             iconName="dice-5">
+                </SidebarItem>
+                <SidebarItem on:press={() => { theme = 'dark'; }}
+                             text="Wordcloud"
+                             href="/tweet-overview"
+                             iconName="house-heart-fill">
+                </SidebarItem>
+                <div class="sb-sidenav-menu-heading">Settings</div>
+                <SidebarItem on:press={() => { theme = 'dark'; }}
+                             text="Stream control"
+                             href="/"
+                             iconName="twitter">
                 </SidebarItem>
                 <!--<SidebarItem
                         on:press={toggleLayout}
@@ -176,17 +188,7 @@
                         </Collapse>
                     </Nav>
                 </Collapse>-->
-                <div class="sb-sidenav-menu-heading">Text Analytics</div>
-                <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Generate Random Tweet"
-                             href="/tweet-overview"
-                             iconName="dice-5">
-                </SidebarItem>
-                <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Wordcloud"
-                             href="/tweet-overview"
-                             iconName="house-heart-fill">
-                </SidebarItem>
+                
             </Nav>
         </div>
     </Nav>

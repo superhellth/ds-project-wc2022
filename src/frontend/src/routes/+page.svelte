@@ -3,13 +3,13 @@
   import IconButton from "@smui/icon-button";
   import Switch from "@smui/switch";
   import Textfield from "@smui/textfield";
-  import ElasticHelper from "../typescript/api_connections/elasticonnection";
   import Layout from "../svelte-components/Layout.svelte";
+  import StreamControl from "../typescript/api_connections/streamControl";
 
   // This gets called whenever the user clicks the image button next to the text field
   // sends rule to middleware and resets the text inside the text field
   async function onSendRule() {
-    rulePromise = elasticHelper.setRule(typedRule);
+    rulePromise = streamControl.setRule(typedRule);
     typedRule = "";
   }
 
@@ -17,27 +17,26 @@
   async function onToggleQuery() {
     let isRunning = await isRunningPromise;
     if (isRunning) {
-      isRunning = await elasticHelper.stopStream();
+      isRunning = await streamControl.stopStream();
     } else {
-      isRunning = await elasticHelper.startStream();
+      isRunning = await streamControl.startStream();
     }
-    isRunningPromise = elasticHelper.isStreamRunning();
+    isRunningPromise = streamControl.isStreamRunning();
   }
 
   // Our connection to the middleware
-  const elasticHelper: ElasticHelper = new ElasticHelper();
+  const streamControl: StreamControl = StreamControl.getInstance();
 
   // We get the stream rule, stream status and a list of the 50 most recent tweets asynchronosly,
   // thus the data type is Promise
-  let rulePromise: Promise<string> = elasticHelper.getRule();
-  let isRunningPromise: Promise<boolean> = elasticHelper.isStreamRunning();
+  let rulePromise: Promise<string> = streamControl.getRule();
+  let isRunningPromise: Promise<boolean> = streamControl.isStreamRunning();
 
   // This variable keeps track of the string in the rule textfield
   let typedRule: string = "";
 </script>
 
 <Layout>
-
   <div class="query-management">
     <div class="query-part" style="float: left;">
       <Textfield
