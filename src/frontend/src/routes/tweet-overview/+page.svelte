@@ -5,7 +5,7 @@
     import Layout from "../../svelte-components/Layout.svelte";
     import Chart from 'chart.js/auto';
     import {onMount} from "svelte";
-    import {Button, Col, Container, Input, Row} from 'sveltestrap';
+    import {Button, Col, Container, Row} from 'sveltestrap';
     import ChartCard from "../../svelte-components/ChartCard.svelte";
 
 
@@ -41,12 +41,23 @@
             <Col>
                 <ChartCard {header} {footer} chart_id={chart_canvas_id}>
                     <div slot="card-header-controls">
-                        <Button>
-                            I'm a button!
-                        </Button>
-                        <Input>
-                            ...
-                        </Input>
+                        <Row>
+                            <Col>
+                                <Button on:click={() => console.log("Button 1 pressed")}>
+                                    Button 1
+                                </Button>
+                            </Col>
+                            <Col>
+                                <Button on:click={() => console.log("Button 2 pressed")}>
+                                    Button 2
+                                </Button>
+                            </Col>
+                            <Col>
+                                <Button on:click={() => console.log("Button 3 pressed")}>
+                                    Button 3
+                                </Button>
+                            </Col>
+                        </Row>
                     </div>
                 </ChartCard>
             </Col>
