@@ -48,9 +48,6 @@ async def get_tweets():
 @app.get("/general/")
 async def get_tweets_that(query: str):
     """Returns all tweets that match the criteria"""
-    query = query.replace('OPEN_CURLY', '{')
-    query = query.replace('CLOSE_CURLY', '}')
-    query = query.replace('QUOTE_SIGN', '"')
     resp = es_client.search(index=INDEX_NAME, body=query)
     return resp["hits"]["hits"]
 
