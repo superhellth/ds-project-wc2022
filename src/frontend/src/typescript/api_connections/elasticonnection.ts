@@ -8,33 +8,13 @@ class ElasticHelper {
   private static DATA_RETRIEVAL_URL: string = "http://127.0.0.1:8000";
   private static DATA_COLLECTION_URL: string = "http://45.13.59.173:8000";
 
-  /**
-   * 
-   * @returns a list of the 50 most recent tweets.
-   */
-  public async getTweets(): Promise<Array<Tweet>> {
-    // async request
-    let data = await fetch(ElasticHelper.DATA_RETRIEVAL_URL + "/query").then((response) => response.json());
-
-    // convert to classes
-    const tweetList = new Array<any>();
-    for (let i = 0; i < data.length; i++) {
-      tweetList.push(Tweet.fromJson(data[i]));
-    }
-
-    tweetList.sort(function(tweetA, tweetB) {return tweetB.getCreatedAt() - tweetA.getCreatedAt()});
-
-    return tweetList;
-  }
-
-
     /**
    *
    * @returns a list of the queried tweets.
    */
   public async getTweetsThat(query: string): Promise<Array<Tweet>> {
     // async request
-      const data = await fetch(ElasticHelper.DATA_RETRIEVAL_URL + "/general?query=" + query).
+      const data = await fetch(ElasticHelper.DATA_RETRIEVAL_URL + "/query?query=" + query).
       then((response) => response.json());
 
     // convert to classes

@@ -31,23 +31,8 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-async def get_tweets():
-    """Test"""
-    return {"hello": "nico"}
-
-
 @app.get("/query/")
-async def get_tweets():
-    """Returns all tweets from the connected elasticsearch instance"""
-    resp = es_client.search(index="tweets", size=50,
-                            sort={"created_at": "desc"})
-    return resp["hits"]["hits"]
-
-
-@app.get("/general/")
 async def get_tweets_that(query: str):
     """Returns all tweets that match the criteria"""
     resp = es_client.search(index=INDEX_NAME, body=query)
     return resp["hits"]["hits"]
-
