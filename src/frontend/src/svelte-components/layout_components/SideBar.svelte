@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     // READ:
     // The commented code is not used currently, but we want to keep a copy of how to implement subpages in the
     // sidebar because they will probably be used in the future.
@@ -9,7 +9,7 @@
 
     import SidebarItem from "./SidebarItem.svelte";
 
-    export let theme;
+    export let theme: any;
 
     $: sidenav_theme = `sb-sidenav-${theme}`;
 
