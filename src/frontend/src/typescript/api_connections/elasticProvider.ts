@@ -36,6 +36,10 @@ class ElasticProvider extends Connection {
         return tweetList;
     }
 
+    /**
+     * bla bla bla.
+     * @returns Days mapped to the number of tweets collected that day.
+     */
     public async getTweetsByDayStats(): Promise<Map<Date, number>> {
         const data = await fetch(this.URL + "/statistics/tweetsPerDay").
         then((response) => response.json());
@@ -43,6 +47,16 @@ class ElasticProvider extends Connection {
         const map: Map<Date, number> = new Map(Object.entries(data).map(([key, value]) => [new Date(key), Number(value)]));
 
         return map;
+    }
+
+    /**
+     * Does not work properly since all queries including a sort or size parameter are labelled as invalid.
+     * @param query Query string to verify.
+     * @returns Whether or not the query is valid.
+     */
+    public async validateQuery(query: string): Promise<boolean> {
+        const data = await fetch(this.URL + "/validate?query=" + query).then((response) => response.json());
+        return data.valid;
     }
 }
 
