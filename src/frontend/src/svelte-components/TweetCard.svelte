@@ -5,6 +5,7 @@
 
     // Define a variable for storing the tweet data
     export let data: Tweet;
+    export let showDetails: boolean;
 
     // Define a variable for storing the shadow effect
     let shadow = "";
@@ -50,6 +51,11 @@
             <CardFooter>
                 <!-- Use an icon to indicate that this is a tweet, and the ageInHours method to show how long ago it was posted -->
                 <Icon name="twitter"/> {data.getAgeInHours()}
+                {#if showDetails}
+                    <p>Score: {data.getScore()}</p>
+                    <p>Like Count: {data.getLikeCount()}</p>
+                    <p>Author's follower count: {data.getAuthor().getFollowerCount()}</p>
+                {/if}
             </CardFooter>
         </div>
     </Card>
