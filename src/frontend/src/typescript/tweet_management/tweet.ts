@@ -17,9 +17,10 @@ class Tweet {
     private like_count: number;
     private quote_count: number;
     private text: string;
+    private score: number;
 
     constructor(attachments: any, author: TwitterUser, created_at: Date, geo: string, id: string, lang: string, possibly_sensitive: boolean,
-        retweet_count: number, reply_count: number, like_count: number, quote_count: number, text: string) {
+        retweet_count: number, reply_count: number, like_count: number, quote_count: number, text: string, score: number) {
         this.attachments = attachments;
         this.author = author;
         this.created_at = created_at;
@@ -32,6 +33,7 @@ class Tweet {
         this.like_count = like_count;
         this.quote_count = quote_count;
         this.text = text;
+        this.score = score;
     }
 
     /**
@@ -40,6 +42,8 @@ class Tweet {
      * @returns the parsed tweet object.
      */
     public static fromJson(json: any): Tweet {
+        console.log(json)
+        const score = json._score;
         json = json._source
         const attachments: any = json.attachments;
         const author: TwitterUser = TwitterUser.fromJson(json.author);
@@ -53,7 +57,7 @@ class Tweet {
         const like_count: number = json.public_metrics.like_count;
         const quote_count: number = json.public_metrics.quote_count;
         const text: string = json.text;
-        return new Tweet(attachments, author, created_at, geo, id, lang, possibly_sensitive, retweet_count, reply_count, like_count, quote_count, text);
+        return new Tweet(attachments, author, created_at, geo, id, lang, possibly_sensitive, retweet_count, reply_count, like_count, quote_count, text, score);
     }
 
     public getAgeInHours(): string {
@@ -128,6 +132,12 @@ class Tweet {
     public getText(): string {
         return this.text;
     }
+
+    
+    public getScore() : number {
+        return this.score;
+    }
+    
 
 }
 

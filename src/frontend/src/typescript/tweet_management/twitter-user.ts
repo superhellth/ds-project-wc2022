@@ -41,7 +41,7 @@ class TwitterUser {
         const location: string = json.location;
         const name: string = json.name;
         const profile_image_url: string = json.profile_image_url;
-        const follower_count: number = json.public_metrics.follower_count;
+        const follower_count: number = json.public_metrics.followers_count;
         const following_count: number = json.public_metrics.following_count;
         const tweet_count: number = json.public_metrics.tweet_count;
         const listed_count: number = json.public_metrics.listed_count;
@@ -66,6 +66,10 @@ class TwitterUser {
 
     public getProfileImageURL(): string {
         return this.profile_image_url;
+    }
+
+    public getFollowerCount(): number {
+        return this.follower_count;
     }
 
 }

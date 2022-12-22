@@ -16,7 +16,7 @@ app = FastAPI()
 
 # allow access from the following addresses:
 origins = [
-    "http://localhost:5173/",
+    "http://localhost:5173/*",
     "http://localhost:5173",
     "http://localhost",
     "http://localhost/",
@@ -62,3 +62,10 @@ async def get_tweet_number_by_days():
         count = bucket['doc_count']
         date_dict[date] = count
     return date_dict
+
+
+@app.get("/validate")
+async def validate_query(query: str = "false"):
+    """Validates the given query"""
+    resp = es_client.indices.validate_query(index=INDEX_NAME, body=query, explain=True)
+    return resp
