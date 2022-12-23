@@ -5,5 +5,5 @@ setup(name='middleware',
       packages=['middleware.data_collection',
                 'middleware.data_retrieval',
                 'middleware.tweet_management'],
-      install_requires=['tweepy', 'elasticsearch', 'fastapi[all]']
+      install_requires=['tweepy', 'elasticsearch==7.17', 'fastapi[all]']
       )

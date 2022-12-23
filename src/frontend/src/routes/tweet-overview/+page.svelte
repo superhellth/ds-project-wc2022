@@ -76,7 +76,6 @@
             sortString +
             `}` +
             "\n}";
-        console.log(fullQuery);
         return fullQuery;
     }
 
