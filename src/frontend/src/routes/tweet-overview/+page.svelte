@@ -40,7 +40,7 @@
     ];
     let currentSort = sortOptions[0];
     let sortAscending = false;
-    let showDetails = true;
+    let showDetails = false;
 
     $: {
         checkQueryValidity(query);
@@ -107,90 +107,86 @@
     });
 </script>
 
-<!-- Use the Layout component to define the overall layout of the page -->
-<Layout>
-    <Form>
-        <h2>Tweet query</h2>
+<title>Overwiev - Tweets</title>
+<Form>
+    <h2>Tweet query</h2>
+    <FormGroup>
+        <Input
+            id="query-input"
+            type="textarea"
+            bind:inner
+            bind:value={query}
+            on:input={resize}
+            feedback={isValid ? "Valid query" : "potentially invalid query"}
+            valid={isValid}
+            invalid={!isValid}
+        />
+    </FormGroup>
+    <div style="display: flex; justify-content: space-between">
         <FormGroup>
+            <Label for="exampleSelect">Sort by</Label>
             <Input
-                id="query-input"
-                type="textarea"
-                bind:inner
-                bind:value={query}
-                on:input={resize}
-                feedback={isValid ? "Valid query" : "potentially invalid query"}
-                valid={isValid}
-                invalid={!isValid}
+                type="select"
+                name="select"
+                id="exampleSelect"
+                style="width: 25em"
+                bind:value={currentSort}
+            >
+                {#each sortOptions as option}
+                    <option>{option}</option>
+                {/each}
+            </Input>
+            <Input
+                type="checkbox"
+                label="Ascending"
+                checked={sortAscending}
+                on:input={() => (sortAscending = !sortAscending)}
             />
         </FormGroup>
-        <div style="display: flex; justify-content: space-between">
-            <FormGroup>
-                <Label for="exampleSelect">Sort by</Label>
-                <Input
-                    type="select"
-                    name="select"
-                    id="exampleSelect"
-                    style="width: 25em"
-                    bind:value={currentSort}
-                >
-                    {#each sortOptions as option}
-                        <option>{option}</option>
-                    {/each}
-                </Input>
-                <Input
-                    type="checkbox"
-                    label="Ascending"
-                    checked={sortAscending}
-                    on:input={() => (sortAscending = !sortAscending)}
-                />
-            </FormGroup>
-            <FormGroup>
-                <Label for="exampleSelect">Count</Label>
-                <Input
-                    type="select"
-                    name="select"
-                    id="exampleSelect"
-                    style="width: 5em"
-                    bind:value={currentSize}
-                >
-                    {#each sizeOptions as option}
-                        <option>{option}</option>
-                    {/each}
-                </Input>
-            </FormGroup>
-            <FormGroup>
-                <Button type="button" on:click={executeQuery}
-                    >Execute Query</Button
-                >
-                <Input
-                    type="checkbox"
-                    label="Show Details"
-                    checked={showDetails}
-                    on:input={() => (showDetails = !showDetails)}
-                />
-            </FormGroup>
-        </div>
-    </Form>
-    <div>
-        {#await tweets_100}
-            <!-- Display a loading spinner while the tweets are being retrieved -->
-            <div class="d-flex justify-content-center mt-4">
-                <strong class="text-twitter-color">Loading Tweets...</strong>
-                <div class="spinner-border ml-4 text-twitter-color" />
-            </div>
-        {:then tweets_100}
-            <!-- Use the Row component from sveltestrap to create a responsive grid -->
-            <Row cols={{ xl: 4, lg: 3, md: 2, sm: 1 }}>
-                {#each tweets_100 as aTweet}
-                    <!-- For each tweet, use the TweetCard component to display the tweet -->
-                    <div>
-                        <TweetCard data={aTweet} bind:showDetails />
-                    </div>
+        <FormGroup>
+            <Label for="exampleSelect">Count</Label>
+            <Input
+                type="select"
+                name="select"
+                id="exampleSelect"
+                style="width: 5em"
+                bind:value={currentSize}
+            >
+                {#each sizeOptions as option}
+                    <option>{option}</option>
                 {/each}
-            </Row>
-        {/await}
+            </Input>
+        </FormGroup>
+        <FormGroup>
+            <Button type="button" on:click={executeQuery}>Execute Query</Button>
+            <Input
+                type="checkbox"
+                label="Show Details"
+                checked={showDetails}
+                on:input={() => (showDetails = !showDetails)}
+            />
+        </FormGroup>
     </div>
-</Layout>
+</Form>
+<div>
+    {#await tweets_100}
+        <!-- Display a loading spinner while the tweets are being retrieved -->
+        <div class="d-flex justify-content-center mt-4">
+            <strong class="text-twitter-color">Loading Tweets...</strong>
+            <div class="spinner-border ml-4 text-twitter-color" />
+        </div>
+    {:then tweets_100}
+        <!-- Use the Row component from sveltestrap to create a responsive grid -->
+        <Row cols={{ xl: 4, lg: 3, md: 2, sm: 1 }}>
+            {#each tweets_100 as aTweet}
+                <!-- For each tweet, use the TweetCard component to display the tweet -->
+                <div>
+                    <TweetCard data={aTweet} bind:showDetails />
+                </div>
+            {/each}
+        </Row>
+    {/await}
+</div>
 
 <style>
     #query-input {

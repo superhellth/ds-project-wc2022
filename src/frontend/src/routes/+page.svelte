@@ -36,59 +36,58 @@
   let typedRule: string = "";
 </script>
 
-<Layout>
-  <div class="query-management">
-    <div class="query-part" style="float: left;">
-      <Textfield
-        bind:value={typedRule}
-        label="Set Query Rule"
-        style="min-width: 30em; float: left;"
-      />
-      {#await isRunningPromise}
-        <p>Checking Stream state...</p>
-      {:then isRunning}
-        <IconButton
-          class="material-icons"
-          disabled={isRunning}
-          on:click={onSendRule}
-          style="float: left;"
-        >
-          send
-        </IconButton>
-      {/await}
-    </div>
-
-    <div class="query-part" style="float: right; margin-left: 5em;">
-      {#await isRunningPromise}
-        <p style="float: left;">Checking state...</p>
-      {:then isRunning}
-        {#await rulePromise}
-          <p>Checking rule...</p>
-        {:then rule}
-          <FormField>
-            <Switch
-              id="toggle-query-switch"
-              disabled={rule == null}
-              checked={isRunning}
-              on:SMUISwitch:change={onToggleQuery}
-            />
-            <p style="float: left;">Stream is running: {isRunning}</p>
-          </FormField>
-        {/await}
-      {/await}
-    </div>
-    <div style="clear: left;" />
-    <FormField>
-      {#await rulePromise}
-        <p>fetching rule...</p>
-      {:then rule}
-        <p style="clear: left">
-          Current rule: {rule == null ? "invalid" : rule}
-        </p>
-      {/await}
-    </FormField>
+<div class="query-management">
+  <div class="query-part" style="float: left;">
+    <Textfield
+      bind:value={typedRule}
+      label="Set Query Rule"
+      style="min-width: 30em; float: left;"
+    />
+    {#await isRunningPromise}
+      <p>Checking Stream state...</p>
+    {:then isRunning}
+      <IconButton
+        class="material-icons"
+        disabled={isRunning}
+        on:click={onSendRule}
+        style="float: left;"
+      >
+        send
+      </IconButton>
+    {/await}
   </div>
-</Layout>
+
+  <title>Settings - Stream</title>
+  <div class="query-part" style="float: right; margin-left: 5em;">
+    {#await isRunningPromise}
+      <p style="float: left;">Checking state...</p>
+    {:then isRunning}
+      {#await rulePromise}
+        <p>Checking rule...</p>
+      {:then rule}
+        <FormField>
+          <Switch
+            id="toggle-query-switch"
+            disabled={rule == null}
+            checked={isRunning}
+            on:SMUISwitch:change={onToggleQuery}
+          />
+          <p style="float: left;">Stream is running: {isRunning}</p>
+        </FormField>
+      {/await}
+    {/await}
+  </div>
+  <div style="clear: left;" />
+  <FormField>
+    {#await rulePromise}
+      <p>fetching rule...</p>
+    {:then rule}
+      <p style="clear: left">
+        Current rule: {rule == null ? "invalid" : rule}
+      </p>
+    {/await}
+  </FormField>
+</div>
 
 <style>
   .query-management {

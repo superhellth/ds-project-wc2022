@@ -3,6 +3,6 @@
     import TweetCountGraph from "./graphs/TweetCountGraph.svelte";
 </script>
 
-<Layout>
-    <TweetCountGraph/>
-</Layout>
+<title>Statistics - Quantity</title>
+<TweetCountGraph/>
+
