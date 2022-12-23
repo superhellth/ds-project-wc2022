@@ -1,11 +1,16 @@
 from middleware.tweet_management import twitter_user
 
+
 class Tweet:
     """A class to store and manage all available data about a tweet."""
 
-    def __init__(self, raw_data):
-        tweet = raw_data["data"]
-        user = raw_data["includes"]["users"][0]
+    def __init__(self, raw_data, is_es_doc=False):
+        if is_es_doc:
+            tweet = raw_data["_source"]
+            user = tweet.get("author", None)
+        else:
+            tweet = raw_data["data"]
+            user = raw_data["includes"]["users"][0]
 
         self.attachments = tweet.get("attachments", None)
         self.author = twitter_user.User(user)
@@ -59,6 +64,58 @@ class Tweet:
         }
         return tweet_doc
 
+    def get_attachments(self):
+        return self.attachments
+    
+    def get_author(self):
+        return self.author
+    
+    def get_context_annotations(self):
+        return self.context_annotations
+    
+    def get_conversation_id(self):
+        return self.conversation_id
+    
+    def get_created_at(self):
+        return self.created_at
+    
+    def get_edit_controls(self):
+        return self.edit_controls
+    
+    def get_edit_history_tweet_ids(self):
+        return self.edit_history_tweet_ids
+    
+    def get_entities(self):
+        return self.entities
+    
     def get_id(self):
-        """Returns the tweet id"""
         return self.id
+    
+    def get_in_reply_to_user_id(self):
+        return self.in_reply_to_user_id
+    
+    def get_lang(self):
+        return self.lang
+    
+    def get_possibly_sensitive(self):
+        return self.possibly_sensitive
+    
+    def get_public_metrics(self):
+        return self.public_metrics
+    
+    def get_referenced_tweets(self):
+        return self.referenced_tweets
+    
+    def get_reply_settings(self):
+        return self.reply_settings
+    
+    def get_source(self):
+        return self.source
+    
+    def get_text(self):
+        return self.text
+    
+    def get_withheld(self):
+        return self.withheld
+
+
