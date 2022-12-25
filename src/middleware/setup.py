@@ -6,5 +6,5 @@ setup(name='middleware',
                 'middleware.data_retrieval',
                 'middleware.tweet_management',
                 'middleware.analysis'],
-      install_requires=['tweepy', 'elasticsearch==7.17', 'fastapi[all]']
+      install_requires=['tweepy', 'elasticsearch==7.17', 'fastapi[all]', 'pandas', 'spacy', 'gensim', 'matplotlib', 'scikit-learn', 'numpy', 'seaborn']
       )

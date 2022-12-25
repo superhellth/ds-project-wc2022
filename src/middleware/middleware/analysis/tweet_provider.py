@@ -1,4 +1,3 @@
-from pydoc import doc
 from elasticsearch import helpers, Elasticsearch
 from middleware.tweet_management import twitter_tweet
 
@@ -26,10 +25,3 @@ class TweetProvider:
             if len(corpus) == size:
                 break
         return corpus
-
-
-# Test
-provider = TweetProvider()
-tweets = provider.get_corpus(size=10)
-for tweet in tweets:
-    print(tweet)
