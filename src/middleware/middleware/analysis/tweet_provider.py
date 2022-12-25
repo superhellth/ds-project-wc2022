@@ -2,13 +2,34 @@ from pydoc import doc
 from elasticsearch import helpers, Elasticsearch
 from middleware.tweet_management import twitter_tweet
 
-es_client = Elasticsearch("http://45.13.59.173:9200", http_auth=("elastic", "sicheristsicher"))
-tweets = list()
-for document in helpers.scan(es_client, index="tweets"):
-    tweets.append(twitter_tweet.Tweet(document, is_es_doc=True))
-    if len(tweets) % 1000 == 0:
-        print(len(tweets))  
-        
-# resp = es_client.search(index="tweets", query={"match_all": {}})
-# documents = resp["hits"]["hits"]
-# for document in documents:
+
+class TweetProvider:
+
+    def __init__(self):
+        self.es_client = Elasticsearch(
+            "http://45.13.59.173:9200", http_auth=("elastic", "sicheristsicher"))
+        self.index = "tweets"
+
+    def get_tweet_list(self, size=100):
+        """Returns a list of tweet objects of size size."""
+        tweets = list()
+        response = self.es_client.search(index=self.index, size=size, query={"match_all": {}})
+        for tweet in response["hits"]["hits"]:
+            tweets.append(twitter_tweet.Tweet(tweet, is_es_doc=True))
+        return tweets
+
+    def get_corpus(self, size=100):
+        """Returns a list of strings of size size."""
+        corpus = list()
+        for document in helpers.scan(self.es_client, index=self.index, _source=["text"]):
+            corpus.append(document["_source"]["text"])
+            if len(corpus) == size:
+                break
+        return corpus
+
+
+# Test
+provider = TweetProvider()
+tweets = provider.get_corpus(size=10)
+for tweet in tweets:
+    print(tweet)
