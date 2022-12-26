@@ -7,19 +7,13 @@ LABELS = {"a": "match announcement", "r": "result related",
           "c": "match commentary", "p": "political", "n": "news", "s": "spam", "o": "other"}
 df_class = pd.read_csv("./src/data/classification.csv")
 tweets = []
+classified = 0
 
 
 def load_more_tweets():
     global tweets
     num_classified = len(df_class["tweet_id"].tolist())
-    tweets += provider.get_tweet_list(size=4, sort={
-        "_script": {
-            "script": "Math.random() * 200000",
-            "type": "number",
-            "params": {},
-            "order": "asc"
-        }
-    }, body={"query": {"match_all": {}}, "from": num_classified})
+    tweets += provider.get_tweet_list(size=100, body={"from": num_classified, "query": {"match_all": {}}, "sort": {"author.username": "asc"}})
 
 
 load_more_tweets()
@@ -43,6 +37,8 @@ window.title("Tweet Classification")
 current_tweet_index = 0
 current_tweet = tweets[current_tweet_index]
 
+classified_label = tk.Label(master=window, text="Classified: 0")
+classified_label.pack()
 tweet_label = tk.Label(master=window, text="Tweet Text:")
 tweet_label.pack()
 tweet_text = tk.Label(master=window, text=current_tweet.get_text())
@@ -52,7 +48,10 @@ tweet_text.pack()
 def classify_tweet(label):
     global current_tweet_index
     global current_tweet
+    global classified_label
     global tweets
+    global classified
+    global window
 
     last_index = df_class.last_valid_index()
     if last_index is None:
@@ -70,6 +69,8 @@ def classify_tweet(label):
         load_more_tweets()
     current_tweet = tweets[current_tweet_index]
     tweet_text.config(text=current_tweet.get_text())
+    classified += 1
+    classified_label.config(text="Classified: " + str(classified))
 
 
 for label_id, label_text in LABELS.items():
