@@ -9,10 +9,10 @@ class TweetProvider:
             "http://45.13.59.173:9200", http_auth=("elastic", "sicheristsicher"))
         self.index = "tweets"
 
-    def get_tweet_list(self, size=100):
+    def get_tweet_list(self, size=100, sort={}, body={"match_all": {}}):
         """Returns a list of tweet objects of size size."""
         tweets = list()
-        response = self.es_client.search(index=self.index, size=size, query={"match_all": {}})
+        response = self.es_client.search(index=self.index, size=size, body=body, sort=sort)
         for tweet in response["hits"]["hits"]:
             tweets.append(twitter_tweet.Tweet(tweet, is_es_doc=True))
         return tweets
