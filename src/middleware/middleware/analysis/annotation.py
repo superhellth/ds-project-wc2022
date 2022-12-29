@@ -3,9 +3,10 @@ from middleware.analysis import tweet_provider
 import tkinter as tk
 
 provider = tweet_provider.TweetProvider()
-LABELS = {"m": "match specific", "w": "world cup specific", "f": "football related",
+LABELS = {"a": "positive", "z": "negative", "b": "neutral",
+          "m": "match specific", "w": "world cup specific", "f": "football related",
           "j": "joke/meme", "c": "personal comment", "p": "political comment",
-          "d": "prediction",
+          "d": "prediction", "n": "news", "g": "announcement",
           "s": "spam/scam",
           "u": "unrelated",
           "-": "unclassifiable"}
@@ -91,10 +92,19 @@ def classify_tweet(event):
         last_index = 0
     else:
         last_index = last_index + 1
+    
+    if "negative" in current_labels:
+        sentiment = "negative"
+    elif "positive" in current_labels:
+        sentiment = "positive"
+    else:
+        sentiment = "neutral"
+    if sentiment in current_labels:
+        current_labels.remove(sentiment)
     df_class.loc[last_index] = pd.Series(
-        {"tweet_id": current_tweet.get_id(), "labels": current_labels})
+        {"tweet_id": current_tweet.get_id(), "labels": current_labels, "sentiment": sentiment})
     df_class.to_csv("./src/data/classification.csv", sep=",",
-                    columns=["tweet_id", "labels"], index=False)
+                    columns=["tweet_id", "labels", "sentiment"], index=False)
 
     current_tweet_index += 1
     # load more tweets if necassary
@@ -117,23 +127,37 @@ for label_id, label_text in LABELS.items():
                        ": " + label_text, command=make_lambda(label_text))
     label_button_dict[label_text] = button
 
-label_button_dict["match specific"].grid(row=start_row + 4, column=center_column - 1)
-label_button_dict["world cup specific"].grid(row=start_row + 4, column=center_column)
-label_button_dict["football related"].grid(row=start_row + 4, column=center_column + 1)
-label_button_dict["personal comment"].grid(row=start_row + 5, column=center_column - 1)
-label_button_dict["joke/meme"].grid(row=start_row + 5, column=center_column)
-label_button_dict["political comment"].grid(row=start_row + 5, column=center_column + 1)
-label_button_dict["prediction"].grid(row=start_row + 6, column=center_column - 1)
-label_button_dict["spam/scam"].grid(row=start_row + 6, column=center_column)
-label_button_dict["unrelated"].grid(row=start_row + 6, column=center_column + 1)
-label_button_dict["unclassifiable"].grid(row=start_row + 7, column=center_column)
+label_button_dict["positive"].grid(row=start_row + 4, column=center_column - 1)
+label_button_dict["negative"].grid(row=start_row + 4, column=center_column + 1)
+label_button_dict["match specific"].grid(
+    row=start_row + 5, column=center_column - 1)
+label_button_dict["world cup specific"].grid(
+    row=start_row + 5, column=center_column)
+label_button_dict["football related"].grid(
+    row=start_row + 5, column=center_column + 1)
+label_button_dict["personal comment"].grid(
+    row=start_row + 6, column=center_column - 1)
+label_button_dict["joke/meme"].grid(row=start_row + 6, column=center_column)
+label_button_dict["political comment"].grid(
+    row=start_row + 6, column=center_column + 1)
+label_button_dict["prediction"].grid(
+    row=start_row + 7, column=center_column - 1)
+label_button_dict["announcement"].grid(row=start_row + 7, column=center_column)
+label_button_dict["news"].grid(row=start_row + 7, column=center_column + 1)
+label_button_dict["unrelated"].grid(
+    row=start_row + 8, column=center_column - 1)
+label_button_dict["spam/scam"].grid(row=start_row + 8, column=center_column)
+label_button_dict["unclassifiable"].grid(
+    row=start_row + 8, column=center_column + 1)
 next_button = tk.Button(
     master=window, text="Space/Enter: Next Tweet", command=classify_tweet)
-next_button.grid(row=start_row + 8, column=center_column)
+next_button.grid(row=start_row + 9, column=center_column)
 window.bind("<space>", classify_tweet)
 window.bind("<Return>", classify_tweet)
-clear_button = tk.Button(master=window, text="Backspace: Remove label", command=lambda event: toggle_label(current_labels[len(current_labels) - 1]))
-clear_button.grid(row=start_row + 9, column=center_column)
-window.bind("<BackSpace>", lambda event: toggle_label(current_labels[len(current_labels) - 1]))
+clear_button = tk.Button(master=window, text="Backspace: Remove label",
+                         command=lambda event: toggle_label(current_labels[len(current_labels) - 1]))
+clear_button.grid(row=start_row + 10, column=center_column)
+window.bind("<BackSpace>", lambda event: toggle_label(
+    current_labels[len(current_labels) - 1]))
 
 window.mainloop()
