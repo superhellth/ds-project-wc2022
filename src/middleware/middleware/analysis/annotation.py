@@ -18,7 +18,7 @@ classified = 0
 def load_more_tweets():
     global tweets
     num_classified = len(df_class["tweet_id"].tolist())
-    tweets += provider.get_tweet_list(size=100, body={"from": num_classified, "query": {
+    tweets += provider.get_tweet_list(size=300, body={"from": num_classified, "query": {
                                       "match_all": {}}, "sort": {"author.username": "asc"}})
 
 
