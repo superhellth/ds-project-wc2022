@@ -1,3 +1,5 @@
+"""Generates a dict of the tokens in all tweets and their counts. Does not keep cashtags."""
+
 from middleware.analysis import tweet_provider
 from elasticsearch.helpers import scan
 from collections import defaultdict
@@ -22,7 +24,8 @@ scroll_id = result["_scroll_id"]
 
 # spacy
 nlp = spacy.load("en_core_web_sm", disable=["ner", "tagger", "lemmatizer", "parser"])
-token_counts = defaultdict(int)
+token_counts = defaultdict(int)#
+placeholder_string = "dswcproject"
 
 # Multithreading
 num_threads = 3
@@ -30,10 +33,11 @@ num_threads = 3
 tweets_loaded = 0
 
 def process_tweet(tweet_text, word_counts):
+    tweet_text = tweet_text.replace("#", placeholder_string)
     doc = nlp(tweet_text)
     for token in doc:
         if not token.is_punct:
-            text = token.lower_.strip()
+            text = token.lower_.strip().replace(placeholder_string, "#")
             if "http" in token.lower_:
                text = "<link>"
             if text != '' and text is not None and text and len(text) != 0:
