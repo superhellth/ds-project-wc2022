@@ -25,3 +25,7 @@ class TweetProvider:
             if len(corpus) == size:
                 break
         return corpus
+
+    def get_client(self):
+        """Returns a connection to the elasticsearch server"""
+        return self.es_client
