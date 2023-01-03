@@ -36,6 +36,8 @@
   let typedRule: string = "";
 </script>
 
+<title>Settings - Stream</title>
+
 <div class="query-management">
   <div class="query-part" style="float: left;">
     <Textfield
@@ -57,7 +59,6 @@
     {/await}
   </div>
 
-  <title>Settings - Stream</title>
   <div class="query-part" style="float: right; margin-left: 5em;">
     {#await isRunningPromise}
       <p style="float: left;">Checking state...</p>
