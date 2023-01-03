@@ -62,18 +62,13 @@
 
                 <div class="sb-sidenav-menu-heading">Statistics</div>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Graph 1"
+                             text="Collected Data"
                              href="/statistics"
                              iconName="graph-up">
                 </SidebarItem>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Graph 2"
-                             href="/statistics"
-                             iconName="graph-up">
-                </SidebarItem>
-                <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Graph 3"
-                             href="/statistics"
+                             text="Hashtags and Mentions"
+                             href="/statistics/unigram-insights"
                              iconName="graph-up">
                 </SidebarItem>
                 <div class="sb-sidenav-menu-heading">Text Analytics</div>

@@ -31,7 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+### Providing data from ES ###
 @app.get("/query/")
 async def get_tweets_that(query: str):
     """Returns all tweets that match the criteria"""
@@ -69,3 +69,27 @@ async def validate_query(query: str = "false"):
     """Validates the given query"""
     resp = es_client.indices.validate_query(index=INDEX_NAME, body=query, explain=True)
     return resp
+
+
+### Providing data from local files ###
+unigrams_were_loaded = False
+sorted_unigrams = None
+
+def load_unigrams():
+    global unigrams_were_loaded
+    global sorted_unigrams
+    f = open("../../../data/unigrams.json", "r")
+    js = json.loads(f.read())
+    sorted_unigrams = sorted(js.items(), key=lambda x: x[1], reverse=True)
+    unigrams_were_loaded = True
+
+
+@app.get("/analysis/unigrams/top")
+async def get_unigrams(k="100"):
+    """Returns top k unigrams"""
+    global unigrams_were_loaded
+    global sorted_unigrams
+
+    k = int(k)
+    if not unigrams_were_loaded: load_unigrams()
+    return {entry[0]: entry[1] for entry in sorted_unigrams[:k]}

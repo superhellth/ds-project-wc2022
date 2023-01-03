@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Chart } from "chart.js/auto";
     import ChartCard from "src/svelte-components/ChartCard.svelte";
+    import Loading from "src/svelte-components/Loading.svelte";
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
     import { onMount } from "svelte";
     import { Col, Input, Row } from "sveltestrap";
@@ -56,10 +57,7 @@
 </script>
 
 {#await tweetsByDayPromise}
-    <div class="d-flex justify-content-center mt-4">
-        <strong class="text-twitter-color">Loading Graph...</strong>
-        <div class="spinner-border ml-4 text-twitter-color" />
-    </div>
+    <Loading displayString="Graph"/>
 {:then ignored}
     <ChartCard {header} {footer} {chart_id}>
         <div slot="card-header-controls">

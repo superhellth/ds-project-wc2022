@@ -1,5 +1,4 @@
 """Generates a dict of the tokens in all tweets and their counts. Does not keep cashtags."""
-
 from middleware.analysis import tweet_provider
 from elasticsearch.helpers import scan
 from collections import defaultdict

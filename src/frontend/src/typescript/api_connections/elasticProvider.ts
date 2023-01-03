@@ -58,6 +58,11 @@ class ElasticProvider extends Connection {
         const data = await fetch(this.URL + "/validate?query=" + query).then((response) => response.json());
         return data.valid;
     }
+
+    public async getTopKUnigrams(k: number): Promise<JSON> {
+        const data = await fetch(this.URL + "/analysis/unigrams/top?k=" + k).then((response) => response.json())
+        return data;
+    }
 }
 
 export default ElasticProvider;
