@@ -3,7 +3,6 @@ from middleware.analysis import tweet_provider
 from elasticsearch.helpers import scan
 from collections import defaultdict
 import json
-import re
 import queue
 import threading
 import spacy
@@ -90,9 +89,3 @@ json_str = json.dumps(token_counts)
 
 with open("./src/data/unigrams.json", "w") as file:
     file.write(json_str)
-
-# display top 20 words
-# sorted_counts = sorted(token_counts.items(), key=lambda x: x[1], reverse=True)
-
-# for i in range(20):
-#     print(sorted_counts[i])
