@@ -1,29 +1,16 @@
 <script lang="ts">
-    // Import Svelte components from the sveltestrap library
-    import {Card, CardBody, CardFooter, CardHeader, Icon} from "sveltestrap";
+    import BasicCard from "./BasicCard.svelte";
 
     // Add header, footer text and chart_id as variables that can be passed to the component
-    export let header, footer, chart_id = "";
+    export let header: string;
+    export let footer: string;
+    export let chart_id: any = "";
 </script>
 
-<!-- Create a Card using the sveltestrap library -->
-<Card>
-    <!-- The Card has a header, which displays the text passed to the "header" variable and a Twitter icon -->
-    <CardHeader>
-        <div>{header} <Icon name="twitter"/></div>
-    </CardHeader>
-    <!-- The "card-header-controls" slot allows additional content to be added to the header of the Card -->
-    <CardHeader>
-        <slot name="card-header-controls"/>
-    </CardHeader>
-    <!-- The Card body contains a canvas element with the specified "chart_id" -->
-    <CardBody>
-        <div>
-            <canvas id={chart_id}></canvas>
-        </div>
-    </CardBody>
-    <!-- The Card footer displays the text passed to the "footer" variable -->
-    <CardFooter>
-        {footer}
-    </CardFooter>
-</Card>
+<BasicCard {header} {footer}>
+    <div slot="card-header-controls"><slot name="card-header-controls" /></div>
+
+    <div slot="body">
+        <canvas id={chart_id} />
+    </div>
+</BasicCard>
