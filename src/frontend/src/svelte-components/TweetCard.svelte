@@ -1,6 +1,7 @@
 <script lang="ts">
+    import type Tweet from "src/typescript/tweet_management/tweet";
+
     // Import the Tweet type and the Card component from the sveltestrap library
-    import Tweet from "../typescript/tweet_management/tweet";
     import {Card, CardBody, CardFooter, CardHeader, CardImg, Col, Icon, Row} from "sveltestrap";
 
     // Define a variable for storing the tweet data

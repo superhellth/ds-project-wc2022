@@ -1,6 +1,9 @@
 import Tweet from "../tweet_management/tweet";
 import Connection from "./connection";
 
+/**
+ * This singeleton class manages all data retrieval tasks related to the middleware.
+ */
 class ElasticProvider extends Connection {
     private static instance: ElasticProvider;
 
@@ -59,6 +62,14 @@ class ElasticProvider extends Connection {
         return data.valid;
     }
 
+    /**
+     * Retrieve filtered tokens from the unigrams.json file.
+     * @param k Number of top unigrams to return.
+     * @param includeStopWords Include or filter out stop words.
+     * @param onlyMentions Return only tokens that are mentions(start with '@')
+     * @param onlyHashtags Return only tokens that are hashtags(start with '#)
+     * @returns The k most common tokens that match the requirements.
+     */
     public async getTopKUnigrams(k: number, includeStopWords: boolean, onlyMentions: boolean, onlyHashtags: boolean): Promise<JSON> {
         let includeStopWordsString: string = includeStopWords ? "True" : "False";
         let onlyMentionsString: string = onlyMentions ? "True" : "False";

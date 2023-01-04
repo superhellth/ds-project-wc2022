@@ -1,6 +1,5 @@
 <script lang="ts">
     // Import Svelte components used in this script
-    import Layout from "../../svelte-components/Layout.svelte";
     import { Button, Form, FormGroup, Input, Row } from "sveltestrap";
     import TweetCard from "../../svelte-components/TweetCard.svelte";
     import type Tweet from "../../typescript/tweet_management/tweet";

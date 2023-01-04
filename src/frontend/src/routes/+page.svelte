@@ -3,7 +3,6 @@
   import IconButton from "@smui/icon-button";
   import Switch from "@smui/switch";
   import Textfield from "@smui/textfield";
-  import Layout from "../svelte-components/Layout.svelte";
   import StreamControl from "../typescript/api_connections/streamControl";
 
   // This gets called whenever the user clicks the image button next to the text field
