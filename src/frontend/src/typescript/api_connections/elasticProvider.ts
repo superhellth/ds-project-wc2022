@@ -59,8 +59,11 @@ class ElasticProvider extends Connection {
         return data.valid;
     }
 
-    public async getTopKUnigrams(k: number): Promise<JSON> {
-        const data = await fetch(this.URL + "/analysis/unigrams/top?k=" + k).then((response) => response.json())
+    public async getTopKUnigrams(k: number, includeStopWords: boolean, onlyMentions: boolean, onlyHashtags: boolean): Promise<JSON> {
+        let includeStopWordsString: string = includeStopWords ? "True" : "False";
+        let onlyMentionsString: string = onlyMentions ? "True" : "False";
+        let onlyHashtagsString: string = onlyHashtags ? "True" : "False";
+        const data = await fetch(this.URL + "/analysis/unigrams/top?k=" + k + "&include_stop_words=" + includeStopWordsString + "&only_mentions=" + onlyMentionsString + "&only_hashtags=" + onlyHashtagsString).then((response) => response.json());
         return data;
     }
 }

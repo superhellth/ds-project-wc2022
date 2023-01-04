@@ -6,22 +6,33 @@
 
     let provider: ElasticProvider = ElasticProvider.getInstance();
 
-    let dataPromise: any = provider.getTopKUnigrams(10);
+    let tokenPromise: any = provider.getTopKUnigrams(10, false, false, false);
+    let mentionPromise: any = provider.getTopKUnigrams(10, false, true, false)
+    let hashtagPromise: any = provider.getTopKUnigrams(10, false, false, true)
 
-    let unigrams: Map<string, number> = new Map<string, number>;
+    let tokenMap: Map<string, number> = new Map<string, number>;
+    let mentionMap: Map<string, number> = new Map<string, number>;
+    let hashtagMap: Map<string, number> = new Map<string, number>;
 
-    async function buildMap(): Promise<any> {
-        let data = await dataPromise;
-        console.log(data)
-        for (const token in data) {
-            unigrams.set(token, data[token])
+    async function buildMaps(): Promise<any> {
+        let tokens = await tokenPromise;
+        let mentions = await mentionPromise;
+        let hashtags = await hashtagPromise;
+        for (const token in tokens) {
+            tokenMap.set(token, tokens[token])
+        }
+        for (const token in mentions) {
+            mentionMap.set(token, mentions[token])
+        }
+        console.log(mentions)
+        for (const token in hashtags) {
+            hashtagMap.set(token, hashtags[token])
         }
 
-        console.log(unigrams)
         return true;
     }
 
-    let readyPromise = buildMap();
+    let readyPromise = buildMaps();
 </script>
 
 <title>Statistics - Hashtags and Mentions</title>
@@ -38,11 +49,47 @@
             </tr>
         </thead>
         <tbody>
-            {#each Array.from(unigrams.keys()) as token, i}
+            {#each Array.from(tokenMap.keys()) as token, i}
                 <tr>
                     <th scope="row">{i + 1}</th>
                     <td>{token}</td>
-                    <td>{unigrams.get(token)}</td>
+                    <td>{tokenMap.get(token)}</td>
+                </tr>
+            {/each}
+        </tbody>
+    </Table>
+    <Table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Mention</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {#each Array.from(mentionMap.keys()) as token, i}
+                <tr>
+                    <th scope="row">{i + 1}</th>
+                    <td>{token}</td>
+                    <td>{mentionMap.get(token)}</td>
+                </tr>
+            {/each}
+        </tbody>
+    </Table>
+    <Table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Hashtag</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {#each Array.from(hashtagMap.keys()) as token, i}
+                <tr>
+                    <th scope="row">{i + 1}</th>
+                    <td>{token}</td>
+                    <td>{hashtagMap.get(token)}</td>
                 </tr>
             {/each}
         </tbody>
