@@ -1,9 +1,8 @@
 import json
-import urllib.parse
 import elasticsearch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from file_management import name_is_not_taken
+import spacy
 
 INDEX_NAME = "tweets"
 
@@ -30,6 +29,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# spacy
+nlp = spacy.load("en_core_web_sm")
 
 ### Providing data from ES ###
 @app.get("/query/")
@@ -76,6 +78,7 @@ unigrams_were_loaded = False
 sorted_unigrams = None
 
 def load_unigrams():
+    """Loads unigrams.json into sorted list of tuples"""
     global unigrams_were_loaded
     global sorted_unigrams
     f = open("../../../data/unigrams.json", "r")
@@ -84,12 +87,34 @@ def load_unigrams():
     unigrams_were_loaded = True
 
 
-@app.get("/analysis/unigrams/top")
-async def get_unigrams(k="100"):
-    """Returns top k unigrams"""
+def get_tokens(k=10, include_stop_words=False, only_hashtags=False, only_mentions=False):
+    """Filter unigrams"""
     global unigrams_were_loaded
     global sorted_unigrams
+    if not unigrams_were_loaded: load_unigrams()
+
+    result = []
+    i = 0
+    j = 0
+    while i < k:
+        token = sorted_unigrams[j][0]
+        if include_stop_words or token not in nlp.Defaults.stop_words:
+            if not only_hashtags or (only_hashtags and token[0] == "#"):
+                if not only_mentions or (only_mentions and token[0] == "@"):
+                    result.append(sorted_unigrams[j])
+                    i += 1
+        j += 1
+    
+    return {entry[0]: entry[1] for entry in result}
+
+
+@app.get("/analysis/unigrams/top")
+async def get_unigrams(k="10", include_stop_words="False", only_mentions="False", only_hashtags="False"):
+    """Returns top k unigrams"""
 
     k = int(k)
-    if not unigrams_were_loaded: load_unigrams()
-    return {entry[0]: entry[1] for entry in sorted_unigrams[:k]}
+    include_stop_words = include_stop_words == "True"
+    only_mentions = only_mentions == "True"
+    only_hashtags = only_hashtags == "True"
+
+    return get_tokens(k=k, include_stop_words=include_stop_words, only_mentions=only_mentions, only_hashtags=only_hashtags)
