@@ -608,3 +608,129 @@ tweet_id,labels,sentiment
 1594391458479341568,"['world cup specific', 'political comment']",neutral
 1590810940714647553,"['world cup specific', 'news']",neutral
 1600956373780819968,"['football related', 'news']",neutral
+1600956373780819968,"['football related', 'personal comment']",neutral
+1596214565708365824,"['match specific', 'joke/meme']",neutral
+1596214751809638403,"['match specific', 'personal comment']",negative
+1596218505971515392,"['match specific', 'personal comment']",negative
+1595009962631118849,"['world cup specific', 'personal comment']",positive
+1594457106756812801,"['world cup specific', 'personal comment']",neutral
+1596112239777517569,"['world cup specific', 'personal comment']",positive
+1595009441971466242,"['world cup specific', 'personal comment']",positive
+1594960042784325632,"['world cup specific', 'political comment']",negative
+1594251362313072640,"['world cup specific', 'political comment']",negative
+1593558134081015808,"['world cup specific', 'political comment']",negative
+1594640699139530755,"['world cup specific', 'political comment']",negative
+1594037944028995585,"['world cup specific', 'announcement']",positive
+1594318632250646531,['spam/scam'],neutral
+1600221861542916096,"['match specific', 'personal comment']",neutral
+1600226463873003521,"['match specific', 'personal comment']",neutral
+1600227041864863745,"['match specific', 'personal comment']",neutral
+1601297079552598016,"['match specific', 'personal comment']",positive
+1599843136506691584,"['football related', 'personal comment']",positive
+1596249034905513984,"['world cup specific', 'personal comment']",neutral
+1595989193527730176,['spam/scam'],neutral
+1594755108935700480,"['world cup specific', 'personal comment']",positive
+1596519499838414851,"['match specific', 'personal comment']",negative
+1590444585066852352,"['football related', 'personal comment']",neutral
+1597389012679143424,"['world cup specific', 'political comment']",negative
+1601280586408419328,"['world cup specific', 'personal comment']",neutral
+1596906072488349696,"['match specific', 'personal comment']",negative
+1606082482008256514,"['match specific', 'personal comment']",neutral
+1594663471546716161,"['unrelated', 'news']",neutral
+1599792349290278913,"['match specific', 'joke/meme']",neutral
+1596562113757003776,['spam/scam'],neutral
+1599779834024300545,['unclassifiable'],neutral
+1593425883238236160,"['world cup specific', 'announcement']",neutral
+1605591513861304320,"['football related', 'personal comment']",negative
+1594777893606858753,"['match specific', 'personal comment']",negative
+1594426849631031296,"['football related', 'personal comment']",positive
+1606193455494877184,"['world cup specific', 'political comment']",positive
+1601023680028344320,['unrelated'],neutral
+1594701111209910273,"['match specific', 'personal comment']",neutral
+1596585187143741440,"['match specific', 'personal comment']",neutral
+1597315371937079297,"['match specific', 'personal comment']",neutral
+1600206076464414720,"['match specific', 'personal comment']",negative
+1600223232514064384,"['match specific', 'personal comment']",neutral
+1600217959191887873,"['match specific', 'personal comment']",neutral
+1601597608073433088,"['match specific', 'personal comment']",neutral
+1601278851874574337,"['match specific', 'personal comment']",positive
+1601348710801510401,"['match specific', 'personal comment']",neutral
+1601251970840334337,"['world cup specific', 'joke/meme']",neutral
+1601231592915349506,"['match specific', 'personal comment']",positive
+1599866830021332992,"['match specific', 'personal comment']",positive
+1597247738030092288,['unclassifiable'],neutral
+1597247992448569344,['unclassifiable'],neutral
+1607371402470133761,"['football related', 'personal comment']",negative
+1596206375012794368,"['football related', 'personal comment']",neutral
+1597636893726101506,"['world cup specific', 'personal comment']",positive
+1601609476741947392,"['match specific', 'joke/meme']",neutral
+1601328007125544961,"['match specific', 'personal comment']",neutral
+1600220979338174464,"['world cup specific', 'personal comment']",neutral
+1600221363679432704,"['match specific', 'personal comment']",positive
+1600222729482838017,['unclassifiable'],neutral
+1596535588332740616,"['world cup specific', 'news']",neutral
+1596541314325266432,"['match specific', 'personal comment']",neutral
+1596954871642849280,"['match specific', 'personal comment']",neutral
+1600190270942822401,['unclassifiable'],neutral
+1601606758136356864,['unclassifiable'],neutral
+1597280581506588673,"['match specific', 'prediction']",neutral
+1594351044451917825,"['world cup specific', 'prediction']",neutral
+1596601294856208384,"['match specific', 'personal comment']",positive
+1600196028942020608,"['match specific', 'personal comment']",negative
+1596611521840300046,"['match specific', 'joke/meme']",neutral
+1596858959629291520,"['match specific', 'joke/meme']",neutral
+1591314174977929218,"['world cup specific', 'personal comment']",neutral
+1601068729655521282,"['match specific', 'personal comment']",neutral
+1600249017782349824,"['match specific', 'personal comment']",positive
+1596184799865094145,['unclassifiable'],neutral
+1601218834492690432,['unclassifiable'],neutral
+1594666218052624385,"['world cup specific', 'personal comment']",negative
+1596478596230840320,"['world cup specific', 'personal comment']",negative
+1596279164080095232,"['world cup specific', 'prediction']",neutral
+1596164961075884032,"['world cup specific', 'political comment']",negative
+1589566992108769280,"['world cup specific', 'personal comment']",neutral
+1599898769163964416,"['world cup specific', 'personal comment']",negative
+1596898480055885824,"['football related', 'personal comment']",positive
+1600221065170497536,"['football related', 'personal comment']",positive
+1599853107504041984,"['match specific', 'personal comment']",positive
+1596898053885419527,['unclassifiable'],neutral
+1597232364563808256,"['world cup specific', 'personal comment']",neutral
+1596939177106427904,"['match specific', 'announcement']",neutral
+1597206916463493122,"['match specific', 'announcement']",neutral
+1596970910568763392,"['match specific', 'personal comment']",positive
+1593969756079431680,"['world cup specific', 'announcement']",neutral
+1596170601705504768,"['world cup specific', 'announcement']",neutral
+1601236672502722561,"['match specific', 'personal comment']",positive
+1599841829427347456,"['match specific', 'personal comment']",positive
+1601609140321005570,"['match specific', 'announcement']",neutral
+1597246980480454658,"['match specific', 'personal comment']",positive
+1597252289265565697,"['world cup specific', 'political comment']",negative
+1599879687110823937,"['match specific', 'personal comment']",positive
+1599947194316263425,"['world cup specific', 'personal comment']",neutral
+1594349564395368448,"['world cup specific', 'personal comment']",positive
+1594380662399795200,"['world cup specific', 'political comment']",negative
+1601608718655057922,['unrelated'],neutral
+1600025001511768065,"['world cup specific', 'personal comment']",positive
+1606876485264056320,"['world cup specific', 'personal comment']",negative
+1594320276397121541,"['world cup specific', 'announcement']",neutral
+1594712068665610240,"['world cup specific', 'personal comment']",neutral
+1594869809455534080,"['match specific', 'personal comment']",neutral
+1596223104388419586,"['match specific', 'announcement']",neutral
+1594377192494235648,"['match specific', 'personal comment']",neutral
+1594504359949180930,"['match specific', 'personal comment']",positive
+1593668416962977796,"['world cup specific', 'political comment']",negative
+1601327784978444288,"['match specific', 'personal comment']",neutral
+1604895929198587905,"['football related', 'personal comment']",neutral
+1605048643509227520,"['world cup specific', 'personal comment']",negative
+1597636762767044608,['unrelated'],neutral
+1597637355552112640,['unrelated'],neutral
+1597639905093423104,['unrelated'],neutral
+1591439814083383298,"['world cup specific', 'political comment']",neutral
+1596615955152457728,"['world cup specific', 'personal comment']",neutral
+1596537934320394240,"['football related', 'personal comment']",neutral
+1596539268025192448,"['match specific', 'personal comment']",positive
+1594190756469694465,"['world cup specific', 'personal comment']",positive
+1593681691121537025,"['world cup specific', 'political comment']",negative
+1594329615434387457,"['world cup specific', 'personal comment']",neutral
+1601153757437317120,"['football related', 'personal comment']",neutral
+1596569960087957504,"['match specific', 'announcement']",positive
