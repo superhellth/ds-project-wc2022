@@ -1,6 +1,9 @@
+"""Tool to annotate tweets. Always try to use one from match specific/word cup specific/football related one from "joke/meme"/personal comment/political comment.
+Those 2 categories go well together. spam/scam, unrelated and unclassifiable can be used alone. The neutral sentiment is selected if neither positive nor negative is selected."""
+
+import tkinter as tk
 import pandas as pd
 from middleware.analysis import tweet_provider
-import tkinter as tk
 
 provider = tweet_provider.TweetProvider()
 LABELS = {"a": "positive", "z": "negative", "b": "neutral",
@@ -16,6 +19,7 @@ classified = 0
 
 
 def load_more_tweets():
+    """Load tweets from ES"""
     global tweets
     num_classified = len(df_class["tweet_id"].tolist())
     tweets += provider.get_tweet_list(size=300, body={"from": num_classified, "query": {
@@ -33,40 +37,41 @@ screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
 
 # Calculate the position of the window
-window_width = 1920
-window_height = 1080
-x_offset = (screen_width - window_width) // 2
-y_offset = (screen_height - window_height) // 2
+WINDOW_WIDTH = 1920
+WINDOW_HEIGHT = 1080
+x_offset = (screen_width - WINDOW_WIDTH) // 2
+y_offset = (screen_height - WINDOW_HEIGHT) // 2
 
 # Set the window size and position
-window.geometry(f"{window_width}x{window_height}+{x_offset}+{y_offset}")
+window.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}+{x_offset}+{y_offset}")
 window.title("Tweet Classification")
 
 current_tweet_index = 0
 current_tweet = tweets[current_tweet_index]
 
-center_column = 2
-start_row = 0
+CENTER_COLUMN = 2
+START_ROW = 0
 
-placeholder_text = "\t\t\t\t\t\t\t\t\t\t\t"
-bottom_left = tk.Label(master=window, text=placeholder_text)
-bottom_right = tk.Label(master=window, text=placeholder_text)
+PLACEHOLDER_TEXT = "\t\t\t\t\t\t\t\t\t\t\t"
+bottom_left = tk.Label(master=window, text=PLACEHOLDER_TEXT)
+bottom_right = tk.Label(master=window, text=PLACEHOLDER_TEXT)
 bottom_left.grid(row=0, column=0)
 bottom_right.grid(row=0, column=4)
 
 classified_label = tk.Label(master=window, text="Classified: 0")
-classified_label.grid(row=15, column=center_column)
+classified_label.grid(row=15, column=CENTER_COLUMN)
 tweet_label = tk.Label(master=window, text="Tweet Text:")
-tweet_label.grid(row=start_row, column=center_column)
+tweet_label.grid(row=START_ROW, column=CENTER_COLUMN)
 tweet_text = tk.Label(master=window, text=current_tweet.get_text())
-tweet_text.grid(row=start_row + 2, column=0, columnspan=5)
+tweet_text.grid(row=START_ROW + 2, column=0, columnspan=5)
 label_label = tk.Label(master=window, text="\nCurrent Labels: ")
-label_label.grid(row=start_row + 3, column=0, columnspan=5)
+label_label.grid(row=START_ROW + 3, column=0, columnspan=5)
 
 current_labels = []
 
 
 def toggle_label(label):
+    """Toggle label for this tweet."""
     global current_labels
     if label in current_labels:
         current_labels.remove(label)
@@ -92,7 +97,6 @@ def classify_tweet(event):
         last_index = 0
     else:
         last_index = last_index + 1
-    
     if "negative" in current_labels:
         sentiment = "negative"
     elif "positive" in current_labels:
@@ -127,36 +131,36 @@ for label_id, label_text in LABELS.items():
                        ": " + label_text, command=make_lambda(label_text))
     label_button_dict[label_text] = button
 
-label_button_dict["positive"].grid(row=start_row + 4, column=center_column - 1)
-label_button_dict["negative"].grid(row=start_row + 4, column=center_column + 1)
+label_button_dict["positive"].grid(row=START_ROW + 4, column=CENTER_COLUMN - 1)
+label_button_dict["negative"].grid(row=START_ROW + 4, column=CENTER_COLUMN + 1)
 label_button_dict["match specific"].grid(
-    row=start_row + 5, column=center_column - 1)
+    row=START_ROW + 5, column=CENTER_COLUMN - 1)
 label_button_dict["world cup specific"].grid(
-    row=start_row + 5, column=center_column)
+    row=START_ROW + 5, column=CENTER_COLUMN)
 label_button_dict["football related"].grid(
-    row=start_row + 5, column=center_column + 1)
+    row=START_ROW + 5, column=CENTER_COLUMN + 1)
 label_button_dict["personal comment"].grid(
-    row=start_row + 6, column=center_column - 1)
-label_button_dict["joke/meme"].grid(row=start_row + 6, column=center_column)
+    row=START_ROW + 6, column=CENTER_COLUMN - 1)
+label_button_dict["joke/meme"].grid(row=START_ROW + 6, column=CENTER_COLUMN)
 label_button_dict["political comment"].grid(
-    row=start_row + 6, column=center_column + 1)
+    row=START_ROW + 6, column=CENTER_COLUMN + 1)
 label_button_dict["prediction"].grid(
-    row=start_row + 7, column=center_column - 1)
-label_button_dict["announcement"].grid(row=start_row + 7, column=center_column)
-label_button_dict["news"].grid(row=start_row + 7, column=center_column + 1)
+    row=START_ROW + 7, column=CENTER_COLUMN - 1)
+label_button_dict["announcement"].grid(row=START_ROW + 7, column=CENTER_COLUMN)
+label_button_dict["news"].grid(row=START_ROW + 7, column=CENTER_COLUMN + 1)
 label_button_dict["unrelated"].grid(
-    row=start_row + 8, column=center_column - 1)
-label_button_dict["spam/scam"].grid(row=start_row + 8, column=center_column)
+    row=START_ROW + 8, column=CENTER_COLUMN - 1)
+label_button_dict["spam/scam"].grid(row=START_ROW + 8, column=CENTER_COLUMN)
 label_button_dict["unclassifiable"].grid(
-    row=start_row + 8, column=center_column + 1)
+    row=START_ROW + 8, column=CENTER_COLUMN + 1)
 next_button = tk.Button(
     master=window, text="Space/Enter: Next Tweet", command=classify_tweet)
-next_button.grid(row=start_row + 9, column=center_column)
+next_button.grid(row=START_ROW + 9, column=CENTER_COLUMN)
 window.bind("<space>", classify_tweet)
 window.bind("<Return>", classify_tweet)
 clear_button = tk.Button(master=window, text="Backspace: Remove label",
                          command=lambda event: toggle_label(current_labels[len(current_labels) - 1]))
-clear_button.grid(row=start_row + 10, column=center_column)
+clear_button.grid(row=START_ROW + 10, column=CENTER_COLUMN)
 window.bind("<BackSpace>", lambda event: toggle_label(
     current_labels[len(current_labels) - 1]))
 
