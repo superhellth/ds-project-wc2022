@@ -1,3 +1,6 @@
+# big data files
+collocations*.json
+
 # IDEs
 .idea
 .vscode
