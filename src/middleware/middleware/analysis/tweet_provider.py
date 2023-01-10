@@ -31,7 +31,8 @@ class TweetProvider:
         return corpus
 
     def get_queue(self):
-        """Return queue object"""
+        """Return queue object and reset queue."""
+        self.queue = queue.Queue()
         return self.queue
 
     def start_queue(self, batch_size=1000, max_tweets=-1):
@@ -63,10 +64,13 @@ class TweetProvider:
 
             tweets_loaded += batch_size
             print(f"Tweets loaded: {tweets_loaded}")
+        print("Finished loading all Tweets!")
 
     def join_queue(self):
         """Joins queue."""
+        print("Waiting for queue items to be processed...")
         self.queue.join()
+        print("Done")
 
     def get_client(self):
         """Returns a connection to the elasticsearch server"""
