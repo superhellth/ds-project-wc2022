@@ -1,19 +1,5 @@
-import spacy
-import re
+from middleware.analysis import nlp_support
 
-# Load the language model
-nlp = spacy.load("en_core_web_sm")
+n_gram_generator = nlp_support.Tokenizer()
 
-text = "This is a #darts tweet"
-placeholder = "thisisauniqueandhopefullyunusedplaceholderstring"
-
-text = re.sub(r'#', placeholder, text)
-
-# Tokenize a string
-doc = nlp(text)
-
-tokens = [re.sub(placeholder, "#", token.text) for token in doc]
-
-# Print the tokens
-for token in tokens:
-    print(token)
+n_gram_generator.generate_n_grams(2, "")

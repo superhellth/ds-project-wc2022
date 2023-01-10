@@ -11,7 +11,7 @@ nlp = spacy.load("en_core_web_sm", disable=["ner", "tagger", "lemmatizer", "pars
 PLACEHOLDER_STRING = "dswcproject"
 NUM_THREADS = 10
 collocations = defaultdict(int)
-WINDOW_SIZE = 3
+WINDOW_SIZE = 3 # change file at the bottom if you change this number, otherwise the old file will be overwritten
 
 def process_tweet(tweet_text, collocations, window_size=2):
     tweet_text = tweet_text.replace("#", PLACEHOLDER_STRING)
