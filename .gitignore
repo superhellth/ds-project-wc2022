@@ -1,5 +1,6 @@
 # big data files
 collocations*.json
+*grams.json
 
 # IDEs
 .idea
