@@ -1,8 +1,7 @@
-import json
 import elasticsearch
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import spacy
+from middleware.analysis import stat_provider
 
 INDEX_NAME = "tweets"
 
@@ -25,8 +24,8 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-# spacy
-nlp = spacy.load("en_core_web_sm")
+# fetch local data
+stat_provider = stat_provider.StatProvider(path_to_data_files="../../../data/")
 
 ### Providing data from ES ###
 @app.get("/query/")
@@ -69,40 +68,6 @@ async def validate_query(query: str = "false"):
 
 
 ### Providing data from local files ###
-unigrams_were_loaded = False
-sorted_unigrams = None
-
-def load_unigrams():
-    """Loads unigrams.json into sorted list of tuples"""
-    global unigrams_were_loaded
-    global sorted_unigrams
-    f = open("../../../data/unigrams.json", "r")
-    js = json.loads(f.read())
-    sorted_unigrams = sorted(js.items(), key=lambda x: x[1], reverse=True)
-    unigrams_were_loaded = True
-
-
-def get_tokens(k=10, include_stop_words=False, only_hashtags=False, only_mentions=False):
-    """Filter unigrams"""
-    global unigrams_were_loaded
-    global sorted_unigrams
-    if not unigrams_were_loaded: load_unigrams()
-
-    result = []
-    i = 0
-    j = 0
-    while i < k:
-        token = sorted_unigrams[j][0]
-        if include_stop_words or token not in nlp.Defaults.stop_words:
-            if not only_hashtags or (only_hashtags and token[0] == "#"):
-                if not only_mentions or (only_mentions and token[0] == "@"):
-                    result.append(sorted_unigrams[j])
-                    i += 1
-        j += 1
-    
-    return {entry[0]: entry[1] for entry in result}
-
-
 @app.get("/analysis/unigrams/top")
 async def get_unigrams(k="10", include_stop_words="False", only_mentions="False", only_hashtags="False"):
     """Returns top k unigrams"""
@@ -112,4 +77,4 @@ async def get_unigrams(k="10", include_stop_words="False", only_mentions="False"
     only_mentions = only_mentions == "True"
     only_hashtags = only_hashtags == "True"
 
-    return get_tokens(k=k, include_stop_words=include_stop_words, only_mentions=only_mentions, only_hashtags=only_hashtags)
+    return stat_provider.get_top_unigrams(k=k, include_stop_words=include_stop_words, only_mentions=only_mentions, only_hashtags=only_hashtags)
