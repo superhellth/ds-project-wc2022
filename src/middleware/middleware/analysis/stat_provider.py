@@ -33,8 +33,8 @@ class StatProvider:
     def get_n_gram_that(self, n, starts_with, not_in=[]):
         """Return n-gram string that starts with given string."""
         sorted_n_gram_list = self.get_n_grams_as_list(n)
-        for i in range(len(sorted_n_gram_list)):
-            n_gram = sorted_n_gram_list[i][0]
+        for i, entry in enumerate(sorted_n_gram_list):
+            n_gram = entry[0]
             if n > 1:
                 n_gram = " ".join(ast.literal_eval(n_gram))
             if n_gram.startswith(starts_with):
@@ -46,7 +46,7 @@ class StatProvider:
         return ()
 
     def get_top_unigrams(self, k=10, include_stop_words=False, only_hashtags=False, only_mentions=False):
-        """Return top k unigrams"""
+        """Return top k unigrams."""
         sorted_unigrams = self.get_n_grams_as_list(1)
 
         result = []
@@ -62,3 +62,7 @@ class StatProvider:
             j += 1
 
         return {entry[0]: entry[1] for entry in result}
+
+    def get_top_n_grams(self, n, k=10):
+        """Return top k n-grams."""
+        return {entry[0]: entry[1] for entry in self.get_n_grams_as_list(n)[:k]}

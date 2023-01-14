@@ -8,7 +8,7 @@
 </script>
 
 <!-- Create a Card using the sveltestrap library -->
-<Card body color="dark" inverse>
+<Card body color="dark" inverse style="margin: 2px">
     <!-- The Card has a header, which displays the text passed to the "header" variable and a Twitter icon -->
     <CardHeader>
         <div>{header} <Icon name="twitter"/></div>

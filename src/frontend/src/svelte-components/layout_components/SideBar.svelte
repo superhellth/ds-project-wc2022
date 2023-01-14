@@ -67,7 +67,7 @@
                              iconName="graph-up">
                 </SidebarItem>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Hashtags and Mentions"
+                             text="N-Grams insights"
                              href="/statistics/unigram-insights"
                              iconName="graph-up">
                 </SidebarItem>
