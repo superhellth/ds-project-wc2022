@@ -59,13 +59,11 @@ class StreamControl extends Connection {
     public async toggleStream(): Promise<boolean> {
         let result: Promise<boolean>;
         const isRunning = await this.isStreamRunning();
-        console.log("in toggle before: " + isRunning);
         if (isRunning) {
             result = this.stopStream();
         } else {
             result = this.startStream();
         }
-        console.log("in toggle after: " + isRunning);
 
         return result;
     }
@@ -75,8 +73,12 @@ class StreamControl extends Connection {
      * @returns the current rule of the stream.
      */
     public async getRule(): Promise<string> {
-        const data = await fetch(this.URL + "/stream/status").then((response) => response.json());
-        return data.rule;
+        try {
+            const data = await fetch(this.URL + "/stream/status").then((response) => response.json());
+            return data.rule;
+        } catch (error) {
+            return "Not Found. The data collection middleware component is probably not running"
+        }
     }
 
     /**
@@ -84,8 +86,12 @@ class StreamControl extends Connection {
      * @returns the current running state of the stream
      */
     public async isStreamRunning(): Promise<boolean> {
-        const data = await fetch(this.URL + "/stream/status").then((response) => response.json());
-        return data.running;
+        try {
+            const data = await fetch(this.URL + "/stream/status").then((response) => response.json());
+            return data.running;
+        } catch (error) {
+            return false
+        }
     }
 }
 

@@ -1,6 +1,6 @@
 from middleware.analysis import stat_provider
 
-N = 3
+N = 2
 stat_provider = stat_provider.StatProvider("./src/data/")
 used_n_grams = []
 

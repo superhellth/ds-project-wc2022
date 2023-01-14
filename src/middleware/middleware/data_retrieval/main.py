@@ -70,7 +70,7 @@ async def validate_query(query: str = "false"):
 ### Providing data from local files ###
 @app.get("/analysis/unigrams/top")
 async def get_unigrams(k="10", include_stop_words="False", only_mentions="False", only_hashtags="False"):
-    """Returns top k unigrams"""
+    """Returns top k unigrams."""
 
     k = int(k)
     include_stop_words = include_stop_words == "True"
@@ -78,3 +78,12 @@ async def get_unigrams(k="10", include_stop_words="False", only_mentions="False"
     only_hashtags = only_hashtags == "True"
 
     return stat_provider.get_top_unigrams(k=k, include_stop_words=include_stop_words, only_mentions=only_mentions, only_hashtags=only_hashtags)
+
+@app.get("/analysis/ngrams/top")
+async def get_n_grams(n, k="10"):
+    """Returns top k n-grams."""
+    
+    n = int(n)
+    k = int(k)
+
+    return stat_provider.get_top_n_grams(n, k)

@@ -70,11 +70,22 @@ class ElasticProvider extends Connection {
      * @param onlyHashtags Return only tokens that are hashtags(start with '#)
      * @returns The k most common tokens that match the requirements.
      */
-    public async getTopKUnigrams(k: number, includeStopWords: boolean, onlyMentions: boolean, onlyHashtags: boolean): Promise<JSON> {
+    public async getTopKUnigrams(k: number, includeStopWords: boolean, onlyMentions: boolean, onlyHashtags: boolean): Promise<Object> {
         let includeStopWordsString: string = includeStopWords ? "True" : "False";
         let onlyMentionsString: string = onlyMentions ? "True" : "False";
         let onlyHashtagsString: string = onlyHashtags ? "True" : "False";
         const data = await fetch(this.URL + "/analysis/unigrams/top?k=" + k + "&include_stop_words=" + includeStopWordsString + "&only_mentions=" + onlyMentionsString + "&only_hashtags=" + onlyHashtagsString).then((response) => response.json());
+        return data;
+    }
+
+    /**
+     * Retrieve the most common n-grams.
+     * @param n n in n-gram.
+     * @param k Number of top unigrams to return.
+     * @returns The k most common n-grams as Object. Map-like: string as key, number as value.
+     */
+    public async getTopKNGrams(n: number, k: number): Promise<Object> {
+        const data = await fetch(this.URL + "/analysis/ngrams/top?n=" + n + "&k=" + k).then((response) => response.json());
         return data;
     }
 }
