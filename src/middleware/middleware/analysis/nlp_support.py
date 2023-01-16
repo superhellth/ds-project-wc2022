@@ -48,7 +48,8 @@ class CorpusAnalyzer:
         tokens = self.tokenize(text)
         for i in range(len(tokens) - 1):
             for j in range(i + 1, min(len(tokens), i + window_size)):
-                collocation = (sorted([tokens[i], tokens[j]]))
+                collocation_list = sorted([tokens[i], tokens[j]])
+                collocation = (collocation_list[0], collocation_list[1])
                 self.counts[collocation] += 1
 
     def worker(self, task):
