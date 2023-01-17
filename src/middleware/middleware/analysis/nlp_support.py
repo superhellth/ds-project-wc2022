@@ -3,6 +3,9 @@ from collections import defaultdict
 import spacy
 from middleware.analysis import tweet_provider
 
+from src.middleware.middleware.analysis.multithreading import MultiThreading
+
+
 class CorpusAnalyzer:
     """Analyzer to generate n-gram- and collocation-counts."""
 
@@ -14,8 +17,7 @@ class CorpusAnalyzer:
         self.HASHTAG_SUBSTITUTE = "dswcprojecthashtag"
 
         # multi-threading
-        self.num_threads = None
-        self.threads = None
+        self.multi_threading = MultiThreading()
 
         # data
         self.counts = None
@@ -51,46 +53,19 @@ class CorpusAnalyzer:
                 collocation = (tokens[i], tokens[j])
                 self.counts[collocation] += 1
 
-    def worker(self, task):
-        """Function run by the worker threads."""
-        while True:
-            text = self.queue.get()
-            if text is None:
-                break
-            task(text)
-            self.queue.task_done()
-
-    def start_threads(self, task):
-        """Start threads."""
-        for i in range(self.num_threads):
-            t = threading.Thread(target=lambda: self.worker(task))
-            t.start()
-            self.threads.append(t)
-
-    def stop_threads(self):
-        """Stop threads."""
-        print("Stopping worker threads...")
-        for i in range(len(self.threads)):
-            self.queue.put(None)
-        for t in self.threads:
-            t.join()
-        print("Done!")
-
     def execute_task(self, task, num_threads, batch_size, num_tweets):
         """Execute the given task with the given number of threads."""
         self.queue = self.provider.get_queue()
         self.counts = defaultdict(int)
-        self.num_threads = num_threads
-        self.threads = []
 
         # Start the worker threads
-        self.start_threads(task)
+        self.multi_threading.start_threads(task, self.queue, num_threads)
         # Start feeding queue
         self.provider.start_queue(batch_size=batch_size, max_tweets=num_tweets)
         # Finish for all queue items to be processed
         self.provider.join_queue()
         # Stop the worker threads
-        self.stop_threads()
+        self.multi_threading.stop_threads(self.queue)
 
     def generate_n_grams(self, n, batch_size=1000, num_tweets=-1, num_threads=4):
         """Generate n-grams from the corpus."""
