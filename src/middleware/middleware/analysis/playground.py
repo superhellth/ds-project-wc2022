@@ -3,6 +3,8 @@ from middleware.analysis import nlp_support
 
 corpus_counter = nlp_support.CorpusAnalyzer()
 
+COLLOCATIONS2_FILE = "./src/data/collocations2.json"
+COLLOCATIONS3_FILE = "./src/data/collocations3.json"
 COLLOCATIONS4_FILE = "./src/data/collocations4.json"
 
 def write_to_file(counts, write_to: str):
@@ -10,8 +12,8 @@ def write_to_file(counts, write_to: str):
     with open(write_to, "w", encoding="utf_8") as file:
         file.write(ujson.dumps(counts))
 
-collocations4 = corpus_counter.generate_collocation_counts(window_size=4)
-write_to_file(collocations4, COLLOCATIONS4_FILE)
+collocations2 = corpus_counter.generate_collocation_counts(window_size=2)
+write_to_file(collocations2, COLLOCATIONS2_FILE)
 
 ### Code to generate all count files ###
 ### Do not execute unless old files are saved or there is a good reason to regenerate ###

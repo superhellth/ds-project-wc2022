@@ -73,8 +73,8 @@
                 </SidebarItem>
                 <div class="sb-sidenav-menu-heading">Text Analytics</div>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Generate Random Tweet"
-                             href="/tweet-overview"
+                             text="Word Graph"
+                             href="/word-graph"
                              iconName="dice-5">
                 </SidebarItem>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
