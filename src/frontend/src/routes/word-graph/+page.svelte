@@ -6,10 +6,10 @@
     
     let displayGraph: Graph;
     let originalGraph: Graph = new Graph();
-    let threshold: number = 0;
+    let threshold: number = 1;
     
     onMount(async () => {
-        const res = await fetch('collocations3.gexf');
+        const res = await fetch('collocations2nostop.gexf');
         const text = await res.text();
 
         const Graph = await import("graphology").then(m => m.default)
@@ -30,24 +30,32 @@
             return;
         }
 
-        let maxWeight = -1
+        let edgesByWeights: Map<string, number> = new Map<string, number>;
 
-        displayGraph.forEachEdge((edge) => displayGraph.dropEdge(edge))
-        displayGraph.forEachNode((node) => displayGraph.dropNode(node))
-        displayGraph.import(originalGraph.export())
+        displayGraph.forEachEdge((edge) => displayGraph.dropEdge(edge));
+        displayGraph.forEachNode((node) => displayGraph.dropNode(node));
+        displayGraph.import(originalGraph.export());
 
         displayGraph.forEachEdge((edge, attributes) => {
-            if (attributes.weight > maxWeight) {
-                maxWeight = attributes.weight;
-            }
+            edgesByWeights.set(edge, attributes.weight);
         })
-
-        let edgesToRemove = displayGraph.filterEdges((edge, attributes) => attributes.weight > maxWeight * threshold)
-        console.log(edgesToRemove.length)
-        
-        for (let edge in edgesToRemove) {
-            displayGraph.dropEdge(edge);
+        let sortedEdges: [string, number][] = [...edgesByWeights.entries()].sort((a, b) => b[1] - a[1]);
+        let numEdges = sortedEdges.length;
+        sortedEdges = sortedEdges.slice(0, Math.round(threshold * numEdges))
+        let edgesToKeep: Set<string> = new Set()
+        for (var i = 0; i < sortedEdges.length; i++) {
+            edgesToKeep.add(sortedEdges[i][0])
         }
+
+        let edgesToRemove: Set<string> = new Set();
+        displayGraph.forEachEdge((edge) => {
+            if (!edgesToKeep.has(edge)) {
+                edgesToRemove.add(edge)
+            }
+        });
+        console.log(edgesToRemove)
+        
+        edgesToRemove.forEach((edge) => displayGraph.dropEdge(edge))
     }
 
     $: changeEdgeThreshold(threshold);
@@ -59,8 +67,8 @@
       name="range"
       id="exampleRange"
       min={0}
-      max={0.01}
-      step={0.000001}
+      max={1}
+      step={0.01}
       bind:value={threshold}
     />
 <div id="sigma-container"></div>

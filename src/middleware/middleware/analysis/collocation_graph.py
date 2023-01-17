@@ -4,13 +4,14 @@ import ast
 import itertools
 import networkx as nx
 import spacy
-import matplotlib.pyplot as plt
+from middleware.analysis import stat_provider
 
 class CollocationGraphGenerator:
     """This class generates collocation graphs using the collocations files."""
 
-    def __init__(self):
+    def __init__(self, path_to_data_files):
         self.nlp = spacy.load("en_core_web_sm")
+        self.stat_provider = stat_provider.StatProvider(path_to_data_files)
 
     def to_dict_of_dicts(self, string_dict, include_stop_word_nodes=True):
         """Converts dict to dict of dicts for networkx to be able to convert it to a graph."""
@@ -21,28 +22,26 @@ class CollocationGraphGenerator:
                 dict_of_dicts[key_tuple[0]][key_tuple[1]] = {"weight": entry[1]}
         return dict_of_dicts
 
-    def generate_graph(self, window_size, path_to_files, num_edges=-1, include_stop_word_nodes=True):
+    def generate_graph(self, window_size, num_edges=-1, include_stop_word_nodes=True):
         """Generate collocation graph with given window size."""
-        f = open(path_to_files + "collocations" + str(window_size) + ".json", "r", encoding="utf_8")
-        print("Loading file...")
-        edge_dict = json.loads(f.read())
+        print("Loading collocation counts...")
+        edge_dict = self.stat_provider.get_collocations_as_list(window_size)[:num_edges]
         print("Done!")
-        if num_edges != -1:
-            edge_dict = dict(itertools.islice(edge_dict.items(), num_edges))
+        edge_dict = {entry[0]: entry[1] for entry in edge_dict}
         print("Converting dict to dict of dicts")
         edge_dict = self.to_dict_of_dicts(edge_dict, include_stop_word_nodes=include_stop_word_nodes)
         print("Done!")
 
         G = nx.from_dict_of_dicts(edge_dict)
         pos = nx.spring_layout(G)
-        # plt.show()
 
         # set coordinates of node, necessary for graphology to read it
         for node in G.nodes:
             G.nodes[node]["x"] = pos[node][0]
             G.nodes[node]["y"] = pos[node][1]
 
-        nx.write_gexf(G, path_to_files + "collocations" + str(window_size) + ".gexf")
+        return G
 
-graph_generator = CollocationGraphGenerator()
-graph_generator.generate_graph(3, path_to_files="./src/data/", num_edges=10000, include_stop_word_nodes=False)
+graph_generator = CollocationGraphGenerator(path_to_data_files="./src/data/")
+graph = graph_generator.generate_graph(2, num_edges=10000, include_stop_word_nodes=False)
+nx.write_gexf(graph, "./src/data/collocations2nostop.gexf")
