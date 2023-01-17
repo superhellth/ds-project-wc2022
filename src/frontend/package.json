@@ -36,8 +36,11 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"chart.js": "^4.0.1",
 		"@popperjs/core": "^2.11.6",
+		"chart.js": "^4.0.1",
+		"graphology": "^0.25.1",
+		"graphology-gexf": "^0.10.3",
+		"sigma": "^2.4.0",
 		"svelte-material-ui": "^7.0.0-beta.0",
 		"sveltestrap": "^5.10.0"
 	}
