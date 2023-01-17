@@ -2,8 +2,7 @@ import threading
 from collections import defaultdict
 import spacy
 from middleware.analysis import tweet_provider
-
-from src.middleware.middleware.analysis.multithreading import MultiThreading
+from middleware.analysis.multithreading import MultiThreading
 
 
 class CorpusAnalyzer:

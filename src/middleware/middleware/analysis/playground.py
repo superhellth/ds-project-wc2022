@@ -12,8 +12,8 @@ def write_to_file(counts, write_to: str):
     with open(write_to, "w", encoding="utf_8") as file:
         file.write(ujson.dumps(counts))
 
-collocations2 = corpus_counter.generate_collocation_counts(window_size=2)
-write_to_file(collocations2, COLLOCATIONS2_FILE)
+collocations3 = corpus_counter.generate_collocation_counts(window_size=3)
+write_to_file(collocations3, COLLOCATIONS3_FILE)
 
 ### Code to generate all count files ###
 ### Do not execute unless old files are saved or there is a good reason to regenerate ###
