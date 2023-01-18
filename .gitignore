@@ -1,5 +1,7 @@
 # big data files
-collocations*.json
+collocations*
+embedding*
+unclustered*
 *grams.json
 
 # IDEs
