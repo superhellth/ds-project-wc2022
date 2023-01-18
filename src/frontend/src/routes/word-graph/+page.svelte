@@ -2,14 +2,25 @@
     import { onMount } from "svelte";
     import Sigma from "sigma";
     import Graph from "graphology";
-    import { Input } from "sveltestrap";
+    import {
+        Accordion,
+        AccordionItem,
+        Form,
+        FormGroup,
+        Input,
+        Label,
+    } from "sveltestrap";
     import type { EdgeDisplayData } from "sigma/types.js";
+    import Loading from "src/svelte-components/Loading.svelte";
 
     let renderer: Sigma;
     let displayGraph: Graph;
     let originalGraph: Graph = new Graph();
     let threshold: number = 1;
+    let displayEdgelessNodes: boolean = true;
+    let clusters: Map<string, Set<string>> = new Map<string, Set<string>>();
 
+    // Code taken from https://codesandbox.io/s/github/jacomyal/sigma.js/tree/main/examples/use-reducers
     interface State {
         hoveredNode?: string;
         searchQuery: string;
@@ -31,9 +42,15 @@
         const { parse } = await import("graphology-gexf/browser");
         displayGraph = parse(Graph, text);
 
-        displayGraph.forEachNode(
-            (node, attributes) => (attributes.size = Math.min(attributes.degree * 0.1, 3.5))
-        );
+        displayGraph.forEachNode((node, attributes) => {
+            attributes.size = Math.min(attributes.degree * 0.1, 3.5);
+            if (clusters.get(attributes.color) == undefined) {
+                clusters.set(attributes.color, new Set<string>([node]));
+            } else {
+                clusters.get(attributes.color)?.add(node);
+            }
+        });
+        clusters = clusters;
         displayGraph.forEachEdge(
             (node, attributes) => (attributes.size = 0.001)
         );
@@ -148,24 +165,78 @@
                 edgesToRemove.add(edge);
             }
         });
-        console.log(edgesToRemove);
-
         edgesToRemove.forEach((edge) => displayGraph.dropEdge(edge));
+
+        if (!displayEdgelessNodes) {
+            let toRemove: Set<string> = new Set();
+            displayGraph.forEachNode((node) => {
+                if (displayGraph.edges(node).length == 0) {
+                    toRemove.add(node);
+                }
+            });
+            toRemove.forEach((node) => displayGraph.dropNode(node));
+        }
+    }
+
+    async function toggleEdgelessNodes(displayEdgelessNodes: boolean) {
+        if (!displayEdgelessNodes) {
+            let toRemove: Set<string> = new Set();
+            displayGraph.forEachNode((node) => {
+                if (displayGraph.edges(node).length == 0) {
+                    toRemove.add(node);
+                }
+            });
+            toRemove.forEach((node) => displayGraph.dropNode(node));
+        }
     }
 
     $: changeEdgeThreshold(threshold);
+    $: toggleEdgelessNodes(displayEdgelessNodes);
 </script>
 
-<Input
-    type="range"
-    name="range"
-    id="exampleRange"
-    min={0}
-    max={1}
-    step={0.01}
-    bind:value={threshold}
-/>
-<div id="sigma-container" />
+<Form>
+    <FormGroup>
+        <Label for="edgeThreshold">% of Edges to display</Label>
+        <Input
+            type="range"
+            name="range"
+            id="edgeThreshold"
+            min={0}
+            max={1}
+            step={0.01}
+            bind:value={threshold}
+        />
+        <Input
+            id="edgelessNodes"
+            type="checkbox"
+            label="Display Nodes without Edges"
+            bind:checked={displayEdgelessNodes}
+        />
+    </FormGroup>
+</Form>
+<div id="graph-container">
+    <div id="sigma-container" />
+    <div id="graph-controls">
+        <Form>
+            <FormGroup>
+                <Label for="clusters">Top Words by Cluster</Label>
+                <Accordion id="clusters">
+                    {#each Array.from(clusters.keys()) as cluster, i}
+                        <AccordionItem header={"Cluster " + (i + 1)}>
+                            <ul>
+                                {#each Array.from(clusters.get(cluster)).sort((nodeA, nodeB) => originalGraph.getNodeAttributes(nodeA).weight - originalGraph.getNodeAttributes(nodeB).weight).slice(0, 10) as token}
+                                <li style="color: {cluster}">{token}</li>
+                                {/each}
+                            </ul>
+                        </AccordionItem>
+                    {:else}
+                        <Loading displayString="Cluster" />
+                    {/each}
+                </Accordion>
+            </FormGroup>
+        </Form>
+    </div>
+</div>
 
 <style>
     #sigma-container {
@@ -174,5 +245,13 @@
         margin: 0;
         padding: 0;
         overflow: hidden;
+        margin-right: 2em;
+    }
+    #graph-container {
+        display: flex;
+        justify-content: space-around;
+    }
+    #graph-controls {
+        min-width: 25em;
     }
 </style>
