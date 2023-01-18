@@ -21,10 +21,10 @@ class TweetProvider:
             tweets.append(twitter_tweet.Tweet(tweet, is_es_doc=True))
         return tweets
 
-    def get_corpus(self, size=100):
+    def get_corpus(self, size=100, body=None):
         """Returns a list of strings of size size."""
         corpus = list()
-        for document in helpers.scan(self.es_client, index=self.index, _source=["text"]):
+        for document in helpers.scan(self.es_client, index=self.index, _source=["text"], body=body):
             corpus.append(document["_source"]["text"])
             if len(corpus) == size:
                 break
