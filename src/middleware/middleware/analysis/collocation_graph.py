@@ -14,7 +14,7 @@ class CollocationGraphGenerator:
         self.nlp = spacy.load("en_core_web_sm")
         self.stat_provider = stat_provider.StatProvider(path_to_data_files)
         self.path_to_graph_files = path_to_graph_files
-        self.colors = ["#FF0000", "#FF8000", "#F3FF00", "00FF01", "#00FFED", "#0008FF", "#BF00FF", "#FF00C9", "#FF0000", "#000000", "#808080", "#004A08", "#6F0000", "#00466F", "#57006F"]
+        self.colors = ["#FF0000", "#FF8000", "#F3FF00", "#00FF01", "#00FFED", "#0008FF", "#BF00FF", "#FF00C9", "#FF0000", "#000000", "#808080", "#004A08", "#6F0000", "#00466F", "#57006F"]
 
     def to_dict_of_dicts(self, string_dict, include_stop_word_nodes=True, min_node_length=1):
         """Converts dict to dict of dicts for networkx to be able to convert it to a graph."""
@@ -128,5 +128,5 @@ G = graph_generator.get_graph(window_size=3, num_edges=100000, include_stop_word
 # model = graph_generator.learn_node2vec(G)
 # model.wv.save_word2vec_format(PATH_TO_GRAPH_FILES + "embedding100000.emb")
 embedding50000 = np.loadtxt(PATH_TO_GRAPH_FILES + "embedding100000.emb", skiprows=1, dtype=str, encoding="utf_8", delimiter=" ", comments=None)
-G = graph_generator.cluster_k_means(G, embedding50000, n_cluster=20)
-nx.write_gexf(G, "./src/data/word-graph/collocations3_top100000_nostop_min2nodelength_kmeans20.gexf")
+G = graph_generator.cluster_k_means(G, embedding50000, n_cluster=11)
+nx.write_gexf(G, "./src/data/word-graph/collocations3_top100000_nostop_min2nodelength_kmeans11.gexf")
