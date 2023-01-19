@@ -1,8 +1,6 @@
 # big data files
 collocations*
-embedding*
-unclustered*
-clustered*
+c_ws*.gexf
 *grams.json
 
 # IDEs

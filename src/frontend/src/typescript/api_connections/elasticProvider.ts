@@ -45,7 +45,7 @@ class ElasticProvider extends Connection {
      */
     public async getTweetsByDayStats(): Promise<Map<Date, number>> {
         const data = await fetch(this.URL + "/statistics/tweetsPerDay").
-        then((response) => response.json());
+            then((response) => response.json());
 
         const map: Map<Date, number> = new Map(Object.entries(data).map(([key, value]) => [new Date(key), Number(value)]));
 
@@ -74,7 +74,8 @@ class ElasticProvider extends Connection {
         let includeStopWordsString: string = includeStopWords ? "True" : "False";
         let onlyMentionsString: string = onlyMentions ? "True" : "False";
         let onlyHashtagsString: string = onlyHashtags ? "True" : "False";
-        const data = await fetch(this.URL + "/analysis/unigrams/top?k=" + k + "&include_stop_words=" + includeStopWordsString + "&only_mentions=" + onlyMentionsString + "&only_hashtags=" + onlyHashtagsString).then((response) => response.json());
+        const data = await fetch(this.URL + "/analysis/unigrams/top?k=" + k + "&include_stop_words=" + includeStopWordsString + "&only_mentions=" + onlyMentionsString
+            + "&only_hashtags=" + onlyHashtagsString).then((response) => response.json());
         return data;
     }
 
@@ -87,6 +88,14 @@ class ElasticProvider extends Connection {
     public async getTopKNGrams(n: number, k: number): Promise<Object> {
         const data = await fetch(this.URL + "/analysis/ngrams/top?n=" + n + "&k=" + k).then((response) => response.json());
         return data;
+    }
+
+    public async getWordGraph(windowSize: number, numEdges: number, includeStopWords: boolean, minNodeLength: number, embeddingSize: number, clusterAlg: string, nClusters: number): Promise<string> {
+        let includeStopWordsString: string = includeStopWords ? "True" : "False";
+        let queryURL: string = this.URL + "/analysis/graph?window_size=" + windowSize + "&num_edges=" + numEdges + "&include_stop_words=" + includeStopWordsString
+            + "&min_node_length=" + minNodeLength + "&embedding_size=" + embeddingSize + "&cluster_alg=" + clusterAlg + "&n_clusters=" + nClusters;
+        const data = await fetch(queryURL).then((response) => response.text())
+        return data
     }
 }
 
