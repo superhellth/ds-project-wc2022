@@ -73,7 +73,7 @@ class CollocationGraphGenerator:
             G = nx.read_gexf(self.path_to_graph_files + unclusterd_graph_file)
         except (FileNotFoundError, OSError):
             print("Graph file does not exists yet. Generating it...")
-            G = graph_generator.generate_graph(window_size=window_size, num_edges=num_edges, include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length)
+            G = self.generate_graph(window_size=window_size, num_edges=num_edges, include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length)
             nx.write_gexf(G, self.path_to_graph_files + unclusterd_graph_file)
         return G
 
@@ -104,12 +104,12 @@ class CollocationGraphGenerator:
         embedding_file = "embedding_" + "windowsize=" + str(window_size) + "-edges=" + str(num_edges) + "_embeddingsize=" + str(embedding_size) + ".emb"
         try:
             print("Reading embedding from file...")
-            return np.loadtxt(PATH_TO_GRAPH_FILES + embedding_file, skiprows=1, dtype=str, encoding="utf_8", delimiter=" ", comments=None)
+            return np.loadtxt(self.path_to_graph_files + embedding_file, skiprows=1, dtype=str, encoding="utf_8", delimiter=" ", comments=None)
         except (FileNotFoundError, OSError):
             print("Embedding file does not exists yet. Generating it...")
-            emb = graph_generator.learn_node2vec(graph, embedding_size)
-            emb.wv.save_word2vec_format(PATH_TO_GRAPH_FILES + embedding_file)
-        return np.loadtxt(PATH_TO_GRAPH_FILES + embedding_file, skiprows=1, dtype=str, encoding="utf_8", delimiter=" ", comments=None)
+            emb = self.learn_node2vec(graph, embedding_size)
+            emb.wv.save_word2vec_format(self.path_to_graph_files + embedding_file)
+        return np.loadtxt(self.path_to_graph_files + embedding_file, skiprows=1, dtype=str, encoding="utf_8", delimiter=" ", comments=None)
         
     def cluster(self, graph: nx.Graph, n_clusters, algorithm: str, embedding: np.array=None):
         """Cluster the given graph using the given clusterer."""
@@ -158,7 +158,7 @@ class CollocationGraphGenerator:
 
     def generate_and_cluster(self, window_size, num_edges, include_stop_word_nodes, min_node_length, embedding_size, cluster_alg, n_clusters=-1, color_edges=False):
         """Generates and clusters graph with the given parameters. Saves to file. -1 embedding size to not use embedding."""
-        graph_file = "clustered_ws=" + str(window_size) + "_edges=" + str(num_edges) + "_includestop=" + str(include_stop_word_nodes) + "_minnodelength=" + str(min_node_length) + "_embeddingsize=" + str(embedding_size) + "_clusteralg=" + cluster_alg + "_nclusters=" + str(n_clusters) + "_colorededges=" + str(color_edges) + ".gexf"
+        graph_file = "c_ws=" + str(window_size) + "_edges=" + str(num_edges) + "_includestop=" + str(include_stop_word_nodes) + "_minnodelength=" + str(min_node_length) + "_embeddingsize=" + str(embedding_size) + "_clusteralg=" + cluster_alg + "_nclusters=" + str(n_clusters) + "_colorededges=" + str(color_edges) + ".gexf"
         try:
             print("Reading clustered graph from file...")
             graph = nx.read_gexf(self.path_to_graph_files + graph_file)
@@ -172,6 +172,7 @@ class CollocationGraphGenerator:
             graph = self.cluster(graph, n_clusters, cluster_alg, embedding)
             if color_edges:
                 graph = self.color_edges(graph)
-            graph_file = "clustered_ws=" + str(window_size) + "_edges=" + str(num_edges) + "_includestop=" + str(include_stop_word_nodes) + "_minnodelength=" + str(min_node_length) + "_embeddingsize=" + str(embedding_size) + "_clusteralg=" + cluster_alg + "_nclusters=" + str(n_clusters) + "_colorededges=" + str(color_edges) + ".gexf"
             nx.write_gexf(graph, self.path_to_graph_files + graph_file)
         return graph_file
+
+graph_gen = CollocationGraphGenerator("./src/data/", "./src/data/word-graph/")

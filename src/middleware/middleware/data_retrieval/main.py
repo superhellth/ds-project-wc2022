@@ -28,8 +28,10 @@ app.add_middleware(
 )
 
 # fetch local data
-stat_provider = stat_provider.StatProvider(path_to_data_files="../../../data/")
-graph_generator = collocation_graph.CollocationGraphGenerator(path_to_data_files="../../../data/", path_to_graph_files="../../../data/word-graph/")
+PATH_TO_DATA_FILES = "../../../data/"
+PATH_TO_GRAPH_FILES = "../../../data/word-graph/"
+stat_provider = stat_provider.StatProvider(path_to_data_files=PATH_TO_DATA_FILES)
+graph_generator = collocation_graph.CollocationGraphGenerator(path_to_data_files=PATH_TO_DATA_FILES, path_to_graph_files=PATH_TO_GRAPH_FILES)
 
 ### Providing data from ES ###
 @app.get("/query/")
@@ -102,4 +104,4 @@ async def get_word_graph(window_size=4, num_edges=50000, include_stop_word_nodes
     embedding_size = int(embedding_size)
     n_clusters = int(n_clusters)
     graph_file = graph_generator.generate_and_cluster(window_size=window_size, num_edges=num_edges, include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length, embedding_size=embedding_size, cluster_alg=cluster_alg, n_clusters=n_clusters)
-    return FileResponse(graph_file)
+    return FileResponse(PATH_TO_GRAPH_FILES + graph_file)
