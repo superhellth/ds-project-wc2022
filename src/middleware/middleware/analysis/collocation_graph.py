@@ -2,9 +2,18 @@ from collections import defaultdict
 import ast
 import numpy as np
 import networkx as nx
-from sklearn.cluster import KMeans
 import spacy
 from node2vec import Node2Vec
+from sklearn.cluster import KMeans
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import SpectralClustering
+from sklearn.cluster import MeanShift
+from sklearn.cluster import AffinityPropagation
+from sklearn.cluster import DBSCAN
+from sklearn.cluster import OPTICS
+from sklearn.cluster import Birch
+from sklearn.cluster import MiniBatchKMeans
+from sklearn.preprocessing import LabelEncoder
 from middleware.analysis import stat_provider
 
 class CollocationGraphGenerator:
@@ -60,59 +69,13 @@ class CollocationGraphGenerator:
         """Read graph file. If not exists: generate graph."""
         unclusterd_graph_file = "unclustered_windowsize=" + str(window_size) + "_edges=" + str(num_edges) + "_includestop=" + str(include_stop_word_nodes) + "_minnodelength=" + str(min_node_length) + ".gexf"
         try:
-            print("Reading graph from file...")
+            print("Reading unclustered graph from file...")
             G = nx.read_gexf(self.path_to_graph_files + unclusterd_graph_file)
-        except FileNotFoundError:
+        except (FileNotFoundError, OSError):
             print("Graph file does not exists yet. Generating it...")
             G = graph_generator.generate_graph(window_size=window_size, num_edges=num_edges, include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length)
             nx.write_gexf(G, self.path_to_graph_files + unclusterd_graph_file)
         return G
-
-    def learn_node2vec(self, graph: nx.Graph, embedding_size=128):
-        """Generate a node2vec embedding for the given graph."""
-        node2vec = Node2Vec(graph, dimensions=embedding_size, workers=4)
-        print("Learning embedding...")
-        return node2vec.fit(window=10, min_count=1)
-
-    def cluster_k_means(self, graph: nx.Graph, loaded_embedding, n_cluster=8):
-        """Cluster the given graph using the k-means algorithm."""
-        print("Clustering using k-means...")
-        X = loaded_embedding
-        X = X[X[:,0].argsort()]
-        Z = X[0:X.shape[0],1:X.shape[1]] # remove the node index from X and save in Z
-
-        kmeans = KMeans(n_clusters=n_cluster, random_state=0).fit(Z) # apply kmeans on Z
-        node_clusters = kmeans.labels_  # get the cluster labels of the nodes.
-        node_to_label = dict(zip(X[:,0], node_clusters))
-
-        # Iterate through the clusters and color the nodes accordingly
-        for i in range(n_cluster):
-            cluster_color = self.colors[i % len(self.colors)]
-            cluster_nodes = [node for node in graph.nodes if node in node_to_label.keys() and node_to_label[node] == i]
-            for node in cluster_nodes:
-                graph.nodes[node]["color"] = cluster_color
-        return graph
-
-    def cluster_girvan_newman(self, graph: nx.Graph, min_cluster_size=10):
-        """Cluster the given graph using the girvan newman algorithm."""
-        print("Clustering using girvan-newman...")
-        communities_generator = nx.algorithms.community.girvan_newman(graph)
-        top_level_communities = next(communities_generator)
-
-        for community in top_level_communities:
-            if len(community) < min_cluster_size:
-                for node in community:
-                    graph.remove_node(node)
-        graph.remove_nodes_from(list(nx.isolates(graph)))
-
-        for i, community in enumerate(top_level_communities):
-            if len(community) < min_cluster_size:
-                continue
-            community_color = self.colors[i % len(self.colors)]
-            for node in community:
-                graph.nodes[node]["color"] = community_color
-
-        return graph
 
     def color_edges(self, graph: nx.Graph):
         """Color edges between nodes of the same color with the according color."""
@@ -121,12 +84,94 @@ class CollocationGraphGenerator:
                 graph.edges[(u, v)]["color"] = graph.nodes[v]["color"]
         return graph
 
-PATH_TO_DATA_FILES = "./src/data/"
-PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
-graph_generator = CollocationGraphGenerator(path_to_data_files=PATH_TO_DATA_FILES, path_to_graph_files=PATH_TO_GRAPH_FILES)
-G = graph_generator.get_graph(window_size=3, num_edges=100000, include_stop_word_nodes=False, min_node_length=2)
-# model = graph_generator.learn_node2vec(G)
-# model.wv.save_word2vec_format(PATH_TO_GRAPH_FILES + "embedding100000.emb")
-embedding50000 = np.loadtxt(PATH_TO_GRAPH_FILES + "embedding100000.emb", skiprows=1, dtype=str, encoding="utf_8", delimiter=" ", comments=None)
-G = graph_generator.cluster_k_means(G, embedding50000, n_cluster=11)
-nx.write_gexf(G, "./src/data/word-graph/collocations3_top100000_nostop_min2nodelength_kmeans11.gexf")
+    def color_nodes(self, graph: nx.Graph, n_cluster: int, node_to_cluster: dict):
+        """Color nodes according to cluster."""
+        for i in range(n_cluster):
+            cluster_color = self.colors[i % len(self.colors)]
+            cluster_nodes = [node for node in graph.nodes if node in node_to_cluster.keys() and node_to_cluster[node] == i]
+            for node in cluster_nodes:
+                graph.nodes[node]["color"] = cluster_color
+        return graph
+
+    def learn_node2vec(self, graph: nx.Graph, embedding_size):
+        """Generate a node2vec embedding for the given graph."""
+        node2vec = Node2Vec(graph, dimensions=embedding_size, workers=4)
+        print("Learning embedding...")
+        return node2vec.fit(window=10, min_count=1)
+
+    def get_embedding(self, graph, window_size, num_edges, embedding_size):
+        """Read embedding file. If not exists: generate embedding."""
+        embedding_file = "embedding_" + "windowsize=" + str(window_size) + "-edges=" + str(num_edges) + "_embeddingsize=" + str(embedding_size) + ".emb"
+        try:
+            print("Reading embedding from file...")
+            return np.loadtxt(PATH_TO_GRAPH_FILES + embedding_file, skiprows=1, dtype=str, encoding="utf_8", delimiter=" ", comments=None)
+        except (FileNotFoundError, OSError):
+            print("Embedding file does not exists yet. Generating it...")
+            emb = graph_generator.learn_node2vec(graph, embedding_size)
+            emb.wv.save_word2vec_format(PATH_TO_GRAPH_FILES + embedding_file)
+        return np.loadtxt(PATH_TO_GRAPH_FILES + embedding_file, skiprows=1, dtype=str, encoding="utf_8", delimiter=" ", comments=None)
+        
+    def cluster(self, graph: nx.Graph, n_clusters, algorithm: str, embedding: np.array=None):
+        """Cluster the given graph using the given clusterer."""
+        print("Clustering...")
+        algorithms = ["spectral", "k-means", "agglomerative", "mean-shift", "affinity-propagation", "dbscan", "optics", "birch", "mini-batch-k-means"]
+        if algorithm not in algorithms:
+            print("Algorithm unknown. Should be one of:")
+            print(algorithms)
+            return graph
+
+        if embedding is not None:
+            X = embedding
+            X = X[X[:,0].argsort()]
+            Z = X[0:X.shape[0],1:X.shape[1]]
+            Z = Z.astype(np.float64)
+        else:
+            le = LabelEncoder()
+            Z = le.fit_transform(graph.nodes()).reshape(-1, 1)
+
+        if algorithm == "k-means":
+            clusterer = KMeans(n_clusters=n_clusters)
+        elif algorithm == "agglomerative":
+            clusterer = AgglomerativeClustering(n_clusters=n_clusters)
+        elif algorithm == "spectral":
+            clusterer = SpectralClustering(n_clusters=n_clusters)
+        elif algorithm == "mean-shift":
+            clusterer = MeanShift()
+        elif algorithm == "affinity-propagation":
+            clusterer = AffinityPropagation()
+        elif algorithm == "dbscan":
+            clusterer = DBSCAN()
+        elif algorithm == "optics":
+            clusterer = OPTICS()
+        elif algorithm == "birch":
+            clusterer = Birch(n_clusters=n_clusters)
+        elif algorithm == "mini-batch-k-means":
+            clusterer = MiniBatchKMeans(n_clusters=n_clusters)
+        res = clusterer.fit(Z)
+        node_clusters = res.labels_
+        if embedding is not None:
+            node_to_cluster = dict(zip(X[:,0], node_clusters))
+        else:
+            original_labels = le.inverse_transform(node_clusters)
+            node_to_cluster = dict(zip(original_labels, node_clusters))
+        return self.color_nodes(graph, n_clusters, node_to_cluster)
+
+    def generate_and_cluster(self, window_size, num_edges, include_stop_word_nodes, min_node_length, embedding_size, cluster_alg, n_clusters=-1, color_edges=False):
+        """Generates and clusters graph with the given parameters. Saves to file. -1 embedding size to not use embedding."""
+        graph_file = "clustered_ws=" + str(window_size) + "_edges=" + str(num_edges) + "_includestop=" + str(include_stop_word_nodes) + "_minnodelength=" + str(min_node_length) + "_embeddingsize=" + str(embedding_size) + "_clusteralg=" + cluster_alg + "_nclusters=" + str(n_clusters) + "_colorededges=" + str(color_edges) + ".gexf"
+        try:
+            print("Reading clustered graph from file...")
+            graph = nx.read_gexf(self.path_to_graph_files + graph_file)
+        except (FileNotFoundError, OSError):
+            print("Graph file does not exists yet. Generating it...")
+            graph = self.get_graph(window_size=window_size, num_edges=num_edges, include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length)
+            if embedding_size == -1:
+                embedding = None
+            else:
+                embedding = self.get_embedding(graph, window_size, num_edges, embedding_size)
+            graph = self.cluster(graph, n_clusters, cluster_alg, embedding)
+            if color_edges:
+                graph = self.color_edges(graph)
+            graph_file = "clustered_ws=" + str(window_size) + "_edges=" + str(num_edges) + "_includestop=" + str(include_stop_word_nodes) + "_minnodelength=" + str(min_node_length) + "_embeddingsize=" + str(embedding_size) + "_clusteralg=" + cluster_alg + "_nclusters=" + str(n_clusters) + "_colorededges=" + str(color_edges) + ".gexf"
+            nx.write_gexf(graph, self.path_to_graph_files + graph_file)
+        return graph_file

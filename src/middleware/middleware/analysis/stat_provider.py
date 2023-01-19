@@ -8,7 +8,7 @@ class StatProvider:
     def __init__(self, path_to_data_files):      
         self.nlp = spacy.load("en_core_web_sm")
         self.n_gram_files = ["unigrams.json", "bigrams.json", "trigrams.json"]
-        self.collocation_files = ["collocations2.json", "collocations3.json", "collocation4.json"]
+        self.collocation_files = ["collocations2.json", "collocations3.json", "collocations4.json"]
         self.path_to_data_files = path_to_data_files
         self.n_grams = [{}, {}, {}]
         self.sorted_n_grams = [[], [], []]

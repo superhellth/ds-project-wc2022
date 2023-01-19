@@ -1,7 +1,10 @@
 import elasticsearch
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+import networkx as nx
 from middleware.analysis import stat_provider
+from middleware.analysis import collocation_graph
 
 INDEX_NAME = "tweets"
 
@@ -26,6 +29,7 @@ app.add_middleware(
 
 # fetch local data
 stat_provider = stat_provider.StatProvider(path_to_data_files="../../../data/")
+graph_generator = collocation_graph.CollocationGraphGenerator(path_to_data_files="../../../data/", path_to_graph_files="../../../data/word-graph/")
 
 ### Providing data from ES ###
 @app.get("/query/")
@@ -87,3 +91,15 @@ async def get_n_grams(n, k="10"):
     k = int(k)
 
     return stat_provider.get_top_n_grams(n, k)
+
+@app.get("/analysis/graph")
+async def get_word_graph(window_size=4, num_edges=50000, include_stop_word_nodes=False, min_node_length=2, embedding_size=128, cluster_alg="agglomerative", n_clusters=11):
+    """Returns word graph as gexf."""
+    window_size = int(window_size)
+    num_edges = int(num_edges)
+    include_stop_word_nodes = include_stop_word_nodes == "True"
+    min_node_length = int(min_node_length)
+    embedding_size = int(embedding_size)
+    n_clusters = int(n_clusters)
+    graph_file = graph_generator.generate_and_cluster(window_size=window_size, num_edges=num_edges, include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length, embedding_size=embedding_size, cluster_alg=cluster_alg, n_clusters=n_clusters)
+    return FileResponse(graph_file)
