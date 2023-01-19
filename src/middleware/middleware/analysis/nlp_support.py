@@ -23,19 +23,44 @@ class CorpusAnalyzer:
         self.tokenized_tweets = []
         self.queue = self.provider.get_queue()
 
-    def tokenize(self, text: str):
+    def tokenize(self, text: str, use_advanced_tokenize: bool = False):
         """Tokenize Text using custom rules."""
         tokens = []
-
         text = text.replace("#", self.HASHTAG_SUBSTITUTE)
+
+        if use_advanced_tokenize:
+            # Remove all non-ASCII characters
+            text = "".join(c for c in text if ord(c) < 128)
+            # Remove special characters which are not alphanumeric or whitespace
+            text = "".join(c for c in text if c.isalnum() or c.isspace())
+
         doc = self.nlp(text)
-        for token in doc:
-            if not token.is_punct:
-                text = token.lower_.strip().replace(self.HASHTAG_SUBSTITUTE, "#")
-                if "http" in token.lower_:
-                    text = "<link>"
-                if text != '' and text is not None and text and len(text) != 0:
-                    tokens.append(text)
+
+        if use_advanced_tokenize:
+            # Remove stop words and punctuation
+            tokens = [token.lower_ for token in doc if not token.is_stop or not token.is_punct]
+        else:
+            for token in doc:
+                if not token.is_punct:
+                    text = token.lower_.strip().replace(self.HASHTAG_SUBSTITUTE, "#")
+                    if "http" in token.lower_:
+                        text = "<link>"
+                    if text != '' and text is not None and text and len(text) != 0:
+                        tokens.append(text)
+
+        if use_advanced_tokenize:
+            # Replace tokens that contain "http" with "<link>"
+            tokens = ["<link>" if "http" in token else token for token in tokens]
+            # Replace the substitute character with '#'
+            tokens = [token.replace(self.HASHTAG_SUBSTITUTE, "#") for token in tokens]
+            # Remove new lines
+            tokens = [token if token != "\n" else "" for token in tokens]
+
+        # Remove empty or fields that contain new lines
+        tokens = [token for token in tokens if token.strip() and '\n' not in token]
+        # Remove any token of length less than 1
+        tokens = [token for token in tokens if len(token) > 1]
+
         return tokens
 
     def count_n_grams(self, text: str, n: int):
@@ -54,42 +79,9 @@ class CorpusAnalyzer:
                 collocation = (collocation_list[0], collocation_list[1])
                 self.counts[collocation] += 1
 
-    def new_tokenize(self, text: str):
-        # Replace '#' with a substitute character to prevent issues with tokenizing hashtags
-        text = text.replace("#", self.HASHTAG_SUBSTITUTE)
-
-        # Remove all non-ASCII characters
-        text = "".join(c for c in text if ord(c) < 128)
-
-        # Remove special characters which are not alphanumeric or whitespace
-        text = "".join(c for c in text if c.isalnum() or c.isspace())
-
-        # Tokenize the text
-        doc = self.nlp(text)
-
-        # Remove stop words and punctuation
-        tokens = [token.lower_ for token in doc if not token.is_stop or not token.is_punct]
-
-        # Replace tokens that contain "http" with "<link>"
-        tokens = ["<link>" if "http" in token else token for token in tokens]
-
-        # Replace the substitute character with '#'
-        tokens = [token.replace(self.HASHTAG_SUBSTITUTE, "#") for token in tokens]
-
-        # Remove new lines
-        tokens = [token if token != "\n" else "" for token in tokens]
-
-        # Remove empty or fields that contain new lines
-        tokens = [token for token in tokens if token.strip() and '\n' not in token]
-
-        # Remove any token of length less than 1
-        tokens = [token for token in tokens if len(token) > 1]
-
-        return tokens
-
     def tokenize_tweet(self, text: str):
         """Tokenizes a tweet and append it to class attribute."""
-        tokens = self.new_tokenize(text)
+        tokens = self.tokenize(text)
         self.tokenized_tweets.append(tokens)
 
     def execute_task(self, task, num_threads, batch_size, num_tweets):
