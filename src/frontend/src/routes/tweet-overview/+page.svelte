@@ -186,9 +186,3 @@
         </Row>
     {/await}
 </div>
-
-<style>
-    #query-input {
-        background-color: gray;
-    }
-</style>
