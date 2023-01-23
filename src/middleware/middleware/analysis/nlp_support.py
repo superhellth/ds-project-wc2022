@@ -12,7 +12,7 @@ class CorpusAnalyzer:
         self.provider = tweet_provider.TweetProvider()
 
         # tokenization
-        self.nlp = spacy.load("en_core_web_sm", disable=["ner", "tagger", "lemmatizer", "parser"])
+        self.nlp = spacy.load("en_core_web_sm", disable=["ner","tagger","parser","lemmatizer"])
         self.HASHTAG_SUBSTITUTE = "dswcprojecthashtag"
 
         # multi-threading
@@ -23,7 +23,7 @@ class CorpusAnalyzer:
         self.tokenized_tweets = []
         self.queue = self.provider.get_queue()
 
-    def tokenize(self, text: str, use_advanced_tokenize: bool = False):
+    def tokenize(self, text: str, use_advanced_tokenize: bool = False,lemmatize : bool = False):
         """Tokenize Text using custom rules."""
         tokens = []
         text = text.replace("#", self.HASHTAG_SUBSTITUTE)
@@ -36,9 +36,13 @@ class CorpusAnalyzer:
 
         doc = self.nlp(text)
 
-        if use_advanced_tokenize:
+        if use_advanced_tokenize and not lemmatize:
             # Remove stop words and punctuation
             tokens = [token.lower_ for token in doc if not token.is_stop or not token.is_punct]
+        elif use_advanced_tokenize and lemmatize: #Modified
+            # Remove stop words and punctuation and lemmatize text
+            tokens = [token.lemma_.lower() if (token.is_alpha or token.is_ascii) and (not token.is_stop and not token.is_punct) else token.text.lower() for token in doc]
+
         else:
             for token in doc:
                 if not token.is_punct:
@@ -60,6 +64,7 @@ class CorpusAnalyzer:
         tokens = [token for token in tokens if token.strip() and '\n' not in token]
         # Remove any token of length less than 1
         tokens = [token for token in tokens if len(token) > 1]
+
 
         return tokens
 
