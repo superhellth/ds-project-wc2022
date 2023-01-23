@@ -1,5 +1,8 @@
 import ujson
 from middleware.analysis import nlp_support
+from middleware.analysis import common_words
+from middleware.analysis import tf_idf_calculator
+import numpy as np
 
 corpus_counter = nlp_support.CorpusAnalyzer()
 
@@ -12,8 +15,36 @@ def write_to_file(counts, write_to: str):
     with open(write_to, "w", encoding="utf_8") as file:
         file.write(ujson.dumps(counts))
 
-collocations4 = corpus_counter.generate_collocation_counts(window_size=4)
-write_to_file(collocations4, COLLOCATIONS4_FILE)
+"""tf_idf = tf_idf_calculator.TfIdfCalculator()
+matrix = tf_idf.calculate_tf_idf()
+print(type(matrix))"""
+
+def get_top_n_indices(matrix, n):
+    # Find the indices of the top n highest entries
+    flat_indices = np.argpartition(-matrix.flatten(), n)[:n]
+    # Use the indices to get the corresponding values
+    top_n_values = matrix.flatten()[flat_indices]
+    # Convert the indices from a flat array to multi-dimensional indices
+    multi_indices = [np.unravel_index(flat_index, matrix.shape) for flat_index in flat_indices]
+    return top_n_values, multi_indices
+
+"""corpus = ["a","b","c","d","e","f"]
+matrix = np.array([[1,2,6,3,5,9], [3,4,6,3,8,2],[8,6,3,7,2,4]])
+top_5_values, top_5_indices = get_top_n_indices(matrix, 3)
+print(top_5_values)
+print(top_5_indices)
+for i in range(3):
+    print(top_5_values[i],corpus[top_5_indices[i][0]],corpus[top_5_indices[i][1]])"""
+
+tf_idf = tf_idf_calculator.TfIdfCalculator()
+values = tf_idf.nth_simiular_tweets(num_tweets=1500,n=10)
+for i in range(len(values)):
+    print(values[i])
+    print("______________________________")
+
+
+#collocations4 = corpus_counter.generate_collocation_counts(window_size=4)
+#write_to_file(collocations4, COLLOCATIONS4_FILE)
 
 ### Code to generate all count files ###
 ### Do not execute unless old files are saved or there is a good reason to regenerate ###
