@@ -3,9 +3,9 @@ import ast
 import spacy
 
 class StatProvider:
-    """Provides python dicts etc. containing n-grams, collocations counts..."""
+    """Provides dicts and lists of n-grams and collocations. Also filters n-grams and collocations."""
 
-    def __init__(self, path_to_data_files):      
+    def __init__(self, path_to_data_files):
         self.nlp = spacy.load("en_core_web_sm")
         self.n_gram_files = ["unigrams.json", "bigrams.json", "trigrams.json"]
         self.collocation_files = ["collocations2.json", "collocations3.json", "collocations4.json"]
@@ -16,37 +16,73 @@ class StatProvider:
         self.sorted_collocation_counts = [[], [], []]
 
     def load_n_grams(self, n):
-        """Loads *grams.json into dict."""
+        """Loads *grams.json into dict.
+
+        Args:
+            n (int): n-gram size.
+        """
         f = open(self.path_to_data_files + self.n_gram_files[n-1], "r", encoding="utf_8")
         n_gram_dict = json.loads(f.read())
         self.n_grams[n-1] = n_gram_dict
 
     def load_collocation_counts(self, window_size):
-        """Loads collocations*.json into dict."""
+        """Loads collocations*.json into dict.
+
+        Args:
+            window_size (int): window size of collocations.
+        """
         f = open(self.path_to_data_files + self.collocation_files[window_size - 2], "r", encoding="utf_8")
         collocation_dict = json.loads(f.read())
         self.collocations_counts[window_size - 2] = collocation_dict
 
     def get_n_grams_as_dict(self, n):
-        """Return complete dict of n-gram counts."""
+        """Return complete dict of n-gram counts.
+
+        Args:
+            n (int): n-gram size.
+
+        Returns:
+            dict: dict of n-grams. Keys are the n-grams as tuple. For unigrams keys are just strings. Values are their respective counts.
+        """
         if not self.n_grams[n-1]:
             self.load_n_grams(n)
         return self.n_grams[n-1]
 
     def get_collocations_as_dict(self, window_size):
-        """Return complete dict of collocation counts."""
+        """Return complete dict of collocation counts.
+
+        Args:
+            window_size (int): window size of collocations to consider.
+
+        Returns:
+            dict: dict of collocations. Keys are the collocations as tuple. Values are their respective counts.
+        """
         if not self.collocations_counts[window_size - 2]:
             self.load_collocation_counts(window_size)
         return self.collocations_counts[window_size - 2]
 
     def get_n_grams_as_list(self, n):
-        """Return complete sorted list of n-grams including their counts."""
+        """Return complete sorted list of n-grams including their counts.
+
+        Args:
+            n (int): n-gram size.
+
+        Returns:
+            list: List of n-grams and their counts sorted by count.
+        """
         if not self.sorted_n_grams[n-1]:
             self.sorted_n_grams[n-1] = sorted(self.get_n_grams_as_dict(n).items(), key=lambda x: x[1], reverse=True)
         return self.sorted_n_grams[n-1]
 
     def get_collocations_as_list(self, window_size):
-        """Return complete sorted list of collocations including their counts."""
+        """Return complete sorted list of collocations including their counts.
+
+        Args:
+            window_size (int): window size of collocations to consider.
+
+        Returns:
+            list: List of collocations and their counts sorted by count.
+        """
         if not self.sorted_collocation_counts[window_size - 2]:
             self.sorted_collocation_counts[window_size - 2] = sorted(self.get_collocations_as_dict(window_size).items(), key=lambda x: x[1], reverse=True)
         return self.sorted_collocation_counts[window_size - 2]
@@ -77,7 +113,17 @@ class StatProvider:
         return ()
 
     def get_top_unigrams(self, k=10, include_stop_words=False, only_hashtags=False, only_mentions=False):
-        """Return top k unigrams."""
+        """Return top k unigrams matching criteria.
+
+        Args:
+            k (int, optional): Number of unigrams to return, sorted by count. Defaults to 10.
+            include_stop_words (bool, optional): Include stop word unigrams. Defaults to False.
+            only_hashtags (bool, optional): Only return unigrams starting with '#'. Defaults to False.
+            only_mentions (bool, optional): Only return unigrams starting with '@'. Defaults to False.
+
+        Returns:
+            dict: Keys are unigrams as string. Values are their counts.
+        """
         sorted_unigrams = self.get_n_grams_as_list(1)
 
         result = []

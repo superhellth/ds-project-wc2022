@@ -13,7 +13,15 @@ class TweetProvider:
         self.queue = queue.Queue()
 
     def get_tweet_list(self, size=100, body={"match_all": {}}):
-        """Returns a list of tweet objects of size size."""
+        """Query the elasticsearch index.
+
+        Args:
+            size (int, optional): Number of results to return. Defaults to 100.
+            body (dict, optional): Body of the query. Defaults to {"match_all": {}}.
+
+        Returns:
+            list: List of Tweet object matching the query.
+        """
         tweets = list()
         response = self.es_client.search(
             index=self.index, size=size, body=body, timeout="1m", request_timeout=30)
@@ -22,7 +30,15 @@ class TweetProvider:
         return tweets
 
     def get_corpus(self, size=100, body=None):
-        """Returns a list of strings of size size."""
+        """Returns a list of strings of size size.
+
+        Args:
+            size (int, optional): Number of tweet texts to return. Defaults to 100.
+            body (dict, optional): Body of the query. Defaults to None.
+
+        Returns:
+            list: List of tweet texts as string.
+        """
         corpus = list()
         for document in helpers.scan(self.es_client, index=self.index, _source=["text"], body=body):
             corpus.append(document["_source"]["text"])
@@ -31,12 +47,22 @@ class TweetProvider:
         return corpus
 
     def get_queue(self):
-        """Return queue object and reset queue."""
+        """Return queue object and reset queue.
+
+        Returns:
+            queue: Queue object which will be feeded with tweet texts, as soon as start_queue is called.
+        """
         self.queue = queue.Queue()
         return self.queue
 
     def start_queue(self, batch_size=1000, max_tweets=-1):
-        """Start filling queue with tweet texts. Call this after starting worker threads on queue."""
+        """Start filling queue with tweet texts. Call this after starting worker threads on queue.
+
+        Args:
+            batch_size (int, optional): Number of tweets to be queried per request from the es index. Defaults to 1000.
+            max_tweets (int, optional): Number of tweet texts to put into the queue. Always rounded up to a multiple of batch_size.
+            When -1 uses whole corpus. Defaults to -1.
+        """
 
         batch_size = 1000
         body = {
@@ -73,5 +99,9 @@ class TweetProvider:
         print("Done")
 
     def get_client(self):
-        """Returns a connection to the elasticsearch server"""
+        """Returns a connection to the elasticsearch server.
+
+        Returns:
+            Elasticsearch: Instance of the providers connection to elasticsearch.
+        """
         return self.es_client
