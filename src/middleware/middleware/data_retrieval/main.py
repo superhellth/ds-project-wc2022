@@ -2,9 +2,9 @@ import elasticsearch
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-import networkx as nx
 from middleware.analysis import stat_provider
 from middleware.analysis import collocation_graph
+from middleware.analysis import tweet_gen
 
 INDEX_NAME = "tweets"
 
@@ -32,6 +32,7 @@ PATH_TO_DATA_FILES = "../../../data/"
 PATH_TO_GRAPH_FILES = "../../../data/word-graph/"
 stat_provider = stat_provider.StatProvider(path_to_data_files=PATH_TO_DATA_FILES)
 graph_generator = collocation_graph.CollocationGraphGenerator(path_to_data_files=PATH_TO_DATA_FILES, path_to_graph_files=PATH_TO_GRAPH_FILES)
+tweet_generator = tweet_gen.TweetGenerator(provider=stat_provider)
 
 ### Providing data from ES ###
 @app.get("/query/")
@@ -88,11 +89,19 @@ async def get_unigrams(k="10", include_stop_words="False", only_mentions="False"
 @app.get("/analysis/ngrams/top")
 async def get_n_grams(n, k="10"):
     """Returns top k n-grams."""
-    
+
     n = int(n)
     k = int(k)
 
     return stat_provider.get_top_n_grams(n, k)
+
+@app.get("/analysis/ngrams/generateTweet")
+async def generate_tweet_from_n_grams(given, tweet_length, n, percent_n_grams, allow_repitition):
+    tweet_length = int(tweet_length)
+    n = int(n)
+    percent_n_grams = float(percent_n_grams)
+    allow_repitition = allow_repitition == "True"
+    return tweet_generator.gen_tweet_from(given, tweet_length, n, percent_n_grams, allow_repitition)
 
 @app.get("/analysis/graph")
 async def get_word_graph(window_size=4, num_edges=50000, include_stop_word_nodes=False, min_node_length=2, embedding_size=128, cluster_alg="agglomerative", n_clusters=11):

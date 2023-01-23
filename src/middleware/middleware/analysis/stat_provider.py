@@ -51,10 +51,20 @@ class StatProvider:
             self.sorted_collocation_counts[window_size - 2] = sorted(self.get_collocations_as_dict(window_size).items(), key=lambda x: x[1], reverse=True)
         return self.sorted_collocation_counts[window_size - 2]
 
-    def get_n_gram_that(self, n, starts_with, not_in=[]):
-        """Return n-gram string that starts with given string."""
+    def get_n_gram_that(self, n, starts_with, not_in=[], top_percent=0.2):
+        """Get the most probable n-gram that matches the criteria.
+
+        Args:
+            n (int): n-gram size.
+            starts_with (string): The resulting n-gram has to start with this string.
+            not_in (list, optional): List of n-grams. Functions as a blacklist for the resulting n-gram. Defaults to [].
+            top_percent (float, optional): For performance reasons. Only consider the top_percent percent of n-grams. Defaults to 0.2.
+
+        Returns:
+            tuple: n-gram as tuple. () is no n-gram matches the criteria.
+        """
         sorted_n_gram_list = self.get_n_grams_as_list(n)
-        for i, entry in enumerate(sorted_n_gram_list):
+        for i, entry in enumerate(sorted_n_gram_list[:round(len(sorted_n_gram_list) * top_percent)]):
             n_gram = entry[0]
             if n > 1:
                 n_gram = " ".join(ast.literal_eval(n_gram))
