@@ -49,7 +49,7 @@ class CorpusAnalyzer:
         if use_advanced_tokenize:
             # Remove stop words and punctuation
             tokens = [
-                token.lower_ for token in doc if not token.is_stop or not token.is_punct]
+                token.lower_ for token in doc if not token.is_stop and not token.is_punct]
         else:
             for token in doc:
                 if not token.is_punct:
