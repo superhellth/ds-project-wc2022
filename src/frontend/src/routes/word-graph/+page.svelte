@@ -274,6 +274,8 @@
     $: toggleEdgelessNodes(displayEdgelessNodes);
 </script>
 
+<title>Text Analytics - Word Graph</title>
+
 <div style="display: flex; justify-content: space-between">
     <h2>Word Graph</h2>
     <Button

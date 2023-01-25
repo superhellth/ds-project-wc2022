@@ -90,12 +90,31 @@ class ElasticProvider extends Connection {
         return data;
     }
 
+    /**
+     * Query the middleware to get a graph with specific parameters. If the graph does not exist yet, it will be generated.
+     * @param windowSize Window size for the collocations to use.
+     * @param numEdges The number of collocations (ordered by count) used to generate graph.
+     * @param includeStopWords Include nodes that are stop words.
+     * @param minNodeLength Minimum number of characters in node name.
+     * @param embeddingSize Size of the Node2Vec embedding.
+     * @param clusterAlg Algorithm used to cluster the graph.
+     * @param nClusters Number of clusters to generate.
+     * @returns The graph file as string.
+     */
     public async getWordGraph(windowSize: number, numEdges: number, includeStopWords: boolean, minNodeLength: number, embeddingSize: number, clusterAlg: string, nClusters: number): Promise<string> {
         let includeStopWordsString: string = includeStopWords ? "True" : "False";
         let queryURL: string = this.URL + "/analysis/graph?window_size=" + windowSize + "&num_edges=" + numEdges + "&include_stop_words=" + includeStopWordsString
             + "&min_node_length=" + minNodeLength + "&embedding_size=" + embeddingSize + "&cluster_alg=" + clusterAlg + "&n_clusters=" + nClusters;
         const data = await fetch(queryURL).then((response) => response.text())
         return data
+    }
+
+    public async getCompletedTweet(given: string, tweetLength: number, n: number, topPercentage: number, allowRepition: boolean): Promise<string> {
+        let repitionString: string = allowRepition ? "True" : "False"
+        let queryURL: string = this.URL + "/analysis/ngrams/generateTweet?given=" + given + "&tweet_length=" + tweetLength + "&n=" + n
+            + "&percent_n_grams=" + topPercentage + "&allow_repitition=" + repitionString;
+        const data = await fetch(queryURL).then((response) => response.text());
+        return data.replaceAll('"', '');
     }
 }
 

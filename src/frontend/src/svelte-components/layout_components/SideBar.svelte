@@ -75,12 +75,12 @@
                 <SidebarItem on:press={() => { theme = 'dark'; }}
                              text="Word Graph"
                              href="/word-graph"
-                             iconName="dice-5">
+                             iconName="bounding-box">
                 </SidebarItem>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Wordcloud"
-                             href="/tweet-overview"
-                             iconName="house-heart-fill">
+                             text="Generate Tweet"
+                             href="/tweet-gen"
+                             iconName="dice-5">
                 </SidebarItem>
                 <div class="sb-sidenav-menu-heading">Settings</div>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
