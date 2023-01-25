@@ -15,8 +15,8 @@ def write_to_file(counts, write_to: str):
     with open(write_to, "w", encoding="utf_8") as file:
         file.write(ujson.dumps(counts))
 
-nes_collocations = corpus_counter.generate_nes_collocation_counts(num_tweets=2000)
-write_to_file(nes_collocations, NES_COLLOCATIONS_FILE)
+nes = corpus_counter.generate_nes_counts(num_tweets=2000)
+write_to_file(nes, NES_FILE)
 
 ### Code to generate all count files ###
 ### Do not execute unless old files are saved or there is a good reason to regenerate ###

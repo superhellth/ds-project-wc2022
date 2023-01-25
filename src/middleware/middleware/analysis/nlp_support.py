@@ -14,7 +14,7 @@ class CorpusAnalyzer:
         # tokenization
         self.nlp = spacy.load("en_core_web_sm", disable=[
                               "ner", "tagger", "lemmatizer", "parser"])
-        self.ner_nlp = spacy.load("en_core_web_sm", disable=["lemmatizer"])
+        self.ner_nlp = spacy.load("en_core_web_sm", disable=["lemmatizer", "tagger", "parser"])
         self.HASHTAG_SUBSTITUTE = "dswcprojecthashtag"
 
         # multi-threading
@@ -141,7 +141,10 @@ class CorpusAnalyzer:
         """
         doc = self.ner_nlp(text)
         for ent in doc.ents:
-            self.counts[(ent.text, ent.label_)] += 1
+            if "http" not in ent.text:
+                text = "".join(c for c in ent.text if ord(c) < 128)
+                text = "".join(c for c in text if c.isalnum() or c.isspace()).replace("#", "").strip().lower()
+                self.counts[(text, ent.label_)] += 1
 
     def execute_task(self, task, num_threads, batch_size, num_tweets):
         """Execute the given task with the given number of threads.
