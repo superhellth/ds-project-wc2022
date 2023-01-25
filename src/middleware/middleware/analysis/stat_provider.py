@@ -7,13 +7,13 @@ class StatProvider:
 
     def __init__(self, path_to_data_files):
         self.nlp = spacy.load("en_core_web_sm")
-        self.n_gram_files = ["unigrams.json", "bigrams.json", "trigrams.json"]
+        self.n_gram_files = ["unigrams.json", "bigrams.json", "trigrams.json", "fourgrams.json"]
         self.collocation_files = ["collocations2.json", "collocations3.json", "collocations4.json"]
         self.path_to_data_files = path_to_data_files
-        self.n_grams = [{}, {}, {}]
-        self.sorted_n_grams = [[], [], []]
-        self.collocations_counts = [{}, {}, {}]
-        self.sorted_collocation_counts = [[], [], []]
+        self.n_grams = [{} for i in range(len(self.n_gram_files))]
+        self.sorted_n_grams = [[] for i in range(len(self.n_gram_files))]
+        self.collocations_counts = [{} for i in range(len(self.collocation_files))]
+        self.sorted_collocation_counts = [[] for i in range(len(self.collocation_files))]
 
     def load_n_grams(self, n):
         """Loads *grams.json into dict.

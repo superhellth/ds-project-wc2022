@@ -6,14 +6,17 @@ corpus_counter = nlp_support.CorpusAnalyzer()
 COLLOCATIONS2_FILE = "./src/data/collocations2.json"
 COLLOCATIONS3_FILE = "./src/data/collocations3.json"
 COLLOCATIONS4_FILE = "./src/data/collocations4.json"
+FOURGRAMS_FILE = "./src/data/fourgrams.json"
+NES_FILE = "./src/data/nes.json"
+NES_COLLOCATIONS_FILE = "./src/data/nes_collocations.json"
 
 def write_to_file(counts, write_to: str):
     """Write the count dict to file."""
     with open(write_to, "w", encoding="utf_8") as file:
         file.write(ujson.dumps(counts))
 
-collocations4 = corpus_counter.generate_collocation_counts(window_size=4)
-write_to_file(collocations4, COLLOCATIONS4_FILE)
+nes_collocations = corpus_counter.generate_nes_collocation_counts(num_tweets=2000)
+write_to_file(nes_collocations, NES_COLLOCATIONS_FILE)
 
 ### Code to generate all count files ###
 ### Do not execute unless old files are saved or there is a good reason to regenerate ###
