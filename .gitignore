@@ -3,6 +3,7 @@ collocations*
 c_ws*.gexf
 *grams.json
 nes*.json
+*.emb
 tokenized_tweets.txt
 
 # IDEs
