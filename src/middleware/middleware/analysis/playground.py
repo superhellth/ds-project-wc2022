@@ -9,12 +9,16 @@ corpus_counter = nlp_support.CorpusAnalyzer()
 COLLOCATIONS2_FILE = "./src/data/collocations2.json"
 COLLOCATIONS3_FILE = "./src/data/collocations3.json"
 COLLOCATIONS4_FILE = "./src/data/collocations4.json"
+FOURGRAMS_FILE = "./src/data/fourgrams.json"
+NES_FILE = "./src/data/nes.json"
+NES_COLLOCATIONS_FILE = "./src/data/nes_collocations.json"
 
 def write_to_file(counts, write_to: str):
     """Write the count dict to file."""
     with open(write_to, "w", encoding="utf_8") as file:
         file.write(ujson.dumps(counts))
 
+<<<<<<< HEAD
 """tf_idf = tf_idf_calculator.TfIdfCalculator()
 matrix = tf_idf.calculate_tf_idf()
 print(type(matrix))"""
@@ -45,6 +49,10 @@ for i in range(len(values)):
 
 #collocations4 = corpus_counter.generate_collocation_counts(window_size=4)
 #write_to_file(collocations4, COLLOCATIONS4_FILE)
+=======
+nes = corpus_counter.generate_nes_counts(num_tweets=2000)
+write_to_file(nes, NES_FILE)
+>>>>>>> b80b247f7c74c65b1c20f6a316144346d659e705
 
 ### Code to generate all count files ###
 ### Do not execute unless old files are saved or there is a good reason to regenerate ###
