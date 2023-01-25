@@ -65,7 +65,7 @@
                     id="n-gram-select"
                     bind:value={n}
                 >
-                    {#each [1, 2, 3] as n_}
+                    {#each [1, 2, 3, 4] as n_}
                         <option>{n_}</option>
                     {/each}
                 </Input>

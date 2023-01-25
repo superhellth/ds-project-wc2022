@@ -62,3 +62,13 @@
         />
     </Col>
 </Row>
+<Row>
+    <Col>
+        <CountTableCard
+            providingFunction={(k, includeStop) => {
+                return provider.getTopKNGrams(4, k);
+            }}
+            header="Common Fourgrams"
+        />
+    </Col>
+</Row>
