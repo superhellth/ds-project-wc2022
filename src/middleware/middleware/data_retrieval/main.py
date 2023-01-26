@@ -114,8 +114,8 @@ async def generate_tweet_from_n_grams(given, tweet_length, n, percent_n_grams, a
 
 
 @app.get("/analysis/graph")
-async def get_word_graph(window_size=4, num_edges=50000, include_stop_word_nodes=False, min_node_length=2,
-                         embedding_size=128, cluster_alg="agglomerative", n_clusters=11):
+async def get_word_graph(window_size=4, num_edges=50000, include_stop_word_nodes="False", min_node_length=2,
+                         embedding_size=128, cluster_alg="agglomerative", n_clusters=11, only_nes="False"):
     """Returns word graph as gexf."""
     window_size = int(window_size)
     num_edges = int(num_edges)
@@ -123,10 +123,12 @@ async def get_word_graph(window_size=4, num_edges=50000, include_stop_word_nodes
     min_node_length = int(min_node_length)
     embedding_size = int(embedding_size)
     n_clusters = int(n_clusters)
+    only_nes = only_nes == "True"
+    print(str(only_nes))
     graph_file = graph_generator.generate_and_cluster(window_size=window_size, num_edges=num_edges,
                                                       include_stop_word_nodes=include_stop_word_nodes,
                                                       min_node_length=min_node_length, embedding_size=embedding_size,
-                                                      cluster_alg=cluster_alg, n_clusters=n_clusters)
+                                                      cluster_alg=cluster_alg, n_clusters=n_clusters, only_nes=only_nes)
     return FileResponse(PATH_TO_GRAPH_FILES + graph_file)
 
 
