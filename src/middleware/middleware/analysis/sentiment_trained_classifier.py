@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 import joblib
 import pandas as pd
 
-from sentiment_base import SentimentBase
+from middleware.analysis.sentiment_base import SentimentBase
 
 
 class TrainedClassifierSentiment(SentimentBase, ABC):
