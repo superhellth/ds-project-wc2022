@@ -1,6 +1,6 @@
 <script lang="ts">
     // Import Svelte components used in this script
-    import { Button, Form, FormGroup, Input, Row } from "sveltestrap";
+    import {Button, Form, FormGroup, Input, Row, Table, Accordion, AccordionItem} from "sveltestrap";
     import TweetCard from "../../svelte-components/TweetCard.svelte";
     import type Tweet from "../../typescript/tweet_management/tweet";
     import ElasticProvider from "../../typescript/api_connections/elasticProvider";
@@ -78,11 +78,12 @@
         return fullQuery;
     }
 
-    function executeQuery() {
+    async function executeQuery() {
         tweets_100 = elasticProvider.getTweetsThat(getFullQuery());
-        console.log("Pressed execute")
-        loadTweets();
-        analyzeSentiment();
+        loaded_tweets = await tweets_100;
+        await analyzeSentiment();
+        console.log("Vader Sentiment Score: ", vaderSent);
+        console.log("Trained Sentiment Score: ", trainedSent);
     }
 
     // Sentiment stuff
@@ -90,10 +91,7 @@
     let vaderSent; // variable to hold the vaderSent score
     let trainedSent; // variable to hold the trainedSent score
 
-    // function to load tweets from Elasticsearch
-    async function loadTweets() {
-        loaded_tweets = await tweets_100;
-    }
+    let sentimentAnalysisIsOpen = false;
 
     // function to send tweets text to the sentiment analysis endpoint
     async function analyzeSentiment() {
@@ -105,14 +103,6 @@
         vaderSent = scores[0];
         trainedSent = scores[1];
     }
-
-    // call the loadTweets function to load the tweets
-    loadTweets()
-        .then(() => analyzeSentiment())
-        .then(() => {
-            console.log("Vader Sentiment Score: ", vaderSent);
-            console.log("Trained Sentiment Score: ", trainedSent);
-        });
 
 
     onMount(async () => {
@@ -136,6 +126,7 @@
                 this.selectionStart = this.selectionEnd = start + 1;
             }
         });
+        await executeQuery();
     });
 </script>
 
@@ -200,6 +191,42 @@
         </FormGroup>
     </div>
 </Form>
+<Accordion>
+    <AccordionItem active>
+        <h4 class="m-0" slot="header">Sentiment Analysis</h4>
+            <Table hover bordered>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Method</th>
+                  <th>Sentiment Score (-1 to 1, 'negative' to 'positive')</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>vaderSentiment</td>
+                  <td>{vaderSent}</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>sklearn SGDClassifier</td>
+                  <td>{trainedSent}</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>Naive Bayes</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <th scope="row">4</th>
+                  <td>BERT based classifier</td>
+                  <td>1</td>
+                </tr>
+              </tbody>
+            </Table>
+    </AccordionItem>
+</Accordion>
 <div>
     {#await tweets_100}
         <!-- Display a loading spinner while the tweets are being retrieved -->
