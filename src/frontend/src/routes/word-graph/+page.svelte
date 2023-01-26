@@ -51,6 +51,7 @@
     ];
     let loading: boolean = false;
     let controlsAreOpen: boolean = false;
+    let nesOnly: boolean = false;
 
     // Code taken from https://codesandbox.io/s/github/jacomyal/sigma.js/tree/main/examples/use-reducers
     interface State {
@@ -74,7 +75,8 @@
             2,
             128,
             "k-means",
-            11
+            11,
+            nesOnly
         );
 
         const Graph = await import("graphology").then((m) => m.default);
@@ -238,7 +240,8 @@
             minNodeLength,
             embeddingSize,
             clusterAlg,
-            nClusters
+            nClusters,
+            nesOnly
         );
 
         const Graph = await import("graphology").then((m) => m.default);

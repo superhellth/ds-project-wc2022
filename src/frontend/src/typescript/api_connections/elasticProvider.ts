@@ -101,10 +101,14 @@ class ElasticProvider extends Connection {
      * @param nClusters Number of clusters to generate.
      * @returns The graph file as string.
      */
-    public async getWordGraph(windowSize: number, numEdges: number, includeStopWords: boolean, minNodeLength: number, embeddingSize: number, clusterAlg: string, nClusters: number): Promise<string> {
+    public async getWordGraph(windowSize: number, numEdges: number, includeStopWords: boolean, minNodeLength: number, embeddingSize: number, clusterAlg: string, nClusters: number, nesOnly: boolean): Promise<string> {
         let includeStopWordsString: string = includeStopWords ? "True" : "False";
+        if (nesOnly) {
+            windowSize = 0;
+        }
+        let nesOnlyString: string = nesOnly ? "True" : "False";
         let queryURL: string = this.URL + "/analysis/graph?window_size=" + windowSize + "&num_edges=" + numEdges + "&include_stop_words=" + includeStopWordsString
-            + "&min_node_length=" + minNodeLength + "&embedding_size=" + embeddingSize + "&cluster_alg=" + clusterAlg + "&n_clusters=" + nClusters;
+            + "&min_node_length=" + minNodeLength + "&embedding_size=" + embeddingSize + "&cluster_alg=" + clusterAlg + "&n_clusters=" + nClusters + "&only_nes=" + nesOnlyString;
         const data = await fetch(queryURL).then((response) => response.text())
         return data
     }
