@@ -14,6 +14,8 @@ class StatProvider:
         self.sorted_n_grams = [[] for i in range(len(self.n_gram_files))]
         self.collocations_counts = [{} for i in range(len(self.collocation_files))]
         self.sorted_collocation_counts = [[] for i in range(len(self.collocation_files))]
+        self.ne_collocation_counts = {}
+        self.sorted_ne_collocation_counts = []
 
     def load_n_grams(self, n):
         """Loads *grams.json into dict.
@@ -34,6 +36,12 @@ class StatProvider:
         f = open(self.path_to_data_files + self.collocation_files[window_size - 2], "r", encoding="utf_8")
         collocation_dict = json.loads(f.read())
         self.collocations_counts[window_size - 2] = collocation_dict
+
+    def load_ne_collocations(self):
+        """Loads nes_collocations.json into dict.
+        """
+        f = open(self.path_to_data_files + "nes_collocations.json", "r", encoding="utf_8")
+        self.ne_collocation_counts = json.loads(f.read())
 
     def get_n_grams_as_dict(self, n):
         """Return complete dict of n-gram counts.
@@ -61,6 +69,16 @@ class StatProvider:
             self.load_collocation_counts(window_size)
         return self.collocations_counts[window_size - 2]
 
+    def get_ne_collocations_as_dict(self):
+        """Return complete dict of named entity collocation counts.
+
+        Returns:
+            dict: dict of ne collocations. Keys are tuple of strings representing nes. Values are their respective counts.
+        """
+        if not self.ne_collocation_counts:
+            self.load_ne_collocations()
+        return self.ne_collocation_counts
+
     def get_n_grams_as_list(self, n):
         """Return complete sorted list of n-grams including their counts.
 
@@ -86,6 +104,16 @@ class StatProvider:
         if not self.sorted_collocation_counts[window_size - 2]:
             self.sorted_collocation_counts[window_size - 2] = sorted(self.get_collocations_as_dict(window_size).items(), key=lambda x: x[1], reverse=True)
         return self.sorted_collocation_counts[window_size - 2]
+
+    def get_ne_collocations_as_list(self):
+        """Return complete sorted list of named entity collocation counts.
+
+        Returns:
+            list: containing tuples of collocations and their counts. Sorted by counts desc.
+        """
+        if not self.sorted_ne_collocation_counts:
+            self.sorted_ne_collocation_counts = sorted(self.get_ne_collocations_as_dict().items(), key=lambda x: x[1], reverse=True)
+        return self.sorted_ne_collocation_counts
 
     def get_n_gram_that(self, n, starts_with, not_in=[], top_percent=0.2):
         """Get the most probable n-gram that matches the criteria.

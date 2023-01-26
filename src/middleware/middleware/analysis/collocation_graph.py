@@ -44,11 +44,11 @@ class CollocationGraphGenerator:
             key_tuple = ast.literal_eval(entry[0])
             if include_stop_word_nodes or (key_tuple[0] not in stop_words and key_tuple[1] not in stop_words):
                 if len(key_tuple[0]) >= min_node_length and len(key_tuple[1]) >= min_node_length:
-                    dict_of_dicts[key_tuple[0]][key_tuple[1]] = {
+                    dict_of_dicts[key_tuple[0].replace(" ", "_").replace("\n", "")][key_tuple[1].replace(" ", "_").replace("\n", "")] = {
                         "weight": entry[1]}
         return dict_of_dicts
 
-    def generate_graph(self, window_size, num_edges, include_stop_word_nodes, min_node_length):
+    def generate_graph(self, window_size, num_edges, include_stop_word_nodes, min_node_length, only_nes=False):
         """Generate graph with given parameters. Applies spring layout.
 
         Args:
@@ -56,14 +56,18 @@ class CollocationGraphGenerator:
             num_edges (int): Number of top collocations to use for generation. The higher this number the more infrequent words the graph contains.
             include_stop_word_nodes (bool): Include nodes that are stop words.
             min_node_length (int): Minimum length of nodes to keep.
+            only_nes (bool): Whether or not to use named entity collocations. If True window_size is ignored. Defaults to False.
 
         Returns:
             nx.Graph: Graph generated with the given parameters.
         """
         print("Loading collocation counts...")
-        edge_dict = self.stat_provider.get_collocations_as_list(window_size)[
-            :num_edges]
-        edge_dict = {entry[0]: entry[1] for entry in edge_dict}
+        if not only_nes:
+            edge_dict = self.stat_provider.get_collocations_as_list(window_size)[
+                :num_edges]
+        else:
+            edge_dict = self.stat_provider.get_ne_collocations_as_list()[:num_edges]
+        edge_dict = {entry[0]: entry[1] for entry in edge_dict}     
         print("Converting dict to dict of dicts...")
         edge_dict = self.to_dict_of_dicts(
             edge_dict, include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length)
@@ -71,6 +75,7 @@ class CollocationGraphGenerator:
         print("Calculating spring layout...")
         pos = nx.spring_layout(graph)
         sub_graphs = nx.connected_components(graph)
+        # remove isolated nodes
         to_remove = set()
         for sub_graph in sub_graphs:
             if len(sub_graph) < 10:
@@ -89,7 +94,7 @@ class CollocationGraphGenerator:
             graph.nodes[node]["color"] = "grey"
         return graph
 
-    def get_graph(self, window_size, num_edges=100, include_stop_word_nodes=True, min_node_length=1):
+    def get_graph(self, window_size, num_edges=100, include_stop_word_nodes=True, min_node_length=1, only_nes=False):
         """Read graph file. If not exists: generate graph.
 
         Args:
@@ -98,19 +103,23 @@ class CollocationGraphGenerator:
             The higher this number the more infrequent words the graph contains.. Defaults to 100.
             include_stop_word_nodes (bool, optional): Include nodes that are stop words. Defaults to True.
             min_node_length (int, optional):  Minimum length of nodes to keep. Defaults to 1.
+            only_nes (bool): Whether or not to use named entity collocations. If True window_size is ignored. Defaults to False.
 
         Returns:
             nx.Graph: Graph matching criteria.
         """
-        unclusterd_graph_file = "unclustered_windowsize=" + str(window_size) + "_edges=" + str(
-            num_edges) + "_includestop=" + str(include_stop_word_nodes) + "_minnodelength=" + str(min_node_length) + ".gexf"
+        if not only_nes:
+            unclusterd_graph_file = "unclustered_windowsize=" + str(window_size) + "_edges=" + str(
+                num_edges) + "_includestop=" + str(include_stop_word_nodes) + "_minnodelength=" + str(min_node_length) + ".gexf"
+        else:
+            unclusterd_graph_file = "unclustered_ne_collocation_graph_numedges=" + str(num_edges) + ".gexf"
         try:
             print("Reading unclustered graph from file...")
             G = nx.read_gexf(self.path_to_graph_files + unclusterd_graph_file)
         except (FileNotFoundError, OSError):
             print("Graph file does not exists yet. Generating it...")
             G = self.generate_graph(window_size=window_size, num_edges=num_edges,
-                                    include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length)
+                                    include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length, only_nes=only_nes)
             nx.write_gexf(G, self.path_to_graph_files + unclusterd_graph_file)
         return G
 
@@ -233,7 +242,7 @@ class CollocationGraphGenerator:
             node_to_cluster = dict(zip(original_labels, node_clusters))
         return self.color_nodes(graph, n_clusters, node_to_cluster)
 
-    def generate_and_cluster(self, window_size, num_edges, include_stop_word_nodes, min_node_length, embedding_size, cluster_alg, n_clusters=-1, color_edges=False):
+    def generate_and_cluster(self, window_size, num_edges, include_stop_word_nodes, min_node_length, embedding_size, cluster_alg, n_clusters=-1, color_edges=False, only_nes=False):
         """Generates and clusters graph with the given parameters. Saves to file. -1 embedding size to not use embedding.
 
         Args:
@@ -246,21 +255,25 @@ class CollocationGraphGenerator:
             "affinity-propagation", "dbscan", "optics", "birch", "mini-batch-k-means"]
             n_clusters (int, optional): Number of clusters to find. Defaults to -1.
             color_edges (bool, optional): Color edges between nodes of the same cluster. Defaults to False.
+            only_nes (bool): Whether or not to use named entity collocations. If True window_size is has to be 0. Defaults to False.
 
         Returns:
             str: path to generated graph file.
         """
-        graph_file = "c_ws=" + str(window_size) + "_edges=" + str(num_edges) + "_includestop=" + str(include_stop_word_nodes) + "_minnodelength=" + str(min_node_length) + \
-            "_embeddingsize=" + str(embedding_size) + "_clusteralg=" + cluster_alg + \
-            "_nclusters=" + str(n_clusters) + \
-            "_colorededges=" + str(color_edges) + ".gexf"
+        if not only_nes:
+            graph_file = "c_ws=" + str(window_size) + "_edges=" + str(num_edges) + "_includestop=" + str(include_stop_word_nodes) + "_minnodelength=" + str(min_node_length) + \
+                "_embeddingsize=" + str(embedding_size) + "_clusteralg=" + cluster_alg + \
+                "_nclusters=" + str(n_clusters) + \
+                "_colorededges=" + str(color_edges) + ".gexf"
+        else:
+            graph_file = "clustered_ne_collocation_graph_numedges=" + str(num_edges) + ".gexf"
         try:
             print("Reading clustered graph from file...")
             graph = nx.read_gexf(self.path_to_graph_files + graph_file)
         except (FileNotFoundError, OSError):
             print("Graph file does not exists yet. Generating it...")
             graph = self.get_graph(window_size=window_size, num_edges=num_edges,
-                                   include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length)
+                                   include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length, only_nes=only_nes)
             if embedding_size == -1:
                 embedding = None
             else:
