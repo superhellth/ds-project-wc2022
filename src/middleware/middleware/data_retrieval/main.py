@@ -132,16 +132,15 @@ async def get_word_graph(window_size=4, num_edges=50000, include_stop_word_nodes
 
 ### Provide sentiment analysis
 
-@app.get("/analysis/sentiment/tweetsListAvg")
+@app.post("/analysis/sentiment/tweetsListAvg")
 async def get_average_sentiment_for_tweets_list(tweets_text: List[str]):
     """
     Returns the average sentiment of the tweets_text list using all methods available.
     """
-
     v = VaderSentiment("vaderSent")
-    c = TrainedClassifierSentiment("trainedClassSent")
-    return [v.get_average_sentiment_of_text_list(tweets_text),
-            c.get_average_sentiment_of_text_list(tweets_text)]
+    # c = TrainedClassifierSentiment("trainedClassSent")
+    return [v.get_average_sentiment_of_text_list(tweets_text), 1]
+            # c.get_average_sentiment_of_text_list(tweets_text)]
 
 
 @app.get("/analysis/sentiment/tweet")

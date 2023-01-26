@@ -80,7 +80,40 @@
 
     function executeQuery() {
         tweets_100 = elasticProvider.getTweetsThat(getFullQuery());
+        console.log("Pressed execute")
+        loadTweets();
+        analyzeSentiment();
     }
+
+    // Sentiment stuff
+    let loaded_tweets: Array<Tweet>; // variable to hold the tweets
+    let vaderSent; // variable to hold the vaderSent score
+    let trainedSent; // variable to hold the trainedSent score
+
+    // function to load tweets from Elasticsearch
+    async function loadTweets() {
+        loaded_tweets = await tweets_100;
+    }
+
+    // function to send tweets text to the sentiment analysis endpoint
+    async function analyzeSentiment() {
+        // Extract the text of each tweet
+        let tweets_text = loaded_tweets.map(t => t.getText());
+        console.log(tweets_text)
+        // Send the tweets text to the sentiment analysis endpoint
+        const scores = await elasticProvider.getAvgSentimentTweetsList(tweets_text)
+        vaderSent = scores[0];
+        trainedSent = scores[1];
+    }
+
+    // call the loadTweets function to load the tweets
+    loadTweets()
+        .then(() => analyzeSentiment())
+        .then(() => {
+            console.log("Vader Sentiment Score: ", vaderSent);
+            console.log("Trained Sentiment Score: ", trainedSent);
+        });
+
 
     onMount(async () => {
         resize();

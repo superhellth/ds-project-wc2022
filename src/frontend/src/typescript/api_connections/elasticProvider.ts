@@ -116,6 +116,17 @@ class ElasticProvider extends Connection {
         const data = await fetch(queryURL).then((response) => response.text());
         return data.replaceAll('"', '');
     }
+
+    public async getAvgSentimentTweetsList(tweetsList: Array<string>) {
+        console.log(JSON.stringify(tweetsList))
+        const queryURL = this.URL + '/analysis/sentiment/tweetsListAvg';
+        const response = await fetch(queryURL, {
+            method: "POST",
+            body: JSON.stringify(tweetsList),
+            headers: { "Content-Type": "application/json" },
+        });
+        return await response.json();
+    }
 }
 
 export default ElasticProvider;
