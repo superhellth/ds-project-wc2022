@@ -18,7 +18,6 @@ def write_to_file(counts, write_to: str):
     with open(write_to, "w", encoding="utf_8") as file:
         file.write(ujson.dumps(counts))
 
-<<<<<<< HEAD
 """tf_idf = tf_idf_calculator.TfIdfCalculator()
 matrix = tf_idf.calculate_tf_idf()
 print(type(matrix))"""
@@ -49,10 +48,8 @@ for i in range(len(values)):
 
 #collocations4 = corpus_counter.generate_collocation_counts(window_size=4)
 #write_to_file(collocations4, COLLOCATIONS4_FILE)
-=======
 nes = corpus_counter.generate_nes_counts(num_tweets=2000)
 write_to_file(nes, NES_FILE)
->>>>>>> b80b247f7c74c65b1c20f6a316144346d659e705
 
 ### Code to generate all count files ###
 ### Do not execute unless old files are saved or there is a good reason to regenerate ###
