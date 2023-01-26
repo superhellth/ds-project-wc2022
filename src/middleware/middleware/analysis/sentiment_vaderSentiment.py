@@ -2,7 +2,7 @@ from abc import ABC
 from typing import List, Tuple, Dict
 
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from sentiment_base import SentimentBase
+from middleware.analysis.sentiment_base import SentimentBase
 
 
 class VaderSentiment(SentimentBase, ABC):
