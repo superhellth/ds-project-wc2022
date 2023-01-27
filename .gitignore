@@ -6,6 +6,7 @@ nes*.json
 *collocation_graph*.gexf
 *.emb
 tokenized_tweets.txt
+index.csv
 
 # IDEs
 .idea

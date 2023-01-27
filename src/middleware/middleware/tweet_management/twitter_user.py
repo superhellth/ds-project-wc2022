@@ -1,9 +1,8 @@
-
 class User:
     """A class representing a twitter user. Stores all available data concerning the user. Fetches data on init"""
 
     def __init__(self, user):
-        if user == None:
+        if user is None:
             user = {}
         self.created_at = user.get("created_at", None)
         self.description = user.get("description", None)
@@ -36,7 +35,6 @@ class User:
             "username": self.username,
             "verified": self.verified
         }
-        return {}
 
     # Getter
     def get_created_at(self):
