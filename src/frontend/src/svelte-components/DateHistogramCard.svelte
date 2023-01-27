@@ -6,18 +6,20 @@
     import { onMount } from "svelte";
     import { Col, Input, Row } from "sveltestrap";
 
-    // data
-    let elasticProvider: ElasticProvider = ElasticProvider.getInstance();
-    let tweetsByDayPromise: Promise<Map<Date, number>> =
-        elasticProvider.getTweetsByDayStats();
-
     // Chart
     let chart: Chart;
     let data: any = null;
-    const chart_id = "c1";
-    let header = "Tweets per Day";
-    let footer = "As we can see in this graph...";
+    export let chart_id = "c1";
+    export let header = "Tweets per Day";
+    export let footer = "As we can see in this graph...";
+    export let field;
+    export let interval;
     let isBar: boolean = true;
+
+    // data
+    let elasticProvider: ElasticProvider = ElasticProvider.getInstance();
+    let tweetsByDayPromise: Promise<Map<Date, number>> =
+        elasticProvider.getDateHistogram(field, interval);
 
     function setupChart(canvas_id: any, type: any, data: any): Chart {
         let chart = new Chart(canvas_id, {
