@@ -14,9 +14,11 @@ class TrainedClassifierSentiment(SentimentBase, ABC):
         super().__init__(model_name)
         self.vectorizer = None
         self.classifier = None
+        self.data_file_path = '/Users/bastianmuller/Desktop/Programming/Python/testing/ds-project-wc2022/src/data/Tweets.csv'
+        self.model_path = '/Users/bastianmuller/Desktop/Programming/Python/testing/ds-project-wc2022/src/middleware/middleware/analysis/sentiment_models/' + self.model_name + '.joblib'
         if not self.did_train:
             self.train_and_save_model()
-        self.model = joblib.load('/src/middleware/middleware/analysis/sentiment_models/' + self.model_name + '.joblib')
+        self.model = joblib.load(self.model_path)
 
     def get_sentiment_of_text(self, text) -> float:
         vec_tweet = self.vectorizer.transform([text])
@@ -55,7 +57,7 @@ class TrainedClassifierSentiment(SentimentBase, ABC):
 
     def train_and_save_model(self):
         # load your labeled tweet dataset
-        tweets = pd.read_csv('/src/data/Tweets.csv')
+        tweets = pd.read_csv(self.data_file_path)
         tweets.dropna(inplace=True)
         tweets_text = tweets["selected_text"]
         tweets_sentiment = tweets["sentiment"]
@@ -74,6 +76,5 @@ class TrainedClassifierSentiment(SentimentBase, ABC):
         self.classifier = SGDClassifier()
         self.classifier.fit(X_train, y_train)
 
-        joblib.dump(self.classifier, '/src/middleware/middleware/analysis/sentiment_models/' +
-                    self.model_name + '.joblib')
+        joblib.dump(self.classifier, self.model_path)
         self.did_train = True
