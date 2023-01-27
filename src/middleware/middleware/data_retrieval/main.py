@@ -7,8 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from middleware.analysis import stat_provider
 from middleware.analysis import collocation_graph
 from middleware.analysis import tweet_gen
-from middleware.analysis.sentiment_vaderSentiment import VaderSentiment
-from middleware.analysis.sentiment_trained_classifier import TrainedClassifierSentiment
+from file_management import get_sentiment_analyzers
 
 INDEX_NAME = "tweets"
 
@@ -139,10 +138,12 @@ async def get_average_sentiment_for_tweets_list(tweets_text: List[str]):
     """
     Returns the average sentiment of the tweets_text list using all methods available.
     """
-    v = VaderSentiment("vaderSent")
-    # c = TrainedClassifierSentiment("trainedClassSent")
-    return [v.get_average_sentiment_of_text_list(tweets_text), 1]
-            # c.get_average_sentiment_of_text_list(tweets_text)]
+    vs, tcs, nbs, berts, = get_sentiment_analyzers()
+
+    return [vs.get_average_sentiment_of_text_list(tweets_text),
+            tcs.get_average_sentiment_of_text_list(tweets_text),
+            nbs.get_average_sentiment_of_text_list(tweets_text),
+            berts.get_average_sentiment_of_text_list(tweets_text)]
 
 
 @app.get("/analysis/sentiment/tweet")
@@ -150,11 +151,12 @@ async def get_sentiment_for_tweet(tweet_text: str):
     """
     Returns the sentiment of the tweets_text list using all methods available.
     """
-    v = VaderSentiment("vaderSent")
-    c = TrainedClassifierSentiment("trainedClassSent")
+    vs, tcs, nbs, berts, = get_sentiment_analyzers()
 
-    return [v.get_sentiment_of_text(tweet_text),
-            c.get_sentiment_of_text(tweet_text)]
+    return [vs.get_sentiment_of_text(tweet_text),
+            tcs.get_sentiment_of_text(tweet_text),
+            nbs.get_sentiment_of_text(tweet_text),
+            berts.get_sentiment_of_text(tweet_text)]
 
 
 @app.get("/analysis/sentiment/tweetsList")
@@ -162,11 +164,12 @@ async def get_sentiment_for_tweets_list(tweets_text: List[str]):
     """
     Returns the sentiment of the tweets_text list using all methods available.
     """
+    vs, tcs, nbs, berts, = get_sentiment_analyzers()
 
-    v = VaderSentiment("vaderSent")
-    c = TrainedClassifierSentiment("trainedClassSent")
-    return [v.get_sentiment_of_text_list(tweets_text),
-            c.get_sentiment_of_text_list(tweets_text)]
+    return [vs.get_sentiment_of_text_list(tweets_text),
+            tcs.get_sentiment_of_text_list(tweets_text),
+            nbs.get_sentiment_of_text_list(tweets_text),
+            berts.get_sentiment_of_text_list(tweets_text)]
 
 
 @app.get("/analysis/sentiment/tweetsListDate")
@@ -174,8 +177,9 @@ async def get_sentiment_for_tweets_list_by_date(texts: List[Tuple[str, str]]):
     """
     Returns the sentiment of the text by unique date str.
     """
+    vs, tcs, nbs, berts, = get_sentiment_analyzers()
 
-    v = VaderSentiment("vaderSent")
-    c = TrainedClassifierSentiment("trainedClassSent")
-    return [v.get_sentiment_of_text_list_by_date(texts),
-            c.get_sentiment_of_text_list_by_date(texts)]
+    return [vs.get_sentiment_of_text_list_by_date(texts),
+            tcs.get_sentiment_of_text_list_by_date(texts),
+            nbs.get_sentiment_of_text_list_by_date(texts),
+            berts.get_sentiment_of_text_list_by_date(texts)]

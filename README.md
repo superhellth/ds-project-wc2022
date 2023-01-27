@@ -76,12 +76,13 @@ Moving forward, we plan to implement the following text analytics tasks as well 
 We split our project code into three parts. The `frontend` based on svelte, the `python middleware` for analysis tasks and as a connection to the `elasticsearch backend` that runs on our server.
 All requests to elasticsearch are handled by the middleware. The frontend only loads data from local files or from the middleware but never directly accesses elasticsearch. But as stated above the middleware does not only provide a connection to the backend but is also where all analysis tasks take place. Here we write scripts to analyse and process our data.
 
-### Already Done [16.01.2023]
+### Already Done [27.01.2023]
 - Data collection is done
 - We wrote a script the allows us to annotate our collected tweets with custom labels. We already labeled 1000 Tweets
-- We generated unigram, bigram and trigram counts *(These files are not included in the repository since they are too large)*
-- We generated collocation counts for a window size of 2, 3 and 4 *(These files are not included in the repository since they are too large)*
-- We implemented a basic tweet completion tool based on n-grams
+- Generated unigram, bigram, trigram and fourgram counts *(These files are not included in the repository since they are too large)*
+- Generated collocation counts for a window size of 2, 3 and 4 *(These files are not included in the repository since they are too large)*
+- Basic tweet completion tool based on n-grams
+- Word graph based on collocation counts
 
 ### Experiments
 We plan to implement a Tweet generator that uses more sophisticated machine learning methods.
