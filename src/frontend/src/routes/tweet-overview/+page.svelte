@@ -90,8 +90,8 @@
     let loaded_tweets: Array<Tweet>; // variable to hold the tweets
     let vaderSent; // variable to hold the vaderSent score
     let trainedSent; // variable to hold the trainedSent score
-
-    let sentimentAnalysisIsOpen = false;
+    let nbSent;// variable to hold the nbSent score
+    let bertSent;// variable to hold the bertSent score
 
     // function to send tweets text to the sentiment analysis endpoint
     async function analyzeSentiment() {
@@ -102,6 +102,8 @@
         const scores = await elasticProvider.getAvgSentimentTweetsList(tweets_text)
         vaderSent = scores[0];
         trainedSent = scores[1];
+        nbSent = scores[2];
+        bertSent = scores[3];
     }
 
 
@@ -193,7 +195,7 @@
 </Form>
 <Accordion>
     <AccordionItem active>
-        <h4 class="m-0" slot="header">Sentiment Analysis</h4>
+        <h5 class="m-0" slot="header">Sentiment Analysis</h5>
             <Table hover bordered>
               <thead>
                 <tr>
@@ -216,12 +218,12 @@
                 <tr>
                   <th scope="row">3</th>
                   <td>Naive Bayes</td>
-                  <td>1</td>
+                  <td>{nbSent}</td>
                 </tr>
                 <tr>
                   <th scope="row">4</th>
                   <td>BERT based classifier</td>
-                  <td>1</td>
+                  <td>{bertSent}</td>
                 </tr>
               </tbody>
             </Table>
