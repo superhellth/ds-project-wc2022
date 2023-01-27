@@ -78,6 +78,11 @@
                              iconName="bounding-box">
                 </SidebarItem>
                 <SidebarItem on:press={() => { theme = 'dark'; }}
+                             text="Sentiment Analysis"
+                             href="/sentiment-analysis"
+                             iconName="emoji-smile-upside-down">
+                </SidebarItem>
+                <SidebarItem on:press={() => { theme = 'dark'; }}
                              text="Generate Tweet"
                              href="/tweet-gen"
                              iconName="dice-5">
