@@ -1,6 +1,6 @@
 <script lang="ts">
     // Import Svelte components used in this script
-    import {Button, Form, FormGroup, Input, Row, Table, Accordion, AccordionItem} from "sveltestrap";
+    import {Button, Form, FormGroup, Input, Row, Table, Accordion, AccordionItem, Popover } from "sveltestrap";
     import TweetCard from "../../svelte-components/TweetCard.svelte";
     import type Tweet from "../../typescript/tweet_management/tweet";
     import ElasticProvider from "../../typescript/api_connections/elasticProvider";
@@ -88,10 +88,10 @@
 
     // Sentiment stuff
     let loaded_tweets: Array<Tweet>; // variable to hold the tweets
-    let vaderSent; // variable to hold the vaderSent score
-    let trainedSent; // variable to hold the trainedSent score
-    let nbSent;// variable to hold the nbSent score
-    let bertSent;// variable to hold the bertSent score
+    let vaderSent = 'Waiting...'; // variable to hold the vaderSent score
+    let trainedSent = 'Waiting...'; // variable to hold the trainedSent score
+    let nbSent = 'Waiting...'; // variable to hold the nbSent score
+    let bertSent = "Waiting... (BERT: I\'m a bit slow, sorry!)"; // variable to hold the bertSent score
 
     // function to send tweets text to the sentiment analysis endpoint
     async function analyzeSentiment() {
@@ -99,6 +99,10 @@
         let tweets_text = loaded_tweets.map(t => t.getText());
         console.log(tweets_text)
         // Send the tweets text to the sentiment analysis endpoint
+        vaderSent = 'Waiting...';
+        trainedSent = 'Waiting...';
+        nbSent = 'Waiting...';
+        bertSent = "Waiting... (BERT: I\'m a bit slow, sorry!)";
         const scores = await elasticProvider.getAvgSentimentTweetsList(tweets_text)
         vaderSent = scores[0];
         trainedSent = scores[1];
@@ -200,29 +204,75 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Method</th>
+                  <th>Method (More info on click)</th>
                   <th>Sentiment Score (-1 to 1, 'negative' to 'positive')</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <th scope="row">1</th>
-                  <td>vaderSentiment</td>
+                  <td id="vaderSentId">
+                      <a href="">vaderSentiment</a>
+                      <Popover placement="right" target="vaderSentId">
+                          <div slot="title">
+                              <b>vaderSentiment</b>
+                          </div>
+                          This sentiment score is calculated by the <a href="https://github.com/cjhutto/vaderSentiment">
+                              vaderSentiment
+                          </a> SentimentIntensityAnalyzer class. It uses a 'lexicon' and 'rule-based' approach and is fine-tuned for social media
+                          sentiment analysis.
+                      </Popover>
+                  </td>
                   <td>{vaderSent}</td>
                 </tr>
                 <tr>
                   <th scope="row">2</th>
-                  <td>sklearn SGDClassifier</td>
+                  <td id="tcsgdSent">
+                      <a href="">SGDClassifier</a>
+                      <Popover placement="right" target="tcsgdSent">
+                          <div slot="title">
+                              <b>SGDClassifier</b>
+                          </div>
+                          This sentiment score is calculated by the <a href="https://scikit-learn.org/stable/index.html">
+                              sklearn
+                          </a> SGDClassifier class in combination with a TfidfVectorizer. It trains using a file with
+                          26000 labeled tweets which can be found in our repository under 'src/data/Tweets.csv'.
+                      </Popover>
+                  </td>
                   <td>{trainedSent}</td>
                 </tr>
                 <tr>
                   <th scope="row">3</th>
-                  <td>Naive Bayes</td>
+                  <td id="nbSent">
+                      <a href="">Naive Bayes Classifier</a>
+                      <Popover placement="right" target="nbSent">
+                          <div slot="title">
+                              <b>Naive Bayes Classifier</b>
+                          </div>
+                          This sentiment score is calculated by the <a href="https://scikit-learn.org/stable/index.html">
+                              sklearn
+                          </a> MultinomialNB class in combination with a CountVectorizer (bag-of-words).
+                          It trains using a file with 26000 labeled tweets which can be found in our repository
+                          under 'src/data/Tweets.csv'.
+                      </Popover>
+                  </td>
                   <td>{nbSent}</td>
                 </tr>
                 <tr>
                   <th scope="row">4</th>
-                  <td>BERT based classifier</td>
+                  <td id="bertSent">
+                      <a href="">BERT based Classifier</a>
+                      <Popover placement="right" target="bertSent">
+                          <div slot="title">
+                              <b>BERT based Classifier</b>
+                          </div>
+                          This sentiment score is calculated by the <a href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english">
+                              skledistilbert-base-uncased-finetuned-sst-2-englisharn
+                          </a> model as found on HuggingFace. In order for the tweets to be processed 'properly' we looked
+                          at the training data for that model. To keep our input similar we decided to drop all non-ascii
+                          symbols. We did not fine-tune the model.
+                      </Popover>
+                  </td>
                   <td>{bertSent}</td>
                 </tr>
               </tbody>
