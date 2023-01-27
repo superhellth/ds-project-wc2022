@@ -38,9 +38,9 @@ while True:
             last_index = last_index + 1
         df.loc[last_index] = pd.Series(
             {field: repr(doc["_source." + field][0]) for field in FIELDS})
-    df.to_csv("./src/data/index.csv", sep=",",
-                    columns=FIELDS, index=False, lineterminator="\n")
 
     tweets_loaded += BATCH_SIZE
     print(f"Tweets loaded: {tweets_loaded}")
     result = es_client.scroll(scroll_id=scroll_id, scroll="1m")
+
+df.to_csv("./src/data/index.csv", sep=",", columns=FIELDS, index=False, lineterminator="\n")

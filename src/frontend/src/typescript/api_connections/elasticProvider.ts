@@ -40,11 +40,13 @@ class ElasticProvider extends Connection {
     }
 
     /**
-     * bla bla bla.
-     * @returns Days mapped to the number of tweets collected that day.
+     * Get date histogram of specific field.
+     * @param field Field to generate histogram on.
+     * @param interval Time interval for buckets. One of day, month, year.
+     * @returns Map from date to tweet count.
      */
-    public async getTweetsByDayStats(): Promise<Map<Date, number>> {
-        const data = await fetch(this.URL + "/statistics/tweetsPerDay").
+    public async getDateHistogram(field: string, interval: string): Promise<Map<Date, number>> {
+        const data = await fetch(this.URL + "/statistics/histogram?histogram_type=date_histogram&interval=" + interval + "&field=" + field).
             then((response) => response.json());
 
         const map: Map<Date, number> = new Map(Object.entries(data).map(([key, value]) => [new Date(key), Number(value)]));

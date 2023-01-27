@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from middleware.analysis import stat_provider
 from middleware.analysis import collocation_graph
 from middleware.analysis import tweet_gen
+from middleware.analysis import basic_stat_provider
 from file_management import get_sentiment_analyzers
 
 INDEX_NAME = "tweets"
@@ -34,6 +35,7 @@ app.add_middleware(
 PATH_TO_DATA_FILES = "../../../data/"
 PATH_TO_GRAPH_FILES = "../../../data/word-graph/"
 stat_provider = stat_provider.StatProvider(path_to_data_files=PATH_TO_DATA_FILES)
+basic_stat_provider = basic_stat_provider.BasicStatProvider()
 graph_generator = collocation_graph.CollocationGraphGenerator(path_to_data_files=PATH_TO_DATA_FILES,
                                                               path_to_graph_files=PATH_TO_GRAPH_FILES)
 tweet_generator = tweet_gen.TweetGenerator(provider=stat_provider)
@@ -47,29 +49,10 @@ async def get_tweets_that(query: str):
     return resp["hits"]["hits"]
 
 
-@app.get("/statistics/tweetsPerDay")
-async def get_tweet_number_by_days():
+@app.get("/statistics/histogram")
+async def get_histogram(field, interval, histogram_type):
     """Return all days on between the earliest and latest tweet with corresponding number of tweets"""
-    resp = es_client.search(index=INDEX_NAME, body={
-        "size": 0,
-        "aggs": {
-            "tweets_per_day": {
-                "date_histogram": {
-                    "field": "created_at",
-                    "interval": "day"
-                }
-            }
-        }
-    })
-
-    # Access the dates and aggregated numbers from the response
-    buckets = resp['aggregations']['tweets_per_day']['buckets']
-    date_dict = dict()
-    for bucket in buckets:
-        date = bucket['key_as_string']
-        count = bucket['doc_count']
-        date_dict[date] = count
-    return date_dict
+    return basic_stat_provider.get_histogram(field, interval, histogram_type)
 
 
 @app.get("/validate")
