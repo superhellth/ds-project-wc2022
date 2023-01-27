@@ -21,6 +21,9 @@ class NBSentiment(SentimentBase, ABC):
             self.train_and_save_model()
         self.model = joblib.load(self.model_path)
 
+    def preprocess_text(self):
+        pass
+
     def get_sentiment_of_text(self, text) -> float:
         vec_tweet = self.vectorizer.transform([text])
         return int(self.classifier.predict(vec_tweet)) - 2
