@@ -25,3 +25,11 @@ class SentimentBase(ABC):
     @abstractmethod
     def train_and_save_model(self):
         pass
+
+    @abstractmethod
+    def preprocess_text(self, text):
+        """
+        This is a private method that preprocesses text
+        """
+        # Code to preprocess text goes here
+        pass
