@@ -24,7 +24,7 @@ class BasicStatProvider:
 
         Args:
             field (str): field name to perform histogram on.
-            interval (int): bucket size.
+            interval (int): bucket size. This is interpreted as size if type=terms.
             histogram_size (str): type of the histogram, one of: date_histogram, histogram, terms
 
         Returns:
@@ -44,7 +44,7 @@ class BasicStatProvider:
                     }
                 }
             }
-        }, timeout="2m")
+        }, timeout="2m", request_timeout=60)
 
         # Access the dates and aggregated numbers from the response
         buckets = resp['aggregations']['hist']['buckets']
