@@ -11,15 +11,13 @@ from middleware.analysis.sentiment_base import SentimentBase
 
 
 class NBSentiment(SentimentBase, ABC):
-    def __init__(self, model_name):
-        super().__init__(model_name)
+    def __init__(self, model_name, path_to_models, path_to_training_data):
+        super().__init__(model_name, path_to_model=path_to_models + model_name + ".joblib", path_to_training_data=path_to_training_data)
         self.vectorizer = None
         self.classifier = None
-        self.data_file_path = '/Users/bastianmuller/Desktop/Programming/Python/testing/ds-project-wc2022/src/data/Tweets.csv'
-        self.model_path = '/Users/bastianmuller/Desktop/Programming/Python/testing/ds-project-wc2022/src/middleware/middleware/analysis/sentiment_models/' + self.model_name + '.joblib'
         if not self.did_train:
             self.train_and_save_model()
-        self.model = joblib.load(self.model_path)
+        self.model = joblib.load(self.path_to_model)
 
     def preprocess_text(self):
         pass
@@ -61,7 +59,7 @@ class NBSentiment(SentimentBase, ABC):
 
     def train_and_save_model(self):
         # load your labeled tweet dataset
-        tweets = pd.read_csv(self.data_file_path)
+        tweets = pd.read_csv(self.path_to_training_data)
         tweets.dropna(inplace=True)
         tweets_text = tweets["selected_text"]
         tweets_sentiment = tweets["sentiment"]
@@ -80,5 +78,5 @@ class NBSentiment(SentimentBase, ABC):
         self.classifier = MultinomialNB()
         self.classifier.fit(X_train, y_train)
 
-        joblib.dump(self.classifier, self.model_path)
+        joblib.dump(self.classifier, self.path_to_model)
         self.did_train = True

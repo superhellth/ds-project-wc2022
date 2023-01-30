@@ -1,5 +1,5 @@
 from typing import List, Tuple
-
+import ujson
 import elasticsearch
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
@@ -8,18 +8,26 @@ from middleware.analysis import stat_provider
 from middleware.analysis import collocation_graph
 from middleware.analysis import tweet_gen
 from middleware.analysis import basic_stat_provider
-from file_management import get_sentiment_analyzers
+from middleware.data_retrieval.file_management import get_sentiment_analyzers
 
-INDEX_NAME = "tweets"
+### path to data files ###
+# Bastian: /Users/bastianmuller/Desktop/Programming/Python/testing/ds-project-wc2022/src/data/
+# Nico: ../../../data/
+PATH_TO_DATA_FILES = "../../../data/"
+PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
+PATH_TO_SENTIMENT_MODELS = PATH_TO_DATA_FILES + "sentiment-models/"
+PATH_TO_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets.csv"
+
+# config
+LOAD_N_GRAMS_ON_STARTUP = False
 
 # elasticsearch instancing: 9200 standard port
+INDEX_NAME = "tweets"
 es_client = elasticsearch.Elasticsearch(
     "http://45.13.59.173:9200", http_auth=("elastic", "sicheristsicher"))
 
 # fastapi instance
 app = FastAPI()
-
-# allow access from the following addresses:
 origins = [
     "*"
 ]
@@ -32,22 +40,29 @@ app.add_middleware(
 )
 
 # fetch local data
-PATH_TO_DATA_FILES = "../../../data/"
-PATH_TO_GRAPH_FILES = "../../../data/word-graph/"
+print("Preparing stat providers...")
 stat_provider = stat_provider.StatProvider(path_to_data_files=PATH_TO_DATA_FILES)
 basic_stat_provider = basic_stat_provider.BasicStatProvider()
 graph_generator = collocation_graph.CollocationGraphGenerator(path_to_data_files=PATH_TO_DATA_FILES,
                                                               path_to_graph_files=PATH_TO_GRAPH_FILES)
 tweet_generator = tweet_gen.TweetGenerator(provider=stat_provider)
+if LOAD_N_GRAMS_ON_STARTUP:
+    print("Loading n-grams from file...")
+    stat_provider.load_n_grams(2)
+    stat_provider.load_n_grams(3)
+    stat_provider.load_n_grams(4)
 
+# sentiment analysis
+print("Loading sentiment models...")
+vs, tcs, nbs, berts, = get_sentiment_analyzers(PATH_TO_SENTIMENT_MODELS, PATH_TO_TRAINING_DATA)
 
 ### Providing data from ES ###
 @app.get("/query/")
 async def get_tweets_that(query: str):
     """Returns all tweets that match the criteria"""
     resp = es_client.search(index=INDEX_NAME, body=query)
-    return resp["hits"]["hits"]
-
+    js = ujson.loads(query)
+    return {"hits": resp["hits"]["hits"], "counts": basic_stat_provider.get_number_of_tweets(query=js["query"])}
 
 @app.get("/statistics/histogram")
 async def get_histogram(field, interval, histogram_type):
@@ -121,8 +136,6 @@ async def get_average_sentiment_for_tweets_list(tweets_text: List[str]):
     """
     Returns the average sentiment of the tweets_text list using all methods available.
     """
-    vs, tcs, nbs, berts, = get_sentiment_analyzers()
-
     return [vs.get_average_sentiment_of_text_list(tweets_text),
             tcs.get_average_sentiment_of_text_list(tweets_text),
             nbs.get_average_sentiment_of_text_list(tweets_text),
@@ -135,8 +148,6 @@ async def get_sentiment_for_tweet(tweet_text: dict):
     Returns the sentiment of the tweets_text list using all methods available.
     """
     tweet_text = list(tweet_text.values())[0]
-    vs, tcs, nbs, berts, = get_sentiment_analyzers()
-
     return [vs.get_sentiment_of_text(tweet_text),
             tcs.get_sentiment_of_text(tweet_text),
             nbs.get_sentiment_of_text(tweet_text),
@@ -148,8 +159,6 @@ async def get_sentiment_for_tweets_list(tweets_text: List[str]):
     """
     Returns the sentiment of the tweets_text list using all methods available.
     """
-    vs, tcs, nbs, berts, = get_sentiment_analyzers()
-
     return [vs.get_sentiment_of_text_list(tweets_text),
             tcs.get_sentiment_of_text_list(tweets_text),
             nbs.get_sentiment_of_text_list(tweets_text),
@@ -161,8 +170,6 @@ async def get_sentiment_for_tweets_list_by_date(texts: List[Tuple[str, str]]):
     """
     Returns the sentiment of the text by unique date str.
     """
-    vs, tcs, nbs, berts, = get_sentiment_analyzers()
-
     return [vs.get_sentiment_of_text_list_by_date(texts),
             tcs.get_sentiment_of_text_list_by_date(texts),
             nbs.get_sentiment_of_text_list_by_date(texts),

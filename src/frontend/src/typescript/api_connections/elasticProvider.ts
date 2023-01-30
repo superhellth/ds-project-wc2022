@@ -25,10 +25,11 @@ class ElasticProvider extends Connection {
      */
     public async getTweetsThat(query: string): Promise<Array<Tweet>> {
         // async request
-        const data = await fetch(this.URL + "/query?query=" + query).
+        let data = await fetch(this.URL + "/query?query=" + query).
             then((response) => response.json());
 
         // convert to classes
+        data = data.hits;
         const tweetList = new Array<any>();
         for (let i = 0; i < data.length; i++) {
             tweetList.push(Tweet.fromJson(data[i]));
@@ -37,6 +38,19 @@ class ElasticProvider extends Connection {
         tweetList.sort(function (tweetA, tweetB) { return tweetB.getCreatedAt() - tweetA.getCreatedAt() });
 
         return tweetList;
+    }
+
+    /**
+     * Count number of matching tweets in es index.
+     * @param query The query to be forwarded to es.
+     * @returns The number of matching tweets.
+     */
+    public async getNumberOfTweets(query: string): Promise<number> {
+        // async request
+        let data = await fetch(this.URL + "/query?query=" + query).
+            then((response) => response.json());
+
+        return data.counts;
     }
 
     /**
@@ -50,6 +64,15 @@ class ElasticProvider extends Connection {
             then((response) => response.json());
 
         const map: Map<Date, number> = new Map(Object.entries(data).map(([key, value]) => [new Date(key), Number(value)]));
+
+        return map;
+    }
+
+    public async getTermHistogram(field: string, size: number): Promise<Map<string, number>> {
+        const data = await fetch(this.URL + "/statistics/histogram?histogram_type=terms&interval=" + size + "&field=" + field).
+            then((response) => response.json());
+
+        const map: Map<string, number> = new Map(Object.entries(data).map(([key, value]) => [String(key), Number(value)]));
 
         return map;
     }
