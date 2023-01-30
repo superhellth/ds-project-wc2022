@@ -129,11 +129,12 @@ async def get_average_sentiment_for_tweets_list(tweets_text: List[str]):
             berts.get_average_sentiment_of_text_list(tweets_text)]
 
 
-@app.get("/analysis/sentiment/tweet")
-async def get_sentiment_for_tweet(tweet_text: str):
+@app.post("/analysis/sentiment/tweet")
+async def get_sentiment_for_tweet(tweet_text: dict):
     """
     Returns the sentiment of the tweets_text list using all methods available.
     """
+    tweet_text = list(tweet_text.values())[0]
     vs, tcs, nbs, berts, = get_sentiment_analyzers()
 
     return [vs.get_sentiment_of_text(tweet_text),

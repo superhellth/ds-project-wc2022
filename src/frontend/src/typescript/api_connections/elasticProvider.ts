@@ -124,13 +124,22 @@ class ElasticProvider extends Connection {
     }
 
     public async getAvgSentimentTweetsList(tweetsList: Array<string>) {
-        console.log(JSON.stringify(tweetsList))
         const queryURL = this.URL + '/analysis/sentiment/tweetsListAvg';
         const response = await fetch(queryURL, {
             method: "POST",
             body: JSON.stringify(tweetsList),
             headers: { "Content-Type": "application/json" },
         });
+        return await response.json();
+    }
+
+    public async getSentimentTweet(tweet: string) {
+        const queryURL = this.URL + '/analysis/sentiment/tweet';
+        const response = await fetch(queryURL, {
+            method: "POST",
+            body: JSON.stringify({tweet_text: tweet}),
+            headers: { "Content-Type": "application/json" },
+          });
         return await response.json();
     }
 }
