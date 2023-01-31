@@ -16,7 +16,7 @@ from middleware.data_retrieval.file_management import get_sentiment_analyzers
 PATH_TO_DATA_FILES = "../../../data/"
 PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
 PATH_TO_SENTIMENT_MODELS = PATH_TO_DATA_FILES + "sentiment-models/"
-PATH_TO_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets.csv"
+PATH_TO_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets_train.csv"
 
 # config
 LOAD_N_GRAMS_ON_STARTUP = False
