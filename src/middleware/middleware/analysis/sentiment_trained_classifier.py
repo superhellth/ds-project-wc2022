@@ -1,3 +1,4 @@
+import os
 from abc import ABC
 from typing import List, Tuple, Dict
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -11,14 +12,14 @@ from middleware.analysis.sentiment_base import SentimentBase
 
 class TrainedClassifierSentiment(SentimentBase, ABC):
     def __init__(self, model_name, path_to_models, path_to_training_data):
-        super().__init__(model_name, path_to_model=path_to_models + model_name + ".joblib", path_to_training_data=path_to_training_data)
-        self.vectorizer = None
-        self.classifier = None
-        if not self.did_train:
+        super().__init__(model_name, path_to_model=path_to_models + model_name, path_to_training_data=path_to_training_data)
+        if not os.path.exists(self.path_to_model + "classifier" + ".joblib" or self.path_to_model + "vectorizer" +
+                              ".joblib"):
             self.train_and_save_model()
-        self.model = joblib.load(self.path_to_model)
+        self.classifier = joblib.load(self.path_to_model + "classifier" + ".joblib")
+        self.vectorizer = joblib.load(self.path_to_model + "vectorizer" + ".joblib")
 
-    def preprocess_text(self):
+    def preprocess_text(self, text):
         pass
 
     def get_sentiment_of_text(self, text) -> float:
@@ -67,15 +68,16 @@ class TrainedClassifierSentiment(SentimentBase, ABC):
         labels = [3 if label == "positive" else 2 if label == "neutral" else 1 for label in tweets_sentiment]
 
         # use a TfidfVectorizer to convert the text to numerical features
-        self.vectorizer = TfidfVectorizer()
-        X = self.vectorizer.fit_transform(tweets_text)
+        vectorizer = TfidfVectorizer()
+        X = vectorizer.fit_transform(tweets_text)
 
         # split the data into training and test sets
         X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.2)
 
         # train a SGDClassifier model on the training data
-        self.classifier = SGDClassifier()
-        self.classifier.fit(X_train, y_train)
+        classifier = SGDClassifier()
+        classifier.fit(X_train, y_train)
 
-        joblib.dump(self.classifier, self.path_to_model)
+        joblib.dump(classifier, self.path_to_model + "classifier" + ".joblib")
+        joblib.dump(vectorizer, self.path_to_model + "vectorizer" + ".joblib")
         self.did_train = True
