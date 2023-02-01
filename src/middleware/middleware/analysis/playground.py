@@ -21,8 +21,9 @@ logging.basicConfig(format="%(levelname)s - %(asctime)s: %(message)s", datefmt= 
 
 # w2v.save("./src/data/w2v_epochs=25.emb")
 
-model = Word2Vec.load("./src/data/w2v_epochs=25.emb")
+model = Word2Vec.load("./src/data/word-embeddings/w2v_epochs=25.emb")
 print(model.wv.most_similar(positive=["cristiano_ronaldo", "messi"], negative=["ronaldo"]))
+print(model.wv.key_to_index.keys())
             
 
 # with open("./src/data/tweet_phrases_nostop_nohashtag.linesentence", "r") as f:
