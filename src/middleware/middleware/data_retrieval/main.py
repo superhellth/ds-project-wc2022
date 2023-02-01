@@ -1,7 +1,8 @@
 from typing import List, Tuple
 import ujson
 import elasticsearch
-from fastapi import FastAPI
+from gensim.models import Word2Vec
+from fastapi import FastAPI, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from middleware.analysis import stat_provider
@@ -10,23 +11,25 @@ from middleware.analysis import tweet_gen
 from middleware.analysis import basic_stat_provider
 from middleware.data_retrieval.file_management import get_sentiment_analyzers
 
-### path to data files ###
+### config ###
+## path to data files
 # Bastian: /Users/bastianmuller/Desktop/Studium/Informatik_HD/7_HWS22:23/INF_ITA/Project/code/src/data
 # Nico: ../../../data/
 PATH_TO_DATA_FILES = "../../../data/"
 PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
 PATH_TO_SENTIMENT_MODELS = PATH_TO_DATA_FILES + "sentiment-models/"
 PATH_TO_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets_train.csv"
+PATH_TO_WORD2VEC_MODEL = PATH_TO_DATA_FILES + "word-embeddings/w2v_epochs=25.emb"
 
-# config
+## loading options
 LOAD_N_GRAMS_ON_STARTUP = False
 
-# elasticsearch instancing: 9200 standard port
+## elasticsearch connection
 INDEX_NAME = "tweets"
 es_client = elasticsearch.Elasticsearch(
     "http://45.13.59.173:9200", http_auth=("elastic", "sicheristsicher"))
 
-# fastapi instance
+## fastapi config
 app = FastAPI()
 origins = [
     "*"
@@ -39,12 +42,11 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-# fetch local data
-print("Preparing stat providers...")
+
+### Loading data on startup ###
+## n-grams
+print("Preparing n-gram data...")
 stat_provider = stat_provider.StatProvider(path_to_data_files=PATH_TO_DATA_FILES)
-basic_stat_provider = basic_stat_provider.BasicStatProvider()
-graph_generator = collocation_graph.CollocationGraphGenerator(path_to_data_files=PATH_TO_DATA_FILES,
-                                                              path_to_graph_files=PATH_TO_GRAPH_FILES)
 tweet_generator = tweet_gen.TweetGenerator(provider=stat_provider)
 if LOAD_N_GRAMS_ON_STARTUP:
     print("Loading n-grams from file...")
@@ -52,11 +54,25 @@ if LOAD_N_GRAMS_ON_STARTUP:
     stat_provider.load_n_grams(3)
     stat_provider.load_n_grams(4)
 
-# sentiment analysis
+## utility
+print("Loading utility classes...")
+basic_stat_provider = basic_stat_provider.BasicStatProvider()
+
+## collocation graph
+print("Loading collocation graph generator...")
+graph_generator = collocation_graph.CollocationGraphGenerator(path_to_data_files=PATH_TO_DATA_FILES,
+                                                              path_to_graph_files=PATH_TO_GRAPH_FILES)
+
+## sentiment analysis
 print("Loading sentiment models...")
 vs, tcs, nbs, berts, = get_sentiment_analyzers(PATH_TO_SENTIMENT_MODELS, PATH_TO_TRAINING_DATA)
 
-### Providing data from ES ###
+## word embeddings
+print("Loading word embedding model...")
+model = Word2Vec.load(PATH_TO_WORD2VEC_MODEL)
+
+
+### Provide data from ES ###
 @app.get("/query/")
 async def get_tweets_that(query: str):
     """Returns all tweets that match the criteria"""
@@ -69,7 +85,6 @@ async def get_histogram(field, interval, histogram_type):
     """Return all days on between the earliest and latest tweet with corresponding number of tweets"""
     return basic_stat_provider.get_histogram(field, interval, histogram_type)
 
-
 @app.get("/validate")
 async def validate_query(query: str = "false"):
     """Validates the given query"""
@@ -77,7 +92,8 @@ async def validate_query(query: str = "false"):
     return resp
 
 
-### Providing data from local files ###
+### Provide data from local files ###
+## n-grams
 @app.get("/analysis/unigrams/top")
 async def get_unigrams(k="10", include_stop_words="False", only_mentions="False", only_hashtags="False"):
     """Returns top k unigrams."""
@@ -90,7 +106,6 @@ async def get_unigrams(k="10", include_stop_words="False", only_mentions="False"
     return stat_provider.get_top_unigrams(k=k, include_stop_words=include_stop_words, only_mentions=only_mentions,
                                           only_hashtags=only_hashtags)
 
-
 @app.get("/analysis/ngrams/top")
 async def get_n_grams(n, k="10"):
     """Returns top k n-grams."""
@@ -100,7 +115,6 @@ async def get_n_grams(n, k="10"):
 
     return stat_provider.get_top_n_grams(n, k)
 
-
 @app.get("/analysis/ngrams/generateTweet")
 async def generate_tweet_from_n_grams(given, tweet_length, n, percent_n_grams, allow_repitition):
     tweet_length = int(tweet_length)
@@ -109,7 +123,7 @@ async def generate_tweet_from_n_grams(given, tweet_length, n, percent_n_grams, a
     allow_repitition = allow_repitition == "True"
     return tweet_generator.gen_tweet_from(given, tweet_length, n, percent_n_grams, allow_repitition)
 
-
+## colloction graph
 @app.get("/analysis/graph")
 async def get_word_graph(window_size=4, num_edges=50000, include_stop_word_nodes="False", min_node_length=2,
                          embedding_size=128, cluster_alg="agglomerative", n_clusters=11, only_nes="False"):
@@ -128,9 +142,7 @@ async def get_word_graph(window_size=4, num_edges=50000, include_stop_word_nodes
                                                       cluster_alg=cluster_alg, n_clusters=n_clusters, only_nes=only_nes)
     return FileResponse(PATH_TO_GRAPH_FILES + graph_file)
 
-
-### Provide sentiment analysis
-
+## sentiment analysis
 @app.post("/analysis/sentiment/tweetsListAvg")
 async def get_average_sentiment_for_tweets_list(tweets_text: List[str]):
     """
@@ -140,7 +152,6 @@ async def get_average_sentiment_for_tweets_list(tweets_text: List[str]):
             tcs.get_average_sentiment_of_text_list(tweets_text),
             nbs.get_average_sentiment_of_text_list(tweets_text),
             berts.get_average_sentiment_of_text_list(tweets_text)]
-
 
 @app.post("/analysis/sentiment/tweet")
 async def get_sentiment_for_tweet(tweet_text: dict):
@@ -153,7 +164,6 @@ async def get_sentiment_for_tweet(tweet_text: dict):
             nbs.get_sentiment_of_text(tweet_text),
             berts.get_sentiment_of_text(tweet_text)]
 
-
 @app.get("/analysis/sentiment/tweetsList")
 async def get_sentiment_for_tweets_list(tweets_text: List[str]):
     """
@@ -164,7 +174,6 @@ async def get_sentiment_for_tweets_list(tweets_text: List[str]):
             nbs.get_sentiment_of_text_list(tweets_text),
             berts.get_sentiment_of_text_list(tweets_text)]
 
-
 @app.get("/analysis/sentiment/tweetsListDate")
 async def get_sentiment_for_tweets_list_by_date(texts: List[Tuple[str, str]]):
     """
@@ -174,3 +183,16 @@ async def get_sentiment_for_tweets_list_by_date(texts: List[Tuple[str, str]]):
             tcs.get_sentiment_of_text_list_by_date(texts),
             nbs.get_sentiment_of_text_list_by_date(texts),
             berts.get_sentiment_of_text_list_by_date(texts)]
+
+## word embedding
+@app.get("/analysis/embedding/exists")
+async def word_in_w2v_vocab(word: str):
+    return word in model.wv.key_to_index.keys()
+
+@app.get("/analysis/embedding/similar")
+async def get_similar(positive: list[str] = Query(default=None), negative: list[str] = Query(default=None), k: int = 10):
+    return model.wv.most_similar(positive=positive, negative=negative, topn=k)
+
+@app.get("/analysis/embedding/doesntmatch")
+async def doesnt_match(word: list[str] = Query(default=None)):
+    return model.wv.doesnt_match(word)
