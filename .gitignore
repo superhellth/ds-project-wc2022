@@ -5,7 +5,9 @@ c_ws*.gexf
 nes*.json
 *collocation_graph*.gexf
 *.emb
-tokenized_tweets.txt
+*.emb.*
+tokenized_tweets*
+tweet_phrases*
 index.csv
 *.joblib
 

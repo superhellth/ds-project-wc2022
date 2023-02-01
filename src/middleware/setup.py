@@ -8,6 +8,6 @@ setup(name='middleware',
                 'middleware.analysis'],
       install_requires=['tweepy', 'elasticsearch==7.17', 'fastapi[all]', 'pandas', 'spacy', 'gensim', 'matplotlib',
                         'scikit-learn', 'sklearn', 'numpy', 'seaborn', 'tk', 'ujson', 'networkx', 'node2vec',
-                        'vaderSentiment', 'sklearn', 'transformers', 'torch', 'torchvision']
+                        'vaderSentiment', 'sklearn', 'transformers', 'torch', 'torchvision', 'gensim']
 
       )
