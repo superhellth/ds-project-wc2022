@@ -1,3 +1,4 @@
+import os.path
 from typing import List, Tuple
 import ujson
 import elasticsearch
@@ -20,6 +21,7 @@ PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
 PATH_TO_SENTIMENT_MODELS = PATH_TO_DATA_FILES + "sentiment-models/"
 PATH_TO_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets_train.csv"
 PATH_TO_WORD2VEC_MODEL = PATH_TO_DATA_FILES + "word-embeddings/w2v_epochs=25.emb"
+PATH_TO_VALIDATION_DATA = PATH_TO_DATA_FILES + "Tweets_test.csv"
 
 ## loading options
 LOAD_N_GRAMS_ON_STARTUP = False
@@ -64,8 +66,14 @@ graph_generator = collocation_graph.CollocationGraphGenerator(path_to_data_files
                                                               path_to_graph_files=PATH_TO_GRAPH_FILES)
 
 ## sentiment analysis
+# create sentiment-models folder in data dir if it does not exist
+if not os.path.exists(PATH_TO_SENTIMENT_MODELS):
+    print("Creating 'data/sentiment-models' dir...")
+    os.makedirs(PATH_TO_SENTIMENT_MODELS)
+
+# sentiment analysis
 print("Loading sentiment models...")
-vs, tcs, nbs, berts, = get_sentiment_analyzers(PATH_TO_SENTIMENT_MODELS, PATH_TO_TRAINING_DATA)
+vs, tcs, nbs, berts, = get_sentiment_analyzers(PATH_TO_SENTIMENT_MODELS, PATH_TO_TRAINING_DATA, PATH_TO_VALIDATION_DATA)
 
 ## word embeddings
 print("Loading word embedding model...")

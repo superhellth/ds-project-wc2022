@@ -2,11 +2,12 @@ from abc import ABC, abstractmethod
 
 
 class SentimentBase(ABC):
-    def __init__(self, model_name, path_to_model=None, path_to_training_data=None):
+    def __init__(self, model_name, path_to_model=None, path_to_training_data=None, path_to_test_data=None):
         self.did_train = False
         self.model_name = model_name
         self.path_to_model = path_to_model
         self.path_to_training_data = path_to_training_data
+        self.path_to_test_data = path_to_test_data
 
     @abstractmethod
     def get_sentiment_of_text(self, text):
@@ -30,8 +31,16 @@ class SentimentBase(ABC):
 
     @abstractmethod
     def preprocess_text(self, text):
-        """
-        This is a private method that preprocesses text
-        """
-        # Code to preprocess text goes here
         pass
+
+    # @abstractmethod
+    # def accuracy(self, text):
+    #     pass
+    #
+    # @abstractmethod
+    # def preprocess_text(self, text):
+    #     pass
+    #
+    # @abstractmethod
+    # def preprocess_text(self, text):
+    #     pass
