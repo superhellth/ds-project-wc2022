@@ -14,7 +14,7 @@ from middleware.data_retrieval.file_management import get_sentiment_analyzers
 
 ### config ###
 ## path to data files
-# Bastian: /Users/bastianmuller/Desktop/Studium/Informatik_HD/7_HWS22:23/INF_ITA/Project/code/src/data
+# Bastian: /Users/bastianmuller/Desktop/Studium/Informatik_HD/7_HWS22:23/INF_ITA/Project/code/src/data/
 # Nico: ../../../data/
 PATH_TO_DATA_FILES = "../../../data/"
 PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
