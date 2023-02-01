@@ -11,8 +11,10 @@ from middleware.analysis.sentiment_base import SentimentBase
 
 
 class TrainedClassifierSentiment(SentimentBase, ABC):
-    def __init__(self, model_name, path_to_models, path_to_training_data):
-        super().__init__(model_name, path_to_model=path_to_models + model_name, path_to_training_data=path_to_training_data)
+    def __init__(self, model_name, path_to_models, path_to_training_data, path_to_test_data):
+        super().__init__(model_name, path_to_model=path_to_models + model_name,
+                         path_to_training_data=path_to_training_data,
+                         path_to_test_data=path_to_test_data)
         if not os.path.exists(self.path_to_model + "classifier" + ".joblib" or self.path_to_model + "vectorizer" +
                               ".joblib"):
             self.train_and_save_model()
@@ -71,13 +73,13 @@ class TrainedClassifierSentiment(SentimentBase, ABC):
         vectorizer = TfidfVectorizer()
         X = vectorizer.fit_transform(tweets_text)
 
-        # split the data into training and test sets
-        X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.2)
-
         # train a SGDClassifier model on the training data
         classifier = SGDClassifier()
-        classifier.fit(X_train, y_train)
+        classifier.fit(X, labels)
 
         joblib.dump(classifier, self.path_to_model + "classifier" + ".joblib")
         joblib.dump(vectorizer, self.path_to_model + "vectorizer" + ".joblib")
         self.did_train = True
+
+    def accuracy(self):
+        pass
