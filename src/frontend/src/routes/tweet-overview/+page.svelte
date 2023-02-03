@@ -253,18 +253,18 @@
                 <tr>
                     <th scope="row">2</th>
                     <td id="tcsgdSent">
-                        <a href="">SGDClassifier</a>
+                        <a href="">SGDClassifierOther</a>
                         <Popover placement="right" target="tcsgdSent">
                             <div slot="title">
                                 <b>SGDClassifier</b>
                             </div>
-                            This sentiment score is calculated by the<a
+                            This sentiment score is calculated by the <a
                                 href="https://scikit-learn.org/stable/index.html"
                             >
                                 sklearn
                             </a> SGDClassifier class in combination with a TfidfVectorizer.
                             It trains using a file with 26000 labeled tweets which
-                            can be found in our repository under 'src/data/Tweets.csv'.
+                            can be found in our repository under 'src/data/Tweets_train.csv'.
                         </Popover>
                     </td>
                     <td>{trainedSent}</td>
@@ -272,18 +272,18 @@
                 <tr>
                     <th scope="row">3</th>
                     <td id="nbSent">
-                        <a href="">Naive Bayes Classifier</a>
+                        <a href="">SGDClassifierOwn</a>
                         <Popover placement="right" target="nbSent">
                             <div slot="title">
-                                <b>Naive Bayes Classifier</b>
+                                <b>SGDClassifierOwn</b>
                             </div>
-                            This sentiment score is calculated by the<a
+                            This sentiment score is calculated by the <a
                                 href="https://scikit-learn.org/stable/index.html"
                             >
                                 sklearn
-                            </a> MultinomialNB class in combination with a CountVectorizer
-                            (bag-of-words). It trains using a file with 26000 labeled
-                            tweets which can be found in our repository under 'src/data/Tweets.csv'.
+                            </a> SGDClassifier class in combination with a TfidfVectorizer.
+                            It trains using a own self labeled tweets from our dataset which
+                            can be found in our repository under 'src/data/classification_with_text_train.csv'.
                         </Popover>
                     </td>
                     <td>{nbSent}</td>
