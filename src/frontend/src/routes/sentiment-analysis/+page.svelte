@@ -8,16 +8,16 @@
 
     let userTweet: string = '';
     let vaderSent = 'Waiting...'; // variable to hold the vaderSent score
-    let trainedSent = 'Waiting...'; // variable to hold the trainedSent score
-    let nbSent = 'Waiting...'; // variable to hold the nbSent score
+    let sgdSentOther = 'Waiting...'; // variable to hold the trainedSent score
+    let sgdSentOwn = 'Waiting...'; // variable to hold the nbSent score
     let bertSent = "Waiting... (BERT: I\'m a bit slow, sorry!)"; // variable to hold the bertSent score
 
     async function executeCustomTweetSent() {
         if (userTweet) {
             const scores = await provider.getSentimentTweet(userTweet)
             vaderSent = scores[0];
-            trainedSent = scores[1];
-            nbSent = scores[2];
+            sgdSentOther = scores[1];
+            sgdSentOwn = scores[2];
             bertSent = scores[3];
         }
     }
@@ -46,13 +46,13 @@
                 </Col>
                 <Col>
                     <Alert color="warning">
-                        <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifier</a></h5>
+                        <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOther</a></h5>
                         0.156459156(dummy)
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="success">
-                        <h5><a href="https://scikit-learn.org/stable/index.html">Naive Bayes Classifier</a></h5>
+                        <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOtherOwn</a></h5>
                         0.156459156(dummy)
                     </Alert>
                 </Col>
@@ -93,14 +93,14 @@
                 </Col>
                 <Col>
                     <Alert color="warning">
-                        <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifier</a></h5>
-                        {trainedSent}
+                        <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOther</a></h5>
+                        {sgdSentOther}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="success">
-                        <h5><a href="https://scikit-learn.org/stable/index.html">Naive Bayes Classifier</a></h5>
-                        {nbSent}
+                        <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOwn</a></h5>
+                        {sgdSentOwn}
                     </Alert>
                 </Col>
                 <Col>
