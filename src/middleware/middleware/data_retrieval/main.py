@@ -19,9 +19,11 @@ from middleware.data_retrieval.file_management import get_sentiment_analyzers
 PATH_TO_DATA_FILES = "../../../data/"
 PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
 PATH_TO_SENTIMENT_MODELS = PATH_TO_DATA_FILES + "sentiment-models/"
-PATH_TO_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets_train.csv"
+PATH_TO_OTHER_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets_train.csv"
 PATH_TO_WORD2VEC_MODEL = PATH_TO_DATA_FILES + "word-embeddings/w2v_epochs=25.emb"
-PATH_TO_VALIDATION_DATA = PATH_TO_DATA_FILES + "Tweets_test.csv"
+PATH_TO_OTHER_VALIDATION_DATA = PATH_TO_DATA_FILES + "Tweets_test.csv"
+PATH_TO_OWN_TRAINING_DATA = PATH_TO_DATA_FILES + "classification_with_text_train.csv"
+PATH_TO_OWN_VALIDATION_DATA = PATH_TO_DATA_FILES + "classification_with_text_test.csv"
 
 ## loading options
 LOAD_N_GRAMS_ON_STARTUP = False
@@ -73,7 +75,9 @@ if not os.path.exists(PATH_TO_SENTIMENT_MODELS):
 
 # sentiment analysis
 print("Loading sentiment models...")
-vs, tcs, nbs, berts, = get_sentiment_analyzers(PATH_TO_SENTIMENT_MODELS, PATH_TO_TRAINING_DATA, PATH_TO_VALIDATION_DATA)
+vs, lrcother, lrcown, berts = get_sentiment_analyzers(PATH_TO_SENTIMENT_MODELS, PATH_TO_OTHER_TRAINING_DATA,
+                                              PATH_TO_OTHER_VALIDATION_DATA, PATH_TO_OWN_TRAINING_DATA,
+                                              PATH_TO_OWN_VALIDATION_DATA)
 
 ## word embeddings
 print("Loading word embedding model...")
@@ -157,8 +161,8 @@ async def get_average_sentiment_for_tweets_list(tweets_text: List[str]):
     Returns the average sentiment of the tweets_text list using all methods available.
     """
     return [vs.get_average_sentiment_of_text_list(tweets_text),
-            tcs.get_average_sentiment_of_text_list(tweets_text),
-            nbs.get_average_sentiment_of_text_list(tweets_text),
+            lrcother.get_average_sentiment_of_text_list(tweets_text),
+            lrcown.get_average_sentiment_of_text_list(tweets_text),
             berts.get_average_sentiment_of_text_list(tweets_text)]
 
 @app.post("/analysis/sentiment/tweet")
@@ -168,8 +172,8 @@ async def get_sentiment_for_tweet(tweet_text: dict):
     """
     tweet_text = list(tweet_text.values())[0]
     return [vs.get_sentiment_of_text(tweet_text),
-            tcs.get_sentiment_of_text(tweet_text),
-            nbs.get_sentiment_of_text(tweet_text),
+            lrcother.get_sentiment_of_text(tweet_text),
+            lrcown.get_sentiment_of_text(tweet_text),
             berts.get_sentiment_of_text(tweet_text)]
 
 @app.get("/analysis/sentiment/tweetsList")
@@ -178,8 +182,8 @@ async def get_sentiment_for_tweets_list(tweets_text: List[str]):
     Returns the sentiment of the tweets_text list using all methods available.
     """
     return [vs.get_sentiment_of_text_list(tweets_text),
-            tcs.get_sentiment_of_text_list(tweets_text),
-            nbs.get_sentiment_of_text_list(tweets_text),
+            lrcother.get_sentiment_of_text_list(tweets_text),
+            lrcown.get_sentiment_of_text_list(tweets_text),
             berts.get_sentiment_of_text_list(tweets_text)]
 
 @app.get("/analysis/sentiment/tweetsListDate")
@@ -188,8 +192,8 @@ async def get_sentiment_for_tweets_list_by_date(texts: List[Tuple[str, str]]):
     Returns the sentiment of the text by unique date str.
     """
     return [vs.get_sentiment_of_text_list_by_date(texts),
-            tcs.get_sentiment_of_text_list_by_date(texts),
-            nbs.get_sentiment_of_text_list_by_date(texts),
+            lrcother.get_sentiment_of_text_list_by_date(texts),
+            lrcown.get_sentiment_of_text_list_by_date(texts),
             berts.get_sentiment_of_text_list_by_date(texts)]
 
 ## word embedding
@@ -198,9 +202,9 @@ async def word_in_w2v_vocab(word: str):
     return word in model.wv.key_to_index.keys()
 
 @app.get("/analysis/embedding/similar")
-async def get_similar(positive: list[str] = Query(default=None), negative: list[str] = Query(default=None), k: int = 10):
+async def get_similar(positive: List[str] = Query(default=None), negative: List[str] = Query(default=None), k: int = 10):
     return model.wv.most_similar(positive=positive, negative=negative, topn=k)
 
 @app.get("/analysis/embedding/doesntmatch")
-async def doesnt_match(word: list[str] = Query(default=None)):
+async def doesnt_match(word: List[str] = Query(default=None)):
     return model.wv.doesnt_match(word)

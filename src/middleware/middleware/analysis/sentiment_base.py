@@ -32,15 +32,3 @@ class SentimentBase(ABC):
     @abstractmethod
     def preprocess_text(self, text):
         pass
-
-    # @abstractmethod
-    # def accuracy(self, text):
-    #     pass
-    #
-    # @abstractmethod
-    # def preprocess_text(self, text):
-    #     pass
-    #
-    # @abstractmethod
-    # def preprocess_text(self, text):
-    #     pass
