@@ -4,36 +4,55 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
+# Test_TF_IDF class calculates TF-IDF values and similarity scores for a set of tweets
 class Test_TF_IDF:
     def __init__(self):
+        # Initialize CorpusAnalyzer object
         self.corpus_analyzer = CorpusAnalyzer()
+
+        # Initialize class variables
         self.corpus = None
         self.tf_idf_matrix = None
         self.similarity_matrix = None
         self.vocabulary = None
-
+        
+    # Calculates TF-IDF values for the set of tweets
     def calculate_tf_idf(self, num_tweets=1, min_df=3,max_df=0.85):
+         # Get tokenized tweets and join them to form sentences
         self.corpus = self.corpus_analyzer.generate_tokenized_tweets(num_tweets=num_tweets)
         self.corpus = [' '.join(row) for row in self.corpus]
 
         # Count term appearances
         count_vectorizer = CountVectorizer()
         count_matrix = count_vectorizer.fit_transform(self.corpus)
+
+        # Get the vocabulary
         self.vocabulary = count_vectorizer.vocabulary_
 
         # Calculate tf-idf values
         tf_idf_transformer = TfidfTransformer()
         self.tf_idf_matrix = tf_idf_transformer.fit_transform(count_matrix).toarray()
+
+        # Return the calculated tf-idf matrix
         return self.tf_idf_matrix
     
+    # Calculates cosine similarity scores for the set of tweets
     def calculate_cosine_similarity(self,num_tweets = 1, min_df=5,max_df=0.85):
+        # If tf-idf matrix not already calculated, call calculate_tf_idf function
         if self.tf_idf_matrix == None:
             self.tf_idf_matrix = self.calculate_tf_idf(num_tweets,min_df,max_df)
+
+        # Calculate similarity matrix using cosine similarity
         self.similarity_matrix = cosine_similarity(self.tf_idf_matrix)
+
+        # return the calculated similarity matrix
         return self.similarity_matrix
 
+    # Returns the n words with the highest mean TF-IDF values
     def n_highest_mean_tfidf(self,n=10):
+        # Convert tf-idf matrix to numpy array
         A = np.array(self.tf_idf_matrix)
+
         # calculate the average value of each column
         column_averages = np.mean(A, axis=0)
 
@@ -50,7 +69,10 @@ class Test_TF_IDF:
         return result
     
     def n_highest_sum_tfidf(self,n=10):
+
+        # Convert tf-idf matrix to numpy array
         A = np.array(self.tf_idf_matrix)
+
         # calculate the sum value of each column
         column_averages = np.sum(A, axis=0)
 
@@ -59,7 +81,7 @@ class Test_TF_IDF:
 
         # get the 5 columns of A with the highest sum value
         most_sum_columns = A[:, indices]
-        # calculate the mean of the most sum columns
+        # calculate the sum of the most sum columns
         total_of_most_sum_columns = np.sum(most_sum_columns,axis=0)
 
         most_sum_words = [word for word, index in self.vocabulary.items() if index in indices]
