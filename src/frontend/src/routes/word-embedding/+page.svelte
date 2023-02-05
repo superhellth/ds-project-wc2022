@@ -1,4 +1,5 @@
 <script lang="ts">
+    import CountTable from "src/svelte-components/CountTable.svelte";
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
     import { Form, FormGroup, Input, Label } from "sveltestrap";
 
@@ -9,9 +10,12 @@
         "Lionel Messi, Phil Foden, Kyle Walker, Declan Rice, Harry Kane";
     let doesntMatchValue: string = "";
     let x1: string = "Hansi Flick";
+    let x1IsValid: boolean = true;
     let y1: string = "Germany";
+    let y1IsValid: boolean = true;
     let x2: string = "Didier Deschamps";
-    let y2: string = "";
+    let x2IsValid: boolean = true;
+    let y2: any = [[]];
 
     $: {
         checkIfExists(checkIfExistsString);
@@ -19,7 +23,7 @@
 
     async function checkIfExists(checkIfExistsString: string) {
         checkIfExistsValue = await provider.existsInW2vecVocabulary(
-            checkIfExistsString.trim().replaceAll(" ", "_").toLowerCase()
+            preprocessString(checkIfExistsString)
         );
     }
 
@@ -30,7 +34,7 @@
     async function doesNotMatch(doesntMatchString: string) {
         let words: string[] = doesntMatchString.split(",");
         for (let i = 0; i < words.length; i++) {
-            words[i] = words[i].trim().replaceAll(" ", "_").toLocaleLowerCase();
+            words[i] = preprocessString(words[i]);
         }
         let res = await provider.doesntMatch(words);
         doesntMatchValue = res.replaceAll("_", " ");
@@ -41,14 +45,25 @@
     }
 
     async function x1IsToy2Likex2IsTo(x1: string, y1: string, x2: string) {
-        let res = await provider.getSimilar(
-            [
-                x2.trim().replaceAll(" ", "_").toLocaleLowerCase(),
-                y1.trim().replaceAll(" ", "_").toLocaleLowerCase(),
-            ],
-            [x1.trim().replaceAll(" ", "_").toLocaleLowerCase()]
+        x1IsValid = await provider.existsInW2vecVocabulary(
+            preprocessString(x1)
         );
-        y2 = res[0];
+        y1IsValid = await provider.existsInW2vecVocabulary(
+            preprocessString(y1)
+        );
+        x2IsValid = await provider.existsInW2vecVocabulary(
+            preprocessString(x2)
+        );
+        if (x1IsValid && x2IsValid && y1IsValid) {
+            y2 = await provider.getSimilar(
+                [preprocessString(x2), preprocessString(y1)],
+                [preprocessString(x1)]
+            );
+        }
+    }
+
+    function preprocessString(str: string): string {
+        return str.trim().replaceAll(" ", "_").toLowerCase();
     }
 </script>
 
@@ -83,11 +98,11 @@
 </Form>
 <Label>x is to y like z is to...</Label>
 <Form inline>
-    <Input type="text" bind:value={x1} />
+    <Input type="text" bind:value={x1} valid={x1IsValid} invalid={!x1IsValid} />
     <Label style="margin: 5px">is to</Label>
-    <Input type="text" bind:value={y1} />
+    <Input type="text" bind:value={y1} valid={y1IsValid} invalid={!y1IsValid} />
     <Label style="margin: 5px">like</Label>
-    <Input type="text" bind:value={x2} />
+    <Input type="text" bind:value={x2} valid={x2IsValid} invalid={!x2IsValid} />
     <Label style="margin: 5px">is to</Label>
-    <Input type="text" bind:value={y2} />
+    <Input type="text" disabled bind:value={y2[0][0]} feedback={y2.slice(0, 3)} valid />
 </Form>

@@ -26,14 +26,14 @@
     let clusters: Map<string, Set<string>> = new Map<string, Set<string>>();
     let windowSize: number = 4;
     let windowSizeOptions: number[] = [2, 3, 4];
-    let numEdges: number = 50000;
+    let numEdges: number = 100000;
     let numEdgesOptions: number[] = [10000, 25000, 50000, 100000, 200000];
     let includeStopWords: boolean = false;
     let minNodeLength: number = 2;
     let minNodeLengthOptions: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     let embeddingSize: number = 128;
     let embeddingSizeOptions: number[] = [-1, 1, 10, 128, 200, 300];
-    let clusterAlg: string = "k-means";
+    let clusterAlg: string = "aggomerative";
     let clusterAlgOptions: string[] = [
         "spectral",
         "k-means",
@@ -70,12 +70,12 @@
     onMount(async () => {
         const text = await provider.getWordGraph(
             4,
-            50000,
+            100000,
             false,
             2,
             128,
-            "k-means",
-            11,
+            "agglomerative",
+            12,
             nesOnly
         );
 
@@ -414,7 +414,7 @@
                 </Input>
             </FormGroup>
             <FormGroup>
-                <Label for="n-clusters-select">Clustering Algorithm</Label>
+                <Label for="n-clusters-select"># of clusters</Label>
                 <Input
                     type="select"
                     name="select"

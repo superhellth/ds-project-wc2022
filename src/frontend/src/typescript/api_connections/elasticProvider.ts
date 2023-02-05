@@ -181,7 +181,7 @@ class ElasticProvider extends Connection {
         return data;
     }
 
-    public async getSimilar(positive: string[], negative: string[]): Promise<string[]> {
+    public async getSimilar(positive: string[], negative: string[]): Promise<Map<string, number>> {
         let argString: string = "&";
         for (let i = 0; i < positive.length; i++) {
             argString += "positive=" + positive[i] + "&"
@@ -190,8 +190,8 @@ class ElasticProvider extends Connection {
             argString += "negative=" + negative[i] + "&"
         }
         let queryURL: string = this.URL + "/analysis/embedding/similar?" + argString.substring(0, argString.length - 1);
-        console.log(queryURL)
-        const data = await fetch(queryURL).then((response) => response.json())
+        const data = await fetch(queryURL).then((response) => response.json());
+
         return data.similar;
     }
 
