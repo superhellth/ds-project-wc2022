@@ -39,7 +39,7 @@ class Test_TF_IDF:
     # Calculates cosine similarity scores for the set of tweets
     def calculate_cosine_similarity(self,num_tweets = 1, min_df=5,max_df=0.85):
         # If tf-idf matrix not already calculated, call calculate_tf_idf function
-        if self.tf_idf_matrix == None:
+        if self.tf_idf_matrix is None:
             self.tf_idf_matrix = self.calculate_tf_idf(num_tweets,min_df,max_df)
 
         # Calculate similarity matrix using cosine similarity
