@@ -3,7 +3,6 @@
     // The commented code is not used currently, but we want to keep a copy of how to implement subpages in the
     // sidebar because they will probably be used in the future.
 
-
     // import Collapse from "sveltestrap/src/Collapse.svelte";
     import Nav from "sveltestrap/src/Nav.svelte";
 
@@ -13,7 +12,7 @@
 
     $: sidenav_theme = `sb-sidenav-${theme}`;
 
-/*    let isLayoutOpen = false;
+    /*    let isLayoutOpen = false;
     let isPageOpen = false;
     let isAuthenticationOpen = false;
     let isErrorOpen = false;
@@ -49,50 +48,81 @@
 </script>
 
 <div id="layoutSidenav_nav" class="sb-nav-fixed">
-    <Nav class="sb-sidenav {sidenav_theme} accordion sb-nav-fixed"
-         id="sidenavAccordion">
+    <Nav
+        class="sb-sidenav {sidenav_theme} accordion sb-nav-fixed"
+        id="sidenavAccordion"
+    >
         <div class="sb-sidenav-menu">
             <Nav>
                 <div class="sb-sidenav-menu-heading">Basic Overview</div>
-                <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Twitter Feed "
-                             href="/tweet-overview"
-                             iconName="house-heart-fill">
-                </SidebarItem>
+                <SidebarItem
+                    on:press={() => {
+                        theme = "dark";
+                    }}
+                    text="Twitter Feed "
+                    href="/tweet-overview"
+                    iconName="house-heart-fill"
+                />
 
                 <div class="sb-sidenav-menu-heading">Statistics</div>
-                <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Collected Data"
-                             href="/statistics"
-                             iconName="graph-up">
-                </SidebarItem>
-                <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="N-Grams insights"
-                             href="/statistics/unigram-insights"
-                             iconName="graph-up">
-                </SidebarItem>
+                <SidebarItem
+                    on:press={() => {
+                        theme = "dark";
+                    }}
+                    text="Collected Data"
+                    href="/statistics"
+                    iconName="graph-up"
+                />
+                <SidebarItem
+                    on:press={() => {
+                        theme = "dark";
+                    }}
+                    text="N-Grams insights"
+                    href="/statistics/unigram-insights"
+                    iconName="graph-up"
+                />
                 <div class="sb-sidenav-menu-heading">Text Analytics</div>
-                <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Word Graph"
-                             href="/word-graph"
-                             iconName="bounding-box">
-                </SidebarItem>
-                <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Sentiment Analysis"
-                             href="/sentiment-analysis"
-                             iconName="emoji-smile-upside-down">
-                </SidebarItem>
-                <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Generate Tweet"
-                             href="/tweet-gen"
-                             iconName="dice-5">
-                </SidebarItem>
+                <SidebarItem
+                    on:press={() => {
+                        theme = "dark";
+                    }}
+                    text="Word Graph"
+                    href="/word-graph"
+                    iconName="bounding-box"
+                />
+                <SidebarItem
+                    on:press={() => {
+                        theme = "dark";
+                    }}
+                    text="Sentiment Analysis"
+                    href="/sentiment-analysis"
+                    iconName="emoji-smile-upside-down"
+                />
+                <SidebarItem
+                    on:press={() => {
+                        theme = "dark";
+                    }}
+                    text="Generate Tweet"
+                    href="/tweet-gen"
+                    iconName="dice-5"
+                />
+                <SidebarItem
+                    on:press={() => {
+                        theme = "dark";
+                    }}
+                    text="Word embeddings"
+                    href="/word-embedding"
+                    iconName="body-text"
+                />
                 <div class="sb-sidenav-menu-heading">Settings</div>
-                <SidebarItem on:press={() => { theme = 'dark'; }}
-                             text="Stream control"
-                             href="/"
-                             iconName="twitter">
-                </SidebarItem>
+                <SidebarItem
+                    on:press={() => {
+                        theme = "dark";
+                    }}
+                    text="Stream control"
+                    href="/"
+                    iconName="twitter"
+                />
                 <!--<SidebarItem
                         on:press={toggleLayout}
                         class={!isLayoutOpen ? 'collapsed' : ''}
@@ -188,7 +218,6 @@
                         </Collapse>
                     </Nav>
                 </Collapse>-->
-                
             </Nav>
         </div>
     </Nav>

@@ -20,7 +20,7 @@ PATH_TO_DATA_FILES = "../../../data/"
 PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
 PATH_TO_SENTIMENT_MODELS = PATH_TO_DATA_FILES + "sentiment-models/"
 PATH_TO_OTHER_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets_train.csv"
-PATH_TO_WORD2VEC_MODEL = PATH_TO_DATA_FILES + "word-embeddings/w2v_epochs=25.emb"
+PATH_TO_WORD2VEC_MODEL = PATH_TO_DATA_FILES + "word-embeddings/w2v_epochs=100.emb"
 PATH_TO_OTHER_VALIDATION_DATA = PATH_TO_DATA_FILES + "Tweets_test.csv"
 PATH_TO_OWN_TRAINING_DATA = PATH_TO_DATA_FILES + "classification_with_text_train.csv"
 PATH_TO_OWN_VALIDATION_DATA = PATH_TO_DATA_FILES + "classification_with_text_test.csv"
@@ -203,7 +203,7 @@ async def word_in_w2v_vocab(word: str):
 
 @app.get("/analysis/embedding/similar")
 async def get_similar(positive: List[str] = Query(default=None), negative: List[str] = Query(default=None), k: int = 10):
-    return model.wv.most_similar(positive=positive, negative=negative, topn=k)
+    return {"similar": model.wv.most_similar(positive=positive, negative=negative, topn=k)}
 
 @app.get("/analysis/embedding/doesntmatch")
 async def doesnt_match(word: List[str] = Query(default=None)):
