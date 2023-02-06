@@ -19,27 +19,19 @@
     <div in:fly={{ y: 200, duration: 2000 }} out:fade>
         <img src="Qatar-2022-1536x798.png" class="banner" />
     </div>
-    <div in:fly={{ y: 200, duration: 2000, delay: 0 }} out:fade>
+    <div style="display: flex; justify-content: center" in:fly={{ y: 200, duration: 2000, delay: 0 }} out:fade>
         <p>
             We collected <span class="highlight">{numTweets}</span> Tweets from
             <span class="highlight">12323</span>
-            different users of which
-            <span class="highlight">12323</span>
-             are verified.
-            The Tweets span a time frame of
-            <span class="highlight">{numDays}</span> days
-            from the 
-            <span class="highlight">12.12.22</span> to the
-            <span class="highlight">12.12.22</span>.
-            From these Tweets we extracted
-            <span class="highlight">424235</span> Named Entities...
+            different users over the course of
+            <span class="highlight">{numDays}</span> days.
         </p>
     </div>
 {/if}
 
 <style>
     p {
-        font-size: 1.15em;
+        font-size: 1.2em;
     }
     .banner {
         width: 100%;
