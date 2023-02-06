@@ -11,7 +11,11 @@ for item in ne_dict.items():
     type = parts[1][2:len(parts[1]) - 2]
     converted_dict[(ne, type)] = item[1]
 
-sorted_list = sorted(ne_dict.items(), key=lambda x: x[1], reverse=True)
-print(sorted_list[0:20])
-sorted_list = sorted(converted_dict.items(), key=lambda x: x[1], reverse=True)
-print(sorted_list[0:20])
+def get_nes_of_type(type):
+    return {entry[0]: entry[1] for entry in converted_dict.items() if type in entry[0]}
+
+def get_top_k(dict, k):
+    as_list = sorted(dict.items(), key=lambda x: x[1], reverse=True)
+    return {entry[0]: entry[1] for entry in as_list[:k]}
+
+print(get_top_k(get_nes_of_type("EVENT"), 20))
