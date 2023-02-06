@@ -1,3 +1,4 @@
+import json
 import os.path
 from typing import List, Tuple
 import ujson
@@ -195,6 +196,16 @@ async def get_sentiment_for_tweets_list_by_date(texts: List[Tuple[str, str]]):
             lrcother.get_sentiment_of_text_list_by_date(texts),
             lrcown.get_sentiment_of_text_list_by_date(texts),
             berts.get_sentiment_of_text_list_by_date(texts)]
+
+@app.get("/analysis/sentiment/meanSentiment")
+async def get_mean_overall_sentiment():
+    """
+    Returns the mean overall sentiment calculated by all methods.
+    """
+    with open(PATH_TO_DATA_FILES + 'mean_sentiment.json') as f:
+        data = json.load(f)
+    return data
+
 
 ## word embedding
 @app.get("/analysis/embedding/exists")
