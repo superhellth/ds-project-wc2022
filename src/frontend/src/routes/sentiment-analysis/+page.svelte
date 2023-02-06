@@ -1,19 +1,31 @@
 <script lang="ts">
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
-    import {Alert, Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Row} from "sveltestrap";
+    import {Alert, Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Label, Row} from "sveltestrap";
     import {onMount} from "svelte";
+    import ChartCard from "../../svelte-components/ChartCard.svelte";
 
     let provider: ElasticProvider = ElasticProvider.getInstance();
 
+    // Overall Sentiment variables
     let userTweet: string = '';
     let vaderSentMean = 'Loading...';
     let lrcSentOtherMean = 'Loading...';
     let lrcSentOwnMean = 'Loading ...';
     let bertSentMean = 'Loading ...';
+
+    // Try it out variables
     let vaderSent = 'Waiting...'; // variable to hold the vaderSent score
     let sgdSentOther = 'Waiting...'; // variable to hold the trainedSent score
     let sgdSentOwn = 'Waiting...'; // variable to hold the nbSent score
     let bertSent = "Waiting... (BERT: I\'m a bit slow, sorry!)"; // variable to hold the bertSent score
+
+    // Sentiment by date variables
+    let useVaderSent = true;
+    let useSgdSentOther = false;
+    let useSgdSentOwn = false;
+    let useBertSent = false;
+    console.log("Test");
+
 
     async function getMeanSent() {
         const mean_sent = await provider.getMeanOverallSentiment();
@@ -36,6 +48,10 @@
     onMount(() => {
         getMeanSent();
     })
+
+    function redraw_graph() {
+        console.log("Redrawing graph with methods X and Y...")
+    }
 
 </script>
 
@@ -133,5 +149,146 @@
                 </Col>
             </Row>
         </Form>
+
+        <Form>
+            <h4>Sentiment over time</h4>
+            <p>Below, you can take a look at the average sentiment over time. You are able so sort by timeframe and
+            decide which methods you would like to see.</p>
+            <div class="float-left">
+                <Row>
+                <Col>
+                    <FormGroup style="margin-left: 2em">
+                        <Label for="timeframe-select"><b>Timeframe selection</b></Label>
+                        <Input
+                            type="select"
+                            id="timeframe-select"
+                        >
+                        {#each ["by Day", "by Week", "by Month"] as timeframe}
+                            <option>{timeframe}</option>
+                        {/each}
+                    </Input>
+                    </FormGroup>
+                </Col>
+                <Col>
+                    <b>Sentiment methods</b>
+                    <Row>
+                          <FormGroup>
+                            <Input
+                                    id="cvs"
+                                    type="checkbox"
+                                    label="vaderSentiment"
+                                    bind:value={useVaderSent}
+                                    on:change={redraw_graph()}
+                            />
+                          </FormGroup>
+                    </Row>
+                    <Row>
+                          <FormGroup>
+                            <Input
+                                    id="ccother"
+                                    type="checkbox"
+                                    label="SGDClassifierOther"
+                                    bind:value={useSgdSentOther}
+                                    on:change={redraw_graph()}
+
+                            />
+                          </FormGroup>
+                    </Row>
+                    <Row>
+                          <FormGroup>
+                            <Input
+                                    id="ccown"
+                                    type="checkbox"
+                                    label="SGDClassifierOwn"
+                                    bind:value={useSgdSentOwn}
+                                    on:change={redraw_graph()}
+                            />
+                          </FormGroup>
+                    </Row>
+                    <Row>
+                          <FormGroup>
+                            <Input
+                                    id="cbc"
+                                    type="checkbox"
+                                    label="BERT based Classifier"
+                                    bind:value={useBertSent}
+                                    on:change={redraw_graph()}
+                            />
+                          </FormGroup>
+                    </Row>
+                </Col>
+                </Row>
+
+            </div>
+
+            <Row>
+                <ChartCard header="Sentiment over time" footer="As you can see...">
+                </ChartCard>
+            </Row>
+
+        </Form>
+
+        <Form>
+            <p></p>
+            <h4>Sentiment by topic</h4>
+            <p>Below, you can take a look at the average sentiment by different topics that we identified in our corpus.
+            </p>
+
+            <Row>
+                <Col>
+                    <Alert color="primary">
+                        Topic X
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="warning">
+                        Topic X
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="success">
+                        Topic X
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="danger">
+                        Topic X
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="danger">
+                        Topic X
+                    </Alert>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Alert color="success">
+                        Topic X
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="warning">
+                        Topic X
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="warning">
+                        Topic X
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="success">
+                        Topic X
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="primary">
+                        Topic X
+                    </Alert>
+                </Col>
+            </Row>
+        </Form>
+
     </FormGroup>
 </div>
