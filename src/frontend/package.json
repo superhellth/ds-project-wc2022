@@ -42,6 +42,7 @@
 		"graphology-gexf": "^0.10.3",
 		"sigma": "^2.4.0",
 		"svelte-material-ui": "^7.0.0-beta.0",
+		"svelte-typing-animated": "^1.0.7",
 		"sveltestrap": "^5.10.0"
 	}
 }
