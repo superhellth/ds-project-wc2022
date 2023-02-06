@@ -214,6 +214,11 @@ class ElasticProvider extends Connection {
           });
         return await response.json();
     }
+
+    public async getMeanOverallSentiment() {
+        let queryURL: string = this.URL + "/analysis/sentiment/meanSentiment";
+        return await fetch(queryURL).then((response) => response.json());
+    }
 }
 
 export default ElasticProvider;
