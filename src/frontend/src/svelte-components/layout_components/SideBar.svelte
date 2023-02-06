@@ -54,13 +54,13 @@
     >
         <div class="sb-sidenav-menu">
             <Nav>
-                <div class="sb-sidenav-menu-heading">Basic Overview</div>
+                <div class="sb-sidenav-menu-heading">Overview</div>
                 <SidebarItem
                     on:press={() => {
                         theme = "dark";
                     }}
-                    text="Twitter Feed "
-                    href="/tweet-overview"
+                    text="Twitter Feed"
+                    href="/"
                     iconName="house-heart-fill"
                 />
 
@@ -120,7 +120,7 @@
                         theme = "dark";
                     }}
                     text="Stream control"
-                    href="/"
+                    href="/settings"
                     iconName="twitter"
                 />
                 <!--<SidebarItem

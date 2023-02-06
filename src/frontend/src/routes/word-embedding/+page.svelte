@@ -1,7 +1,7 @@
 <script lang="ts">
     import CountTable from "src/svelte-components/CountTable.svelte";
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
-    import { Form, FormGroup, Input, Label } from "sveltestrap";
+    import { Breadcrumb, BreadcrumbItem, Form, FormGroup, Input, Label } from "sveltestrap";
 
     let provider: ElasticProvider = ElasticProvider.getInstance();
     let checkIfExistsString: string = "Christiano Ronaldo";
@@ -69,10 +69,16 @@
 
 <title>Text Analytics - Word2Vec</title>
 
-<h2>Word2Vec Embedding</h2>
-<p>Our Embedding is a gensim Word2Vec Model trained on our whole corpus...</p>
+<h1>Word2Vec Embedding</h1>
+<Breadcrumb class="mb-4">
+    <BreadcrumbItem>
+        <a href=".">Dashboard</a>
+    </BreadcrumbItem>
+    <BreadcrumbItem active>Word2Vec</BreadcrumbItem>
+</Breadcrumb>
 
 <h3>Explore the embedding</h3>
+<p>Our Embedding is a gensim Word2Vec Model trained on our whole corpus...</p>
 <Form>
     <FormGroup>
         <Label>Check for embedding</Label>

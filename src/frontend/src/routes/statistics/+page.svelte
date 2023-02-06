@@ -3,7 +3,7 @@
     import TweetCountGraph from "src/svelte-components/DateHistogramCard.svelte";
     import Loading from "src/svelte-components/Loading.svelte";
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
-    import { Col, Row } from "sveltestrap";
+    import { Breadcrumb, BreadcrumbItem, Col, Row } from "sveltestrap";
 
     let provider: ElasticProvider = ElasticProvider.getInstance();
     let authorLocationMap: Promise<Map<string, number>> =
@@ -17,6 +17,13 @@
 </script>
 
 <title>Statistics - Collected Data</title>
+<h1>Corpus Statistics</h1>
+<Breadcrumb class="mb-4">
+    <BreadcrumbItem>
+        <a href=".">Dashboard</a>
+    </BreadcrumbItem>
+    <BreadcrumbItem active>Statistics</BreadcrumbItem>
+</Breadcrumb>
 
 <Row>
     <Col>

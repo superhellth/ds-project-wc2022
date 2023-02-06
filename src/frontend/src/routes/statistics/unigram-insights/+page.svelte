@@ -1,12 +1,19 @@
 <script lang="ts">
     import CountTableCard from "src/svelte-components/CountTableCard.svelte";
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
-    import { Col, Row } from "sveltestrap";
+    import { Breadcrumb, BreadcrumbItem, Col, Row } from "sveltestrap";
 
     let provider: ElasticProvider = ElasticProvider.getInstance();
 </script>
 
 <title>Statistics - Hashtags and Mentions</title>
+<h1>N-grams</h1>
+<Breadcrumb class="mb-4">
+    <BreadcrumbItem>
+        <a href=".">Dashboard</a>
+    </BreadcrumbItem>
+    <BreadcrumbItem active>n-grams</BreadcrumbItem>
+</Breadcrumb>
 
 <Row>
     <Col>

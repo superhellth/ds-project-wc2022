@@ -3,7 +3,7 @@
     import Loading from "src/svelte-components/Loading.svelte";
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
     import { onMount } from "svelte";
-    import { Button, Form, FormGroup, Input, Tooltip } from "sveltestrap";
+    import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Input, Tooltip } from "sveltestrap";
 
     let provider: ElasticProvider = ElasticProvider.getInstance();
     let text: string = "";
@@ -43,6 +43,13 @@
 </script>
 
 <title>Text Analytics - Generate Tweet</title>
+<h1>Tweet Completion</h1>
+<Breadcrumb class="mb-4">
+    <BreadcrumbItem>
+        <a href=".">Dashboard</a>
+    </BreadcrumbItem>
+    <BreadcrumbItem active>Tweet Completion</BreadcrumbItem>
+</Breadcrumb>
 
 <div>
     <FormGroup>
