@@ -59,9 +59,17 @@
                     on:press={() => {
                         theme = "dark";
                     }}
-                    text="Twitter Feed"
+                    text="Home"
                     href="/"
                     iconName="house-heart-fill"
+                />
+                <SidebarItem
+                    on:press={() => {
+                        theme = "dark";
+                    }}
+                    text="Twitter Feed"
+                    href="/overview"
+                    iconName="twitter"
                 />
 
                 <div class="sb-sidenav-menu-heading">Statistics</div>
@@ -121,7 +129,7 @@
                     }}
                     text="Stream control"
                     href="/settings"
-                    iconName="twitter"
+                    iconName="gear"
                 />
                 <!--<SidebarItem
                         on:press={toggleLayout}
