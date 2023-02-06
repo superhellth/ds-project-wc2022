@@ -1,16 +1,27 @@
 <script lang="ts">
-    import Loading from "src/svelte-components/Loading.svelte";
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
-    import { onMount } from "svelte";
-    import {Alert, Breadcrumb, BreadcrumbItem, Button, CardText, Col, Form, FormGroup, Input, Row, Tooltip} from "sveltestrap";
+    import {Alert, Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Row} from "sveltestrap";
+    import {onMount} from "svelte";
 
     let provider: ElasticProvider = ElasticProvider.getInstance();
 
     let userTweet: string = '';
+    let vaderSentMean = 'Loading...';
+    let lrcSentOtherMean = 'Loading...';
+    let lrcSentOwnMean = 'Loading ...';
+    let bertSentMean = 'Loading ...';
     let vaderSent = 'Waiting...'; // variable to hold the vaderSent score
     let sgdSentOther = 'Waiting...'; // variable to hold the trainedSent score
     let sgdSentOwn = 'Waiting...'; // variable to hold the nbSent score
     let bertSent = "Waiting... (BERT: I\'m a bit slow, sorry!)"; // variable to hold the bertSent score
+
+    async function getMeanSent() {
+        const mean_sent = await provider.getMeanOverallSentiment();
+        vaderSentMean = mean_sent['mean_vs_sent']
+        lrcSentOtherMean = mean_sent['mean_lrc_other_sent']
+        lrcSentOwnMean = mean_sent['mean_lrc_own_sent']
+        bertSentMean = mean_sent['mean_bert_sent']
+    }
 
     async function executeCustomTweetSent() {
         if (userTweet) {
@@ -21,6 +32,10 @@
             bertSent = scores[3];
         }
     }
+
+    onMount(() => {
+        getMeanSent();
+    })
 
 </script>
 
@@ -48,25 +63,25 @@
                 <Col>
                     <Alert color="primary">
                         <h5><a href="https://github.com/cjhutto/vaderSentiment">vaderSentiment</a></h5>
-                        0.156459156(dummy)
+                        {vaderSentMean}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="warning">
                         <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOther</a></h5>
-                        0.156459156(dummy)
+                        {lrcSentOtherMean}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="success">
                         <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOtherOwn</a></h5>
-                        0.156459156(dummy)
+                        {lrcSentOwnMean}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="danger">
                         <h5><a href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english">BERT based Classifier</a></h5>
-                        0.156459156(dummy)
+                        {bertSentMean}
                     </Alert>
                 </Col>
             </Row>
