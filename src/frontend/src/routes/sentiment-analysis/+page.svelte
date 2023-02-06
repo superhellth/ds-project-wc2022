@@ -2,7 +2,7 @@
     import Loading from "src/svelte-components/Loading.svelte";
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
     import { onMount } from "svelte";
-    import {Alert, Button, CardText, Col, Form, FormGroup, Input, Row, Tooltip} from "sveltestrap";
+    import {Alert, Breadcrumb, BreadcrumbItem, Button, CardText, Col, Form, FormGroup, Input, Row, Tooltip} from "sveltestrap";
 
     let provider: ElasticProvider = ElasticProvider.getInstance();
 
@@ -25,12 +25,19 @@
 </script>
 
 <title>Text Analytics - Sentiment Analysis</title>
+<h1>Sentiment Analysis</h1>
+<Breadcrumb class="mb-4">
+    <BreadcrumbItem>
+        <a href=".">Dashboard</a>
+    </BreadcrumbItem>
+    <BreadcrumbItem active>Sentiment</BreadcrumbItem>
+</Breadcrumb>
 
 <div>
     <FormGroup>
         <Form>
-            <h3>Sentiment Analysis</h3>
-            <p>Welcome to the Sentiment Analysis page! Here, you can view sentiment analysis of tweets,
+            <h4>Welcome!</h4>
+            <p>to the Sentiment Analysis page! Here, you can view sentiment analysis of tweets,
                 but you can also input your own "tweet" to see what sentiment it conveys. Furthermore, you can see
                 sentiment analysis by country and track sentiment changes over time. Get an in-depth understanding of
                 the buzz surrounding the World Cup with this sentiment analysis tool.</p>

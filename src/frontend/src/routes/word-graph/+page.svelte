@@ -5,6 +5,8 @@
     import {
         Accordion,
         AccordionItem,
+        Breadcrumb,
+        BreadcrumbItem,
         Button,
         Form,
         FormGroup,
@@ -279,15 +281,13 @@
 
 <title>Text Analytics - Word Graph</title>
 
-<div style="display: flex; justify-content: space-between">
-    <h2>Word Graph</h2>
-    <Button
-        type="button"
-        on:click={() => controlsAreOpen = !controlsAreOpen}
-        style="float: right;">Graph settings</Button
-    >
-</div>
-<div style="height: 1px; background: black; margin-top: 2px" />
+<h1>Word Graph</h1>
+<Breadcrumb class="mb-4">
+    <BreadcrumbItem>
+        <a href=".">Dashboard</a>
+    </BreadcrumbItem>
+    <BreadcrumbItem active>Word Graph</BreadcrumbItem>
+</Breadcrumb>
 <div id="graph-container">
     <div id="sigma-container" />
     <div id="cluster-div">
@@ -332,8 +332,16 @@
             bind:checked={displayEdgelessNodes}
         />
     </FormGroup>
+    <FormGroup>
+        <Button type="button" style="float: right" on:click={() => (controlsAreOpen = !controlsAreOpen)}
+            >Graph settings</Button >
+        </FormGroup>
 </Form>
-<Offcanvas isOpen={controlsAreOpen} toggle={() => controlsAreOpen = !controlsAreOpen} placement="end">
+<Offcanvas
+    isOpen={controlsAreOpen}
+    toggle={() => (controlsAreOpen = !controlsAreOpen)}
+    placement="end"
+>
     <div id="graph-chooser">
         <Form>
             <legend>Filtering</legend>
@@ -448,7 +456,7 @@
             style="background: blue">Rebuild Graph</Button
         >
         {#if loading}
-                <Loading displayString="graph" />
+            <Loading displayString="graph" />
         {/if}
     </div>
 </Offcanvas>
