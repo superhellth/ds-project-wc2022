@@ -290,5 +290,66 @@
             </Row>
         </Form>
 
+        <Form>
+            <p></p>
+            <h4>Evaluation and Limitations of our Trained Sentiment Models</h4>
+            <p>In order to assess the sentiment of the tweets we obtained, we utilized two methods that do not require
+                further training. The first method is the 'vaderSentiment' analyzer, which is specifically designed to
+                work with social media data and was found to be a suitable choice. The second method is a BERT-based
+                model that was trained on a corpus of 129 million tweets.
+            </p>
+            <p>Additionally, we developed our own sentiment analyzers using logistic regression (SGDClassifier from
+                sklearn.linear_models). These analyzers were trained on two datasets: a pre-existing dataset of 26,000
+                labeled tweets and a smaller dataset of approximately 1,000 tweets that we manually labeled. The latter
+                dataset represents a limitation of the models.
+            </p>
+            <p>The performance of our models is reported in terms of accuracy, recall, and F1 score.
+            </p>
+            <h5>SGD Classifier with 'other' dataset</h5>
+            <Row>
+                <Col>
+                    <Alert color="success">
+                        <h5>Accuracy</h5>
+                        0.8
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="danger">
+                        <h5>Recall</h5>
+                        0.65
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="warning">
+                            <h5>F1</h5>
+                            0.75
+                    </Alert>
+                </Col>
+
+            </Row>
+            <h5>SGD Classifier with own dataset</h5>
+            <Row>
+                <Col>
+                    <Alert color="danger">
+                        <h5>Accuracy</h5>
+                        0.5
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="warning">
+                        <h5>Recall</h5>
+                        0.55
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="success">
+                            <h5>F1</h5>
+                            0.58
+                    </Alert>
+                </Col>
+
+            </Row>
+        </Form>
+
     </FormGroup>
 </div>
