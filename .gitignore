@@ -11,6 +11,9 @@ tweet_phrases*
 index.csv
 *.joblib
 
+# for security reasons
+twitter-api-bearer-token.txt
+
 # IDEs
 .idea
 .vscode
