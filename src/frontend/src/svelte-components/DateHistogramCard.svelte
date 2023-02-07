@@ -15,6 +15,15 @@
     export let field;
     export let interval;
     let isBar: boolean = true;
+    let backgroundColors: string[] = [
+        "rgba(255, 99, 132)",
+        "rgba(255, 159, 64)",
+        "rgba(255, 205, 86)",
+        "rgba(75, 192, 192)",
+        "rgba(54, 162, 235)",
+        "rgba(153, 102, 255)",
+        "rgba(201, 203, 207)",
+    ];
 
     // data
     let elasticProvider: ElasticProvider = ElasticProvider.getInstance();
@@ -51,6 +60,7 @@
                 {
                     label: "Tweets",
                     data: Array.from(tweetsByDayStats.values()),
+                    backgroundColor: backgroundColors
                 },
             ],
         };

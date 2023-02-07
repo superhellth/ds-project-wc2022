@@ -158,8 +158,11 @@
 <title>Overwiev - Tweets</title>
 <h1>Tweet Query</h1>
 <Breadcrumb class="mb-4">
+    <BreadcrumbItem>
+        <a href=".">Dashboard</a>
+    </BreadcrumbItem>
     <BreadcrumbItem active>
-        Dashboard
+        Twitter Feed
     </BreadcrumbItem>
 </Breadcrumb>
 

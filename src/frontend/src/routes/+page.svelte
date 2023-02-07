@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { fly, fade, slide } from "svelte/transition";
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
+    import { Icon } from "sveltestrap";
 
     let provider: ElasticProvider = ElasticProvider.getInstance();
     let visible: boolean = false;
@@ -21,19 +22,23 @@
             minZoom: 1,
         }).addTo(map);
 
-        let locations: Map<string, number> = await provider.getTermHistogram("author.location", 20);
-        locations.forEach(async (num, location) => {
-            let locationPos = await getCoordinates(location)
-            L.circle([locationPos.lat, locationPos.lng], {
+        let locations: Map<string, number> = await provider.getTermHistogram(
+            "author.location",
+            50
+        );
+        for (const [key, value] of locations) {
+            let locationPos = await getCoordinates(key);
+            if (locationPos.lat == 0 && locationPos.lng == 0) {
+                continue;
+            }
+            let marker = L.circle([locationPos.lat, locationPos.lng], {
                 color: "red",
                 fillColor: "#f03",
                 fillOpacity: 0.5,
-                radius: num,
+                radius: Math.min(value * 10, 200000),
             }).addTo(map);
-            console.log("Added")
-        })
-        for (let location in locations.entries()) {
-            
+            marker.bindPopup("<b>" + key + "</b><br>" + value + " Tweets")
+            await new Promise((r) => setTimeout(r, 1100));
         }
     }
 
@@ -51,7 +56,10 @@
                 lng: data[0].lon,
             };
         } else {
-            throw new Error(`No coordinates found for location: ${location}`);
+            return {
+                lat: 0,
+                lng: 0,
+            };
         }
     }
 
@@ -65,6 +73,9 @@
 {#if visible}
     <div in:fly={{ y: 200, duration: 2000 }} out:fade>
         <img src="Qatar-2022-1536x798.png" class="banner" />
+        <p style="margin-left: 80em; font-size: 0.8em">
+            <Icon name="exclamation-circle" /> Copyright by
+        </p>
     </div>
     <div
         style="display: flex; justify-content: center"
@@ -88,7 +99,9 @@
     </div>
 {/if}
 
-<style>
+<style lang="scss">
+    @use "src/themes";
+
     #map {
         height: 900px;
         width: 1200px;
@@ -105,7 +118,7 @@
     }
     .highlight {
         font-size: 2em;
-        background-color: #6c1d45;
+        background-color: var(--qatar-color);
         color: white;
     }
 </style>
