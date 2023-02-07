@@ -9,6 +9,7 @@
     export let chartID = "c1";
     export let header = "Tweets per Day";
     export let footer = "As we can see in this graph...";
+    export let valueLabel = "Tweets";
     export let dataMap: Map<string, number>;
     export let type: any = "pie";
 
@@ -35,7 +36,7 @@
             labels: Array.from(dataMap.keys()),
             datasets: [
                 {
-                    label: "Tweets",
+                    label: valueLabel,
                     data: Array.from(dataMap.values()),
                     backgroundColor: shuffleArray(backgroundColors),
                 },
@@ -52,12 +53,6 @@
 
 {#await onMount}
     <Loading displayString="Graph" />
-{:then ignored}
-    <ChartCard {header} {footer} chart_id={chartID} />
-{/await}
-
-{#await onMount}
-    <Loading displayString="Graph"/>
 {:then ignored}
     <ChartCard {header} {footer} chart_id={chartID} />
 {/await}

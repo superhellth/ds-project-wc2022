@@ -19,6 +19,18 @@ class ElasticProvider extends Connection {
     }
 
     /**
+     * Send a query directly to ES.
+     * @param query Query to be passed to ES.
+     * @returns Response as json.
+     */
+    public async queryESRaw(query: string): Promise<any> {
+        // async request
+        let data = await fetch(this.URL + "/query/raw?query=" + query).
+            then((response) => response.json());
+        return data;
+    }
+
+    /**
      * Query tweets from elasticsearch.
      * @param query The query to be forwarded to es.
      * @returns The queried tweets as an ArrayPromise.
@@ -167,7 +179,7 @@ class ElasticProvider extends Connection {
     }
 
     /**
-     * Find unfitting word in list.
+     * Find unfitting word in list based on Word2Vec embedding.
      * @param words List of words to check.
      * @returns The word in the list that does not fit in.
      */
@@ -181,6 +193,12 @@ class ElasticProvider extends Connection {
         return data;
     }
 
+    /**
+     * Get similar words based on Word2Vec embedding.
+     * @param positive Positive contributions.
+     * @param negative Negative contributions.
+     * @returns Top 10 most similar words.
+     */
     public async getSimilar(positive: string[], negative: string[]): Promise<Map<string, number>> {
         let argString: string = "&";
         for (let i = 0; i < positive.length; i++) {

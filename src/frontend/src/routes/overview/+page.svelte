@@ -161,9 +161,7 @@
     <BreadcrumbItem>
         <a href=".">Dashboard</a>
     </BreadcrumbItem>
-    <BreadcrumbItem active>
-        Twitter Feed
-    </BreadcrumbItem>
+    <BreadcrumbItem active>Twitter Feed</BreadcrumbItem>
 </Breadcrumb>
 
 <Form>
@@ -269,7 +267,7 @@
                             <div slot="title">
                                 <b>SGDClassifier</b>
                             </div>
-                            This sentiment score is calculated by the <a
+                            This sentiment score is calculated by the<a
                                 href="https://scikit-learn.org/stable/index.html"
                             >
                                 sklearn
@@ -288,13 +286,13 @@
                             <div slot="title">
                                 <b>SGDClassifierOwn</b>
                             </div>
-                            This sentiment score is calculated by the <a
+                            This sentiment score is calculated by the<a
                                 href="https://scikit-learn.org/stable/index.html"
                             >
                                 sklearn
                             </a> SGDClassifier class in combination with a TfidfVectorizer.
-                            It trains using a own self labeled tweets from our dataset which
-                            can be found in our repository under 'src/data/classification_with_text_train.csv'.
+                            It trains using a own self labeled tweets from our dataset
+                            which can be found in our repository under 'src/data/classification_with_text_train.csv'.
                         </Popover>
                     </td>
                     <td>{nbSent}</td>

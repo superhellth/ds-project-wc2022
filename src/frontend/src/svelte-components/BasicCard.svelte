@@ -11,7 +11,7 @@
 <Card body color="dark" inverse style="margin: 2px">
     <!-- The Card has a header, which displays the text passed to the "header" variable and a Twitter icon -->
     <CardHeader>
-        <div>{header} <Icon name="twitter"/></div>
+        <h3>{header} <Icon name="twitter"/></h3>
     </CardHeader>
     <!-- The "card-header-controls" slot allows additional content to be added to the header of the Card -->
     <CardHeader>

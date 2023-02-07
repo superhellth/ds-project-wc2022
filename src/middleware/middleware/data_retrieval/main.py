@@ -86,6 +86,11 @@ model = Word2Vec.load(PATH_TO_WORD2VEC_MODEL)
 
 
 ### Provide data from ES ###
+@app.get("/query/raw")
+async def query_raw(query: str):
+    resp = es_client.search(index=INDEX_NAME, body=query, timeout="2m", request_timeout=60)
+    return resp
+
 @app.get("/query/")
 async def get_tweets_that(query: str):
     """Returns all tweets that match the criteria"""
@@ -210,6 +215,14 @@ async def get_mean_overall_sentiment():
 ## word embedding
 @app.get("/analysis/embedding/exists")
 async def word_in_w2v_vocab(word: str):
+    """Check for existing Word2Vec Embedding for a word.
+
+    Args:
+        word (str): Word to check.
+
+    Returns:
+        bool: Whether or not the word exists in the vocab.
+    """
     return word in model.wv.key_to_index.keys()
 
 @app.get("/analysis/embedding/similar")
