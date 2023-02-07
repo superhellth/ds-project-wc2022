@@ -24,6 +24,8 @@ class CollocationGraphGenerator:
         self.nlp = spacy.load("en_core_web_sm")
         self.stat_provider = stat_provider.StatProvider(path_to_data_files)
         self.path_to_graph_files = path_to_graph_files
+        # red, orange, yellow, green, cyan, blue, purple, 
+        # pink, red, black, grey, green-gray, brownish
         self.colors = ["#FF0000", "#FF8000", "#F3FF00", "#00FF01", "#00FFED", "#0008FF", "#BF00FF",
                        "#FF00C9", "#FF0000", "#000000", "#808080", "#004A08", "#6F0000", "#00466F", "#57006F"]
 

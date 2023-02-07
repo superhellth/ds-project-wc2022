@@ -11,6 +11,7 @@
     export let showStopWordSwitch: boolean = false;
     export let footer = "Lorem ipsum";
     export let header = "Lorem ipsum";
+    export let keyColumnName: string = "Token"
 
     let options = [3, 10, 20, 50, 100];
     let displayedRows = 10;
@@ -48,6 +49,6 @@
                 />
             {/if}
         </div>
-        <CountTable map={countMap} keyColumnName="Token" slot="body" />
+        <CountTable map={countMap} keyColumnName={keyColumnName} slot="body" />
     </BasicCard>
 {/await}

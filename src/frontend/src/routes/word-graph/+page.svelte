@@ -10,11 +10,17 @@
         Button,
         Form,
         FormGroup,
+        Icon,
         Input,
         Label,
+        Modal,
         Offcanvas,
     } from "sveltestrap";
-    import type { EdgeDisplayData } from "sigma/types.js";
+    import type {
+        Coordinates,
+        EdgeDisplayData,
+        NodeDisplayData,
+    } from "sigma/types.js";
     import Loading from "src/svelte-components/Loading.svelte";
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
 
@@ -68,6 +74,68 @@
         hoveredNeighbors?: Set<string>;
     }
     const state: State = { searchQuery: "" };
+    let searchInput: any;
+    let searchSuggestions: any;
+
+    // Actions:
+    function setSearchQuery(query: string) {
+        state.searchQuery = query;
+
+        if (searchInput.value !== query) searchInput.value = query;
+
+        if (query) {
+            const lcQuery = query.toLowerCase();
+            const suggestions = displayGraph
+                .nodes()
+                .map((n) => ({
+                    id: n,
+                    label: displayGraph.getNodeAttribute(n, "label") as string,
+                }))
+                .filter(({ label }) => label.toLowerCase().includes(lcQuery));
+
+            // If we have a single perfect match, them we remove the suggestions, and
+            // we consider the user has selected a node through the datalist
+            // autocomplete:
+            if (suggestions.length === 1 && suggestions[0].label === query) {
+                state.selectedNode = suggestions[0].id;
+                state.suggestions = undefined;
+
+                // Move the camera to center it on the selected node:
+                const nodePosition = renderer.getNodeDisplayData(
+                    state.selectedNode
+                ) as Coordinates;
+                renderer.getCamera().animate(nodePosition, {
+                    duration: 500,
+                });
+            }
+            // Else, we display the suggestions list:
+            else {
+                state.selectedNode = undefined;
+                state.suggestions = new Set(suggestions.map(({ id }) => id));
+            }
+        }
+        // If the query is empty, then we reset the selectedNode / suggestions state:
+        else {
+            state.selectedNode = undefined;
+            state.suggestions = undefined;
+        }
+
+        // Refresh rendering:
+        renderer.refresh();
+    }
+
+    function setHoveredNode(node?: string) {
+        if (node) {
+            state.hoveredNode = node;
+            state.hoveredNeighbors = new Set(displayGraph.neighbors(node));
+        } else {
+            state.hoveredNode = undefined;
+            state.hoveredNeighbors = undefined;
+        }
+
+        // Refresh rendering:
+        renderer.refresh();
+    }
 
     onMount(async () => {
         const text = await provider.getWordGraph(
@@ -163,20 +231,30 @@
 
             return res;
         });
+
+        searchInput = document.getElementById(
+            "search-input"
+        ) as HTMLInputElement;
+        searchSuggestions = document.getElementById(
+            "suggestions"
+        ) as HTMLDataListElement;
+        searchSuggestions.innerHTML = displayGraph
+            .nodes()
+            .map(
+                (node) =>
+                    `<option value="${displayGraph.getNodeAttribute(
+                        node,
+                        "label"
+                    )}"></option>`
+            )
+            .join("\n");
+        searchInput.addEventListener("input", () => {
+            setSearchQuery(searchInput.value || "");
+        });
+        searchInput.addEventListener("blur", () => {
+            setSearchQuery("");
+        });
     });
-
-    function setHoveredNode(node?: string) {
-        if (node) {
-            state.hoveredNode = node;
-            state.hoveredNeighbors = new Set(displayGraph.neighbors(node));
-        } else {
-            state.hoveredNode = undefined;
-            state.hoveredNeighbors = undefined;
-        }
-
-        // Refresh rendering:
-        renderer.refresh();
-    }
 
     async function changeEdgeThreshold(threshold: number) {
         if (displayGraph == null) {
@@ -281,13 +359,31 @@
 
 <title>Text Analytics - Word Graph</title>
 
-<h1>Word Graph</h1>
-<Breadcrumb class="mb-4">
+<div style="display: flex; justify-content: space-between">
+    <h1>Word Graph</h1>
+    <Button
+        type="button"
+        style="background: rgba(0,0,0,0); color: black; border: 0px"
+        on:click={() => (controlsAreOpen = !controlsAreOpen)}
+        ><Icon name="gear" /> Settings</Button
+    >
+</div>
+<Breadcrumb style="float: clear">
     <BreadcrumbItem>
         <a href=".">Dashboard</a>
     </BreadcrumbItem>
     <BreadcrumbItem active>Word Graph</BreadcrumbItem>
 </Breadcrumb>
+<div id="search" style="position: absolute; top: 8em; right: 30em; z-index: 1">
+    <input
+    style="width: 15em"
+        type="search"
+        id="search-input"
+        list="suggestions"
+        placeholder="Try searching for a node..."
+    />
+    <datalist id="suggestions" />
+</div>
 <div id="graph-container">
     <div id="sigma-container" />
     <div id="cluster-div">
@@ -332,17 +428,71 @@
             bind:checked={displayEdgelessNodes}
         />
     </FormGroup>
-    <FormGroup>
-        <Button type="button" style="float: right" on:click={() => (controlsAreOpen = !controlsAreOpen)}
-            >Graph settings</Button >
-        </FormGroup>
 </Form>
-<Offcanvas
+<h2>Results</h2>
+<p>These results are suprisingly good, considering the only thing we input was the collocation counts. We have played around a bit with the parameters
+    and found that this combination which is set as standard works best. We interpreted the topics the following way:
+</p>
+<ul>
+    <li><h4 style="color: #FF0000">The Center Cluster</h4>
+        <p>This cluster probably is the least meaningful one. It's made up of the most frequent words of the corpus. This topic includes: The Argentina
+            vs Saudi Arabia match, the opening ceremony and generally all match announcements.
+        </p>
+    </li>
+    <li><h4 style="color: #000000">#Cluster</h4>
+        <p>Here we find a cluster consisting mainly of the hashtags used. It is obvious that such a cluster exists, since most people put all Hashtags
+            they use at the end of their Tweet and thus most hashtags frequently appear together. Not too much information can be won from this cluster.
+        </p>
+    </li>
+    <li><h4 style="color: #0008FF">#SayTheirNames</h4>
+        <p>The first real topic! This clusters clearly represents the Iran Conflict discussion. We found that this cluster exists, even if we reduce the 
+            number of clusters to find. So we can assume it is a much discussed and clearly outlined topic. 
+        </p>
+    </li>
+    <li><h4 style="color: #004A08">C'mon England!</h4>
+        <p>It's coming home... or maybe not... Like we've seen in the statistics about our data, there are many Tweets from England and thus it was to
+            be expected, that the English football team would be quite a topic. It seems like people or news pages love to talk about english players.
+        </p>
+    </li>
+    <li><h4 style="color: #00FFED">???</h4>
+        <p>This cluster is hard to classify, we might need to do some more digging on that...
+        </p>
+    </li>
+    <li><h4 style="color: #FF00C9">Steve Harvey</h4>
+        <p>We call this one the "USA"-Cluster. It appears to be the cluster of topics american accounts tweeted about that are not related to the world
+            cup. Things like Wrestling, Formula 1, Kanye West and... well Steve Harvey. Though we already know the Tweets about Steve Harvey mainly come
+            from one single account, so it's not really a topic many people talk about but simply the result of spam.
+        </p>
+    </li>
+    <li><h4 style="color: #FF8000">SUIIII!!!</h4>
+        <p>Yep. There is a SUII-Cluster. But it's not, as you might suspect the result of Ronaldo fans tweeting about him, but the again the result of a
+            few spam accounts pushing their product. This cluster most likely does not exist because there are so many tweets belonging to it, but because
+            its very unrelated to other things people talked about.
+        </p>
+    </li>
+    <li><h4 style="color: #F3FF00">NFT and Crypto</h4>
+        <p>This cluster is quite similar to the one above. It's a spam cluster about NFTs and Cryptos. It's less specific but just as meaningless.
+        </p>
+    </li>
+    <li><h4 style="color: #BF00FF">你好中国人！</h4>
+        <p>Although we specified in our Twitter API Query, that we only want to collect english Tweets, we got Tweets with chinese and arabic hashtags.
+            At least the chinese hashtags making up this cluster indicate that these Tweets are also scam related.
+        </p>
+    </li>
+    <li><h4 style="color: #00FF01">Cluster 10</h4>
+        <p>Another unclassifiable cluster, covering different unrelated topics like Harry and Meghan, some Leak controversy and the GOAT debate.
+        </p>
+    </li>
+    <li><h4 style="color: #808080">Stand with Ukraine</h4>
+        <p>This clusters is made up of Tweets about the war in Ukraine. It's the most isolated cluster.
+        </p>
+    </li>
+</ul>
+<Modal
     isOpen={controlsAreOpen}
     toggle={() => (controlsAreOpen = !controlsAreOpen)}
-    placement="end"
 >
-    <div id="graph-chooser">
+    <div id="graph-chooser" style="margin: 2em">
         <Form>
             <legend>Filtering</legend>
             <FormGroup>
@@ -459,12 +609,12 @@
             <Loading displayString="graph" />
         {/if}
     </div>
-</Offcanvas>
+</Modal>
 
 <style>
     #sigma-container {
         width: 100%;
-        height: 45em;
+        height: 41em;
         margin: 0;
         padding: 0;
         overflow: hidden;
