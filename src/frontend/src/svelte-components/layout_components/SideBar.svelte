@@ -87,7 +87,7 @@
                     }}
                     text="N-Grams insights"
                     href="/statistics/unigram-insights"
-                    iconName="graph-up"
+                    iconName="input-cursor-text"
                 />
                 <div class="sb-sidenav-menu-heading">Text Analytics</div>
                 <SidebarItem

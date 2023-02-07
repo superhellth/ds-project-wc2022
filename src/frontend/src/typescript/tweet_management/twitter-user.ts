@@ -72,6 +72,10 @@ class TwitterUser {
         return this.follower_count;
     }
 
+    public getTweetCount(): number {
+        return this.tweet_count;
+    }
+
 }
 
 export default TwitterUser;
