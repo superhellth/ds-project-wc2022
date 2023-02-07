@@ -55,3 +55,9 @@
 {:then ignored}
     <ChartCard {header} {footer} chart_id={chartID} />
 {/await}
+
+{#await onMount}
+    <Loading displayString="Graph"/>
+{:then ignored}
+    <ChartCard {header} {footer} chart_id={chartID} />
+{/await}
