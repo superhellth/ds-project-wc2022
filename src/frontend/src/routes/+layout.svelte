@@ -20,7 +20,7 @@
         <div id="layoutSidenav">
             <!-- Use the SideBar component to create the sidebar, passing the "color" variable to customize it -->
             <SideBar theme={color} />
-            <div id="layoutSidenav_content" style="background-color: white;">
+            <div id="layoutSidenav_content" style="background-color: var(--background-color);">
                 <main>
                     <!-- Use the Container component from sveltestrap to create a fluid container for the main content of the page -->
                     <Container fluid={true}>
@@ -35,7 +35,8 @@
     </div>
 </body>
 
-<style>
+<style lang="scss">
+    @use "src/themes";
     main {
         margin: 3px;
     }

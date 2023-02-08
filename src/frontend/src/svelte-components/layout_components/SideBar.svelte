@@ -50,7 +50,7 @@
 <div id="layoutSidenav_nav" class="sb-nav-fixed">
     <Nav
         class="sb-sidenav {sidenav_theme} accordion sb-nav-fixed"
-        id="sidenavAccordion"
+        id="sidenavAccordion" style="background-color: var(--side-bar-color)"
     >
         <div class="sb-sidenav-menu">
             <Nav>

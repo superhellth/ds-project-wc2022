@@ -133,7 +133,7 @@
     onMount(async () => {
         resize();
         let queryInput = document.getElementById("query-input")!;
-        queryInput.style.backgroundColor = "#212529";
+        queryInput.style.backgroundColor = "var(--side-bar-color)";
         queryInput.style.color = "#FFFFFF";
         queryInput.addEventListener("keydown", function (e) {
             if (e.key == "Tab") {
@@ -184,7 +184,7 @@
                 type="select"
                 name="select"
                 id="exampleSelect"
-                style="width: 25em"
+                style="width: 25em;"
                 bind:value={currentSort}
             >
                 {#each sortOptions as option}

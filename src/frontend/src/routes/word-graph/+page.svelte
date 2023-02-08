@@ -363,7 +363,7 @@
     <h1>Word Graph</h1>
     <Button
         type="button"
-        style="background: rgba(0,0,0,0); color: black; border: 0px"
+        style="background: rgba(0,0,0,0); color: var(--text-color); border: 0px"
         on:click={() => (controlsAreOpen = !controlsAreOpen)}
         ><Icon name="gear" /> Settings</Button
     >
@@ -611,7 +611,7 @@
     </div>
 </Modal>
 
-<style>
+<style lang="scss">
     #sigma-container {
         width: 100%;
         height: 41em;

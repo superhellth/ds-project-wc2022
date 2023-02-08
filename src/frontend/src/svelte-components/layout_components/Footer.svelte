@@ -10,7 +10,7 @@
 </script>
 
 
-<footer class="py-4 {bg_color} mt-auto">
+<footer class="py-4 mt-auto" style="background-color: var(--nav-bar-color)">
   <Container fluid={true}>
     <div class="d-flex align-items-center justify-content-between small">
       <div class="text-muted ">
@@ -23,3 +23,9 @@
     </div>
   </Container>
 </footer>
+
+<style lang="scss">
+  // a {
+  //   color: var(--twitter-dimmed-primary-color);
+  // }
+</style>

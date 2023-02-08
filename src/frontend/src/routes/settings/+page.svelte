@@ -98,7 +98,7 @@
   </FormField>
 </div>
 
-<style>
+<style lang="scss">
   .query-management {
     margin: 2em;
   }

@@ -4,6 +4,8 @@
     import ElasticProvider from "src/typescript/api_connections/elasticProvider";
     import { Icon } from "sveltestrap";
 
+    let currentTheme: string | null;
+
     let provider: ElasticProvider = ElasticProvider.getInstance();
     let visible: boolean = false;
     let map: any;
@@ -12,7 +14,7 @@
         let L = await import("leaflet");
         map = L.map("map", {
             center: [0, 0],
-            zoom: 2,
+            zoom: 1,
         });
 
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -85,11 +87,12 @@
         <p>
             We collected <span class="highlight">5.025.511</span> Tweets from
             <span class="highlight">1.521.959</span>
-            different users over the course of
+            different users from
+            <span class="highlight">329.177</span>
+            locations around the world over the course of
             <span class="highlight">54</span> days.
         </p>
     </div>
-    <p style="color: white">von fiete errechnet (im kopf sogar)</p>
     <div
         style="display: flex; justify-content: center"
         in:fly={{ y: -200, duration: 2000 }}
@@ -103,15 +106,16 @@
     @use "src/themes";
 
     #map {
-        height: 900px;
-        width: 1200px;
+        height: 350px;
+        width: 600px;
     }
     p {
         font-size: 1.2em;
+        color: var(--text-color)
     }
     .banner {
         width: 100%;
-        height: 300px;
+        height: 200px;
         object-fit: scale-down;
         margin-top: 3em;
         margin-bottom: 3em;

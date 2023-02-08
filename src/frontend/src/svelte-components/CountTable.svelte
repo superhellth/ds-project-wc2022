@@ -12,7 +12,7 @@
 </script>
 
 <div>
-    <Table dark striped hover responsive>
+    <Table hover striped responsive>
         <thead>
             <tr>
                 <th>#</th>
