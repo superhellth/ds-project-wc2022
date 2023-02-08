@@ -92,7 +92,7 @@ button.btn-secondary {
     background-color: var(--breadcrumbs-background-color);
 }
 li.active.breadcrumb-item {
-    color: white;
+    color: var(--text-color);
 }
 
 // Tweet card stuff
