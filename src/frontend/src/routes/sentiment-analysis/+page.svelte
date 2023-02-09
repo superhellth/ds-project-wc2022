@@ -191,7 +191,7 @@
                     </FormGroup>
                 </Col>
                 <Col>
-                    <b>Sentiment methods</b>
+                    <b class="inv">Sentiment methods</b>
                     <Row>
                           <FormGroup>
                             <Input
