@@ -24,34 +24,55 @@
     let useSgdSentOther = false;
     let useSgdSentOwn = false;
     let useBertSent = false;
-    console.log("Test");
+
+    // Trained model performance variables
+    let lrcAccOther = 'Waiting...';
+    let lrcRecOther = 'Waiting...';
+    let lrcF1Other = 'Waiting...';
+    let lrcF1Own = 'Waiting...';
+    let lrcAccOwn = 'Waiting...';
+    let lrcRecOwn = 'Waiting...';
+
+
+    async function getTrainedModelPerf() {
+        const performance = await provider.getTrainedModelPerformance();
+        lrcAccOther = performance[0].toString().slice(0, 4);
+        lrcRecOther = performance[1].toString().slice(0, 4);
+        lrcF1Other = performance[2].toString().slice(0, 4);
+        lrcF1Own = performance[3].toString().slice(0, 4);
+        lrcAccOwn = performance[4].toString().slice(0, 4);
+        lrcRecOwn = performance[5].toString().slice(0, 4);
+    }
 
 
     async function getMeanSent() {
         const mean_sent = await provider.getMeanOverallSentiment();
-        vaderSentMean = mean_sent['mean_vs_sent']
-        lrcSentOtherMean = mean_sent['mean_lrc_other_sent']
-        lrcSentOwnMean = mean_sent['mean_lrc_own_sent']
-        bertSentMean = mean_sent['mean_bert_sent']
+        vaderSentMean = mean_sent['mean_vs_sent'].toString().slice(0, 8);
+        lrcSentOtherMean = mean_sent['mean_lrc_other_sent'].toString().slice(0, 8);
+        lrcSentOwnMean = mean_sent['mean_lrc_own_sent'].toString().slice(0, 8);
+        bertSentMean = mean_sent['mean_bert_sent'].toString().slice(0, 8);
     }
 
     async function executeCustomTweetSent() {
         if (userTweet) {
             const scores = await provider.getSentimentTweet(userTweet)
-            vaderSent = scores[0];
-            sgdSentOther = scores[1];
-            sgdSentOwn = scores[2];
-            bertSent = scores[3];
+            vaderSent = scores[0].toString().slice(0, 8);
+            sgdSentOther = scores[1].toString().slice(0, 8);
+            sgdSentOwn = scores[2].toString().slice(0, 8);
+            bertSent = scores[3].toString().slice(0, 8);
         }
     }
 
     onMount(() => {
         getMeanSent();
+        getTrainedModelPerf();
     })
 
     function redraw_graph() {
         console.log("Redrawing graph with methods X and Y...")
     }
+
+
 
 </script>
 
@@ -310,41 +331,41 @@
                 <Col>
                     <Alert color="success">
                         <h5>Accuracy</h5>
-                        0.8
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="danger">
-                        <h5>Recall</h5>
-                        0.65
+                        {lrcAccOther}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="warning">
-                            <h5>F1</h5>
-                            0.75
+                        <h5>Recall</h5>
+                        {lrcRecOther}
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="success">
+                        <h5>F1</h5>
+                        {lrcF1Other}
                     </Alert>
                 </Col>
 
             </Row>
             <h5>SGD Classifier with own dataset</h5>
             <Row>
-                <Col>
+                                <Col>
                     <Alert color="danger">
                         <h5>Accuracy</h5>
-                        0.5
+                        {lrcAccOwn}
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="danger">
+                        <h5>Recall</h5>
+                        {lrcRecOwn}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="warning">
-                        <h5>Recall</h5>
-                        0.55
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="success">
-                            <h5>F1</h5>
-                            0.58
+                        <h5>F1</h5>
+                        {lrcF1Own}
                     </Alert>
                 </Col>
 

@@ -267,6 +267,11 @@ class MiddlewareProvider extends Connection {
         let queryURL: string = this.URL + "/analysis/sentiment/meanSentiment";
         return await fetch(queryURL).then((response) => response.json());
     }
+
+    public async getTrainedModelPerformance() {
+        let queryURL: string = this.URL + "/analysis/sentiment/trainedModelPerformance";
+        return await fetch(queryURL).then((response) => response.json());
+    }
 }
 
 export default MiddlewareProvider;

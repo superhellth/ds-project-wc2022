@@ -217,6 +217,14 @@ async def get_mean_overall_sentiment():
     return data
 
 
+@app.get("/analysis/sentiment/trainedModelPerformance")
+async def get_trained_model_performance():
+    """
+    Returns the accuracy, recall and f1 score of the two trained models
+    """
+    return [lrcother.accuracy(), lrcother.recall(), lrcother.f1_score(),
+            lrcown.accuracy(), lrcown.recall(), lrcown.f1_score()]
+
 ## word embedding
 @app.get("/analysis/embedding/exists")
 async def word_in_w2v_vocab(word: str):
