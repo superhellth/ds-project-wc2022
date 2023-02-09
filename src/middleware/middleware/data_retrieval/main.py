@@ -216,6 +216,14 @@ async def get_mean_overall_sentiment():
         data = json.load(f)
     return data
 
+@app.get("/analysis/sentiment/sentimentOverTime")
+async def get_sentiment_over_time():
+    """
+    Returns the dictionary that contains the sentiment values over time.
+    """
+    with open(PATH_TO_DATA_FILES + 'sentiment_over_time.json') as f:
+        data = json.load(f)
+    return data
 
 @app.get("/analysis/sentiment/trainedModelPerformance")
 async def get_trained_model_performance():
