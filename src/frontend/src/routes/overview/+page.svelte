@@ -15,12 +15,12 @@
     } from "sveltestrap";
     import TweetCard from "src/svelte-components/TweetCard.svelte";
     import type Tweet from "src/typescript/tweet_management/tweet";
-    import ElasticProvider from "src/typescript/api_connections/elasticProvider";
+    import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
     import Label from "@smui/list/src/Label.svelte";
     import { onMount } from "svelte";
 
     // Our connection to the middleware
-    const elasticProvider: ElasticProvider = ElasticProvider.getInstance();
+    const elasticProvider: MiddlewareProvider = MiddlewareProvider.getInstance();
 
     // We get  a list of the 50 most recent tweets asynchronously, thus the data type is Promise
     // const tweets: Promise<Array<Tweet>> = elasticHelper.getTweets();

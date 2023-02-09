@@ -2,10 +2,10 @@
     import TweetCountGraph from "src/svelte-components/DateHistogramCard.svelte";
     import Loading from "src/svelte-components/Loading.svelte";
     import BarChartCard from "src/svelte-components/MapChartCard.svelte";
-    import ElasticProvider from "src/typescript/api_connections/elasticProvider";
+    import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
     import { Breadcrumb, BreadcrumbItem, Col, Row } from "sveltestrap";
 
-    let provider: ElasticProvider = ElasticProvider.getInstance();
+    let provider: MiddlewareProvider = MiddlewareProvider.getInstance();
     let authorLocationMap: Promise<Map<string, number>> =
         provider.getTermHistogram("author.location", 20);
     let authorVerifiedMap: Promise<Map<string, number>> =

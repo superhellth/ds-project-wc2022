@@ -1,6 +1,8 @@
+import statistics
 import json
 import os.path
 from typing import List, Tuple
+import matplotlib.pyplot as plt
 import ujson
 import elasticsearch
 from gensim.models import Word2Vec
@@ -11,6 +13,7 @@ from middleware.analysis import stat_provider
 from middleware.analysis import collocation_graph
 from middleware.analysis import tweet_gen
 from middleware.analysis import basic_stat_provider
+from middleware.analysis import embedding
 from middleware.data_retrieval.file_management import get_sentiment_analyzers
 
 ### config ###
@@ -21,7 +24,8 @@ PATH_TO_DATA_FILES = "../../../data/"
 PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
 PATH_TO_SENTIMENT_MODELS = PATH_TO_DATA_FILES + "sentiment-models/"
 PATH_TO_OTHER_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets_train.csv"
-PATH_TO_WORD2VEC_MODEL = PATH_TO_DATA_FILES + "word-embeddings/w2v_epochs=100.emb"
+PATH_TO_EMBEDDING_DATA = PATH_TO_DATA_FILES + "word-embeddings/"
+PATH_TO_WORD2VEC_MODEL = PATH_TO_EMBEDDING_DATA + "w2v_epochs=100.emb"
 PATH_TO_OTHER_VALIDATION_DATA = PATH_TO_DATA_FILES + "Tweets_test.csv"
 PATH_TO_OWN_TRAINING_DATA = PATH_TO_DATA_FILES + "classification_with_text_train.csv"
 PATH_TO_OWN_VALIDATION_DATA = PATH_TO_DATA_FILES + "classification_with_text_test.csv"
@@ -74,7 +78,7 @@ if not os.path.exists(PATH_TO_SENTIMENT_MODELS):
     print("Creating 'data/sentiment-models' dir...")
     os.makedirs(PATH_TO_SENTIMENT_MODELS)
 
-# sentiment analysis
+# load models
 print("Loading sentiment models...")
 vs, lrcother, lrcown, berts = get_sentiment_analyzers(PATH_TO_SENTIMENT_MODELS, PATH_TO_OTHER_TRAINING_DATA,
                                               PATH_TO_OTHER_VALIDATION_DATA, PATH_TO_OWN_TRAINING_DATA,
@@ -82,7 +86,8 @@ vs, lrcother, lrcown, berts = get_sentiment_analyzers(PATH_TO_SENTIMENT_MODELS, 
 
 ## word embeddings
 print("Loading word embedding model...")
-model = Word2Vec.load(PATH_TO_WORD2VEC_MODEL)
+w2v_model = Word2Vec.load(PATH_TO_WORD2VEC_MODEL)
+embedder = embedding.Embedder(PATH_TO_DATA_FILES, PATH_TO_EMBEDDING_DATA)
 
 
 ### Provide data from ES ###
@@ -215,20 +220,27 @@ async def get_mean_overall_sentiment():
 ## word embedding
 @app.get("/analysis/embedding/exists")
 async def word_in_w2v_vocab(word: str):
-    """Check for existing Word2Vec Embedding for a word.
-
-    Args:
-        word (str): Word to check.
-
-    Returns:
-        bool: Whether or not the word exists in the vocab.
-    """
-    return word in model.wv.key_to_index.keys()
+    """Check for existing Word2Vec Embedding for a word."""
+    return word in w2v_model.wv.key_to_index.keys()
 
 @app.get("/analysis/embedding/similar")
 async def get_similar(positive: List[str] = Query(default=None), negative: List[str] = Query(default=None), k: int = 10):
-    return {"similar": model.wv.most_similar(positive=positive, negative=negative, topn=k)}
+    """Get similar words."""
+    return {"similar": w2v_model.wv.most_similar(positive=positive, negative=negative, topn=k)}
 
 @app.get("/analysis/embedding/doesntmatch")
 async def doesnt_match(word: List[str] = Query(default=None)):
-    return model.wv.doesnt_match(word)
+    """Find word that doesn't match."""
+    return w2v_model.wv.doesnt_match(word)
+
+@app.get("/analysis/embedding/tsne")
+async def get_tsne(word: str, num_closest="10", num_furthest="0"):
+    """Return TSNE plot of word."""
+    embedder.tsneplot(w2v_model, word, num_closest=int(num_closest), num_furthest=int(num_furthest))
+    path_to_file = PATH_TO_EMBEDDING_DATA + word + "-tsne.png"
+    plt.savefig(path_to_file, format="png")
+    return FileResponse(path_to_file)
+
+@app.get("/analysis/embedding/distance")
+async def get_relative_distance(word1: str, word2: str):
+    return w2v_model.wv.distance(word1, word2)

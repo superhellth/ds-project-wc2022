@@ -1,10 +1,10 @@
 <script lang="ts">
-    import ElasticProvider from "src/typescript/api_connections/elasticProvider";
+    import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
     import {Alert, Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Label, Row} from "sveltestrap";
     import {onMount} from "svelte";
     import ChartCard from "../../svelte-components/ChartCard.svelte";
 
-    let provider: ElasticProvider = ElasticProvider.getInstance();
+    let provider: MiddlewareProvider = MiddlewareProvider.getInstance();
 
     // Overall Sentiment variables
     let userTweet: string = '';
@@ -109,7 +109,7 @@
             some of our classifiers return 0 if an input is likely neutral!</p>
             <Row>
                 <Col xs="12" sm="9">
-                    <FormGroup floating label="Enter your Tweet">
+                    <FormGroup label="Enter your Tweet">
                         <Input
                                 bind:value={userTweet}
                         />

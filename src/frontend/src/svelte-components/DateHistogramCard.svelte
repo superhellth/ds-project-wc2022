@@ -2,7 +2,7 @@
     import { Chart } from "chart.js/auto";
     import ChartCard from "src/svelte-components/ChartCard.svelte";
     import Loading from "src/svelte-components/Loading.svelte";
-    import ElasticProvider from "src/typescript/api_connections/elasticProvider";
+    import ElasticProvider from "src/typescript/api_connections/middlewareConnection";
     import { onMount } from "svelte";
     import { Col, Input, Row } from "sveltestrap";
 

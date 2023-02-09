@@ -1,12 +1,12 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { fly, fade, slide } from "svelte/transition";
-    import ElasticProvider from "src/typescript/api_connections/elasticProvider";
+    import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
     import { Icon } from "sveltestrap";
 
     let currentTheme: string | null;
 
-    let provider: ElasticProvider = ElasticProvider.getInstance();
+    let provider: MiddlewareProvider = MiddlewareProvider.getInstance();
     let visible: boolean = false;
     let map: any;
 
@@ -29,6 +29,7 @@
             50
         );
         for (const [key, value] of locations) {
+            console.log(key)
             let locationPos = await getCoordinates(key);
             if (locationPos.lat == 0 && locationPos.lng == 0) {
                 continue;

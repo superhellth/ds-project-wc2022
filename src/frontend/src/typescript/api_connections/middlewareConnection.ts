@@ -4,18 +4,18 @@ import Connection from "./connection";
 /**
  * This singeleton class manages all data retrieval tasks related to the middleware.
  */
-class ElasticProvider extends Connection {
-    private static instance: ElasticProvider;
+class MiddlewareProvider extends Connection {
+    private static instance: MiddlewareProvider;
 
     private constructor(URL: string) {
         super(URL);
     }
 
-    public static getInstance(): ElasticProvider {
-        if (!ElasticProvider.instance) {
-            ElasticProvider.instance = new ElasticProvider("http://127.0.0.1:8000");
+    public static getInstance(): MiddlewareProvider {
+        if (!MiddlewareProvider.instance) {
+            MiddlewareProvider.instance = new MiddlewareProvider("http://127.0.0.1:8000");
         }
-        return ElasticProvider.instance;
+        return MiddlewareProvider.instance;
     }
 
     /**
@@ -80,6 +80,12 @@ class ElasticProvider extends Connection {
         return map;
     }
 
+    /**
+     * Create term histogram on ES index.
+     * @param field Field to create histogram on. Has to be a keyword field.
+     * @param size Number of buckets (?).
+     * @returns Histogram as Map<string, number>.
+     */
     public async getTermHistogram(field: string, size: number): Promise<Map<string, number>> {
         const data = await fetch(this.URL + "/statistics/histogram?histogram_type=terms&interval=" + size + "&field=" + field).
             then((response) => response.json());
@@ -213,6 +219,30 @@ class ElasticProvider extends Connection {
         return data.similar;
     }
 
+    /**
+     * Get distance between 2 words based on Word2Vec embedding.
+     * @param word1 Word 1.
+     * @param word2 Word 2.
+     * @returns Distance between Word 1 and Word 2.
+     */
+    public async getDistance(word1: string, word2: string): Promise<number> {
+        let queryURL = this.URL + "/analysis/embedding/distance?word1=" + word1 + "&word2=" + word2;
+        const data = await fetch(queryURL).then((response) => response.text());
+        return Number.parseFloat(data);
+    }
+
+    /**
+     * Get link to generated TSNE plot with given parameters.
+     * @param word Word to build plot around.
+     * @param numCloseWords Number of close words to display on plot.
+     * @param numFarWords Number of far away words to display on plot.
+     * @returns Link to generated plot.
+     */
+    public getTSNEPlotURL(word: string, numCloseWords: number, numFarWords: number): string {
+        let queryURL: string = this.URL + "/analysis/embedding/tsne?word=" + word + "&num_closest=" + numCloseWords + "&num_furthest=" + numFarWords;
+        return queryURL;
+    }
+
     public async getAvgSentimentTweetsList(tweetsList: Array<string>) {
         const queryURL = this.URL + '/analysis/sentiment/tweetsListAvg';
         const response = await fetch(queryURL, {
@@ -227,9 +257,9 @@ class ElasticProvider extends Connection {
         const queryURL = this.URL + '/analysis/sentiment/tweet';
         const response = await fetch(queryURL, {
             method: "POST",
-            body: JSON.stringify({tweet_text: tweet}),
+            body: JSON.stringify({ tweet_text: tweet }),
             headers: { "Content-Type": "application/json" },
-          });
+        });
         return await response.json();
     }
 
@@ -239,4 +269,4 @@ class ElasticProvider extends Connection {
     }
 }
 
-export default ElasticProvider;
+export default MiddlewareProvider;

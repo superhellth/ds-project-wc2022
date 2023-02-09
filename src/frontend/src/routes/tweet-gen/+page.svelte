@@ -1,11 +1,11 @@
 <script lang="ts">
     import Label from "@smui/list/src/Label.svelte";
     import Loading from "src/svelte-components/Loading.svelte";
-    import ElasticProvider from "src/typescript/api_connections/elasticProvider";
+    import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
     import { onMount } from "svelte";
     import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Input, Tooltip } from "sveltestrap";
 
-    let provider: ElasticProvider = ElasticProvider.getInstance();
+    let provider: MiddlewareProvider = MiddlewareProvider.getInstance();
     let text: string = "";
     let n: number = 3;
     let tweetLength: number = 10;

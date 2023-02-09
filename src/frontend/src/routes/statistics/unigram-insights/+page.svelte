@@ -1,9 +1,9 @@
 <script lang="ts">
     import CountTableCard from "src/svelte-components/CountTableCard.svelte";
-    import ElasticProvider from "src/typescript/api_connections/elasticProvider";
+    import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
     import { Breadcrumb, BreadcrumbItem, Col, Row } from "sveltestrap";
 
-    let provider: ElasticProvider = ElasticProvider.getInstance();
+    let provider: MiddlewareProvider = MiddlewareProvider.getInstance();
 </script>
 
 <title>Statistics - Hashtags and Mentions</title>

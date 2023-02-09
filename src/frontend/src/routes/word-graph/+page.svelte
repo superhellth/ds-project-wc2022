@@ -14,7 +14,6 @@
         Input,
         Label,
         Modal,
-        Offcanvas,
     } from "sveltestrap";
     import type {
         Coordinates,
@@ -22,9 +21,9 @@
         NodeDisplayData,
     } from "sigma/types.js";
     import Loading from "src/svelte-components/Loading.svelte";
-    import ElasticProvider from "src/typescript/api_connections/elasticProvider";
+    import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
 
-    let provider = ElasticProvider.getInstance();
+    let provider = MiddlewareProvider.getInstance();
 
     let renderer: Sigma;
     let displayGraph: Graph;
