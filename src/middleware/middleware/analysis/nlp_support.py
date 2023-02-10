@@ -14,6 +14,7 @@ class CorpusAnalyzer:
         # tokenization
         self.nlp = spacy.load("en_core_web_sm", disable=[
                               "ner", "tagger", "lemmatizer", "parser"])
+        self.ner_nlp = spacy.load("en_core_web_sm", disable=["lemmatizer", "tagger", "parser"])
         self.HASHTAG_SUBSTITUTE = "dswcprojecthashtag"
 
         # multi-threading
@@ -103,6 +104,38 @@ class CorpusAnalyzer:
                 collocation = (collocation_list[0], collocation_list[1])
                 self.counts[collocation] += 1
 
+    def count_nes_collocations(self, text: str):
+        """Count the cooccurences of named entities.
+        Args:
+            text (str): document to analyze.
+        """
+        doc = self.ner_nlp(text)
+        for i in range(len(doc.ents) - 1):
+            for j in range(i + 1, len(doc.ents)):
+                ent1 = [doc.ents[i].text, doc.ents[i].label_]
+                ent2 = [doc.ents[j].text, doc.ents[j].label_]
+                if ent1 != ent2:
+                    ent1[0] = "".join(c for c in ent1[0] if ord(c) < 128)
+                    ent1[0] = "".join(c for c in ent1[0] if c.isalnum() or c.isspace()).replace("#", "").strip().lower()
+                    ent2[0] = "".join(c for c in ent2[0] if ord(c) < 128)
+                    ent2[0] = "".join(c for c in ent2[0] if c.isalnum() or c.isspace()).replace("#", "").strip().lower()
+                    if ent1[0] != "" and ent2[0] != "" and "http" not in ent1[0] and "http" not in ent2[0]:
+                        collocation_list = sorted([(ent1[0], ent1[1]), (ent2[0], ent2[1])], key=lambda x: x[0])
+                        collocation = (collocation_list[0], collocation_list[1])
+                        self.counts[collocation] += 1
+
+    def count_nes(self, text: str):
+        """Count the appearance of named entities.
+        Args:
+            text (str): document to analyze.
+        """
+        doc = self.ner_nlp(text)
+        for ent in doc.ents:
+            if "http" not in ent.text:
+                text = "".join(c for c in ent.text if ord(c) < 128)
+                text = "".join(c for c in text if c.isalnum() or c.isspace()).replace("#", "").strip().lower()
+                self.counts[(text, ent.label_)] += 1
+
     def tokenize_tweet(self, text: str):
         """Tokenizes a tweet and append it to class attribute tokenized_tweets.
 
@@ -172,7 +205,38 @@ class CorpusAnalyzer:
     def generate_tokenized_tweets(self, batch_size=1000, num_tweets=-1, num_threads=multiprocessing.cpu_count()):
         """Generate tokenized tweets"""
         print("Start generating tokenized tweets")
-        self.execute_task(lambda text: self.tokenize_tweet(
-            text), num_threads, batch_size, num_tweets)
+        self.execute_task(self.tokenize_tweet, num_threads, batch_size, num_tweets)
         print()
         return self.tokenized_tweets
+
+    def generate_nes_collocation_counts(self, batch_size=1000, num_tweets=-1, num_threads=multiprocessing.cpu_count()):
+        """Generate named entity collocation counts from the corpus.
+        Args:
+            batch_size (int, optional): Number of tweets to load at once from es. Defaults to 1000.
+            num_tweets (int, optional): Number of tweets to use for the collocations count generation.
+            When -1 uses whole corpus. Defaults to -1.
+            num_threads (_type_, optional): Number of threads to execute the task on. Defaults to multiprocessing.cpu_count().
+        Returns:
+            _type_: dict containing collocations as tuple as keys and their respective counts as values.
+        """
+        print("Start counting named entity collocations...")
+        self.execute_task(self.count_nes_collocations, num_threads, batch_size, num_tweets)
+        print()
+        return self.counts
+    
+    def generate_nes_counts(self, batch_size=1000, num_tweets=-1, num_threads=multiprocessing.cpu_count()):
+        """Generate named entity counts from the corpus.
+        Args:
+            batch_size (int, optional): Number of tweets to load at once from es. Defaults to 1000.
+            num_tweets (int, optional): Number of tweets to use for the collocations count generation.
+            When -1 uses whole corpus. Defaults to -1.
+            num_threads (_type_, optional): Number of threads to execute the task on.
+            Defaults to multiprocessing.cpu_count().
+        Returns:
+            _type_: dict containing named entities and their types as tuple as keys and their respective counts as values.
+        """
+        print("Start counting named entities...")
+        self.execute_task(self.count_nes, num_threads, batch_size, num_tweets)
+        print()
+        return self.counts
+    
