@@ -3,6 +3,7 @@
     import {Alert, Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Label, Row} from "sveltestrap";
     import {onMount} from "svelte";
     import ChartCard from "../../svelte-components/ChartCard.svelte";
+    import SentimentByCard from "../../svelte-components/SentimentByCard.svelte";
 
     let provider: MiddlewareProvider = MiddlewareProvider.getInstance();
 
@@ -19,11 +20,6 @@
     let sgdSentOwn = 'Waiting...'; // variable to hold the nbSent score
     let bertSent = "Waiting... (BERT: I\'m a bit slow, sorry!)"; // variable to hold the bertSent score
 
-    // Sentiment by date variables
-    let useVaderSent = true;
-    let useSgdSentOther = false;
-    let useSgdSentOwn = false;
-    let useBertSent = false;
 
     // Trained model performance variables
     let lrcAccOther = 'Waiting...';
@@ -68,9 +64,6 @@
         getTrainedModelPerf();
     })
 
-    function redraw_graph() {
-        console.log("Redrawing graph with methods X and Y...")
-    }
 
 
 
@@ -175,76 +168,14 @@
             <h4>Sentiment over time</h4>
             <p>Below, you can take a look at the average sentiment over time. You are able so sort by timeframe and
             decide which methods you would like to see.</p>
-            <div class="float-left">
-                <Row>
-                <Col>
-                    <FormGroup style="margin-left: 2em">
-                        <Label for="timeframe-select"><b>Timeframe selection</b></Label>
-                        <Input
-                            type="select"
-                            id="timeframe-select"
-                        >
-                        {#each ["by Day", "by Week", "by Month"] as timeframe}
-                            <option>{timeframe}</option>
-                        {/each}
-                    </Input>
-                    </FormGroup>
-                </Col>
-                <Col>
-                    <b class="inv">Sentiment methods</b>
-                    <Row>
-                          <FormGroup>
-                            <Input
-                                    id="cvs"
-                                    type="checkbox"
-                                    label="vaderSentiment"
-                                    bind:value={useVaderSent}
-                                    on:change={redraw_graph()}
-                            />
-                          </FormGroup>
-                    </Row>
-                    <Row>
-                          <FormGroup>
-                            <Input
-                                    id="ccother"
-                                    type="checkbox"
-                                    label="SGDClassifierOther"
-                                    bind:value={useSgdSentOther}
-                                    on:change={redraw_graph()}
 
-                            />
-                          </FormGroup>
-                    </Row>
-                    <Row>
-                          <FormGroup>
-                            <Input
-                                    id="ccown"
-                                    type="checkbox"
-                                    label="SGDClassifierOwn"
-                                    bind:value={useSgdSentOwn}
-                                    on:change={redraw_graph()}
-                            />
-                          </FormGroup>
-                    </Row>
-                    <Row>
-                          <FormGroup>
-                            <Input
-                                    id="cbc"
-                                    type="checkbox"
-                                    label="BERT based Classifier"
-                                    bind:value={useBertSent}
-                                    on:change={redraw_graph()}
-                            />
-                          </FormGroup>
-                    </Row>
-                </Col>
-                </Row>
-
-            </div>
 
             <Row>
-                <ChartCard header="Sentiment over time" footer="As you can see...">
-                </ChartCard>
+                <SentimentByCard
+                        header="Sentiment over time by different methods"
+                        footer="This is a test"
+                >
+                </SentimentByCard>
             </Row>
 
         </Form>
