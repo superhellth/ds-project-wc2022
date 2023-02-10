@@ -28,18 +28,27 @@
     async function updateChart() {
         await getChartData();
 
-        let vsSentData = chartData[byTime['cmd']].map(d => d.vs_sent);
+        let vsSentData = chartData[byTime.cmd].map(d => d.vs_sent);
         let bertSentData = chartData[byTime.cmd].map(d => d.bert_sent);
         let lrcOwnData = chartData[byTime.cmd].map(d => d.lrc_own);
         let lrcOtherData = chartData[byTime.cmd].map(d => d.lrc_other);
+        let countsData = chartData[byTime.cmd].map(d => d.counts);
 
         let datasets = [];
+        datasets.push({
+            borderColor: "#3e9822",
+            data: countsData,
+            type: 'bar',
+            label: "Amount Tweets",
+            yAxisID: 'y1'
+        })
         if (useMethodVsSent) {
             datasets.push({
                 borderColor: "#3e95cd",
                 data: vsSentData,
                 label: "VS Sent",
-                fill: false
+                fill: false,
+            yAxisID: 'y2'
             });
         }
         if (useMethodBertSent) {
@@ -47,7 +56,8 @@
                 borderColor: "#8e5ea2",
                 data: bertSentData,
                 label: "Bert Sent",
-                fill: false
+                fill: false,
+            yAxisID: 'y2'
             });
         }
         if (useMethodLrcOwn) {
@@ -55,7 +65,8 @@
                 borderColor: "#3cba9f",
                 data: lrcOwnData,
                 label: "LRC Own",
-                fill: false
+                fill: false,
+            yAxisID: 'y2'
             });
         }
         if (useMethodLrcOther) {
@@ -63,7 +74,8 @@
                 borderColor: "#e8c3b9",
                 data: lrcOtherData,
                 label: "LRC Other",
-                fill: false
+                fill: false,
+            yAxisID: 'y2'
             });
         }
 
