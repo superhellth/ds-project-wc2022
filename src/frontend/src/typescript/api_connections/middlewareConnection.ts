@@ -152,7 +152,7 @@ class MiddlewareProvider extends Connection {
         let nesOnlyString: string = nesOnly ? "True" : "False";
         let queryURL: string = this.URL + "/analysis/graph?window_size=" + windowSize + "&num_edges=" + numEdges + "&include_stop_words=" + includeStopWordsString
             + "&min_node_length=" + minNodeLength + "&embedding_size=" + embeddingSize + "&cluster_alg=" + clusterAlg + "&n_clusters=" + nClusters + "&only_nes=" + nesOnlyString;
-        const data = await fetch(queryURL).then((response) => response.text())
+        const data = await fetch(queryURL).then((response) => response.text());
         return data
     }
 

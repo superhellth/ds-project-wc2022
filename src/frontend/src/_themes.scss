@@ -68,8 +68,6 @@ div.card-footer,
     color: var(--text-color);
 }
 
-
-
 // set text color to elements that stay white
 h5.m-0 {
     color: #000000;
@@ -79,6 +77,7 @@ h5.m-0 {
 div.accordion-body,
 th,
 td,
+div.modal-content.svelte-q841md,
 table.table-dark {
     background-color: var(--secondary-color);
 }

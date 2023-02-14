@@ -276,7 +276,7 @@ class CollocationGraphGenerator:
                 "_nclusters=" + str(n_clusters) + \
                 "_colorededges=" + str(color_edges) + ".gexf"
         else:
-            graph_file = "clustered_ne_collocation_graph_numedges=" + str(num_edges) + ".gexf"
+            graph_file = "clustered_ne_collocation_graph_numedges=" + str(num_edges) + "nclusters=" + str(n_clusters) + ".gexf"
         try:
             print("Reading clustered graph from file...")
             graph = nx.read_gexf(self.path_to_graph_files + graph_file)

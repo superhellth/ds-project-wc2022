@@ -102,6 +102,14 @@
                     on:press={() => {
                         theme = "dark";
                     }}
+                    text="Named entity Graph"
+                    href="/ne-graph"
+                    iconName="bounding-box"
+                />
+                <SidebarItem
+                    on:press={() => {
+                        theme = "dark";
+                    }}
                     text="Sentiment Analysis"
                     href="/sentiment-analysis"
                     iconName="emoji-smile-upside-down"

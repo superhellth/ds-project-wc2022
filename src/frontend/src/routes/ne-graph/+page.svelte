@@ -31,7 +31,34 @@
     let threshold: number = 1;
     let displayEdgelessNodes: boolean = true;
     let clusters: Map<string, Set<string>> = new Map<string, Set<string>>();
-    let numEdges: number = 10000;
+    let neTypeSelection: Map<string, boolean> = new Map<string, boolean>();
+    neTypeSelection.set("DATE", true);
+    neTypeSelection.set("PERSON", true);
+    neTypeSelection.set("GPE", true);
+    neTypeSelection.set("LOC", true);
+    neTypeSelection.set("MONEY", true);
+    neTypeSelection.set("TIME", true);
+    neTypeSelection.set("PRODUCT", true);
+    neTypeSelection.set("CARDINAL", true);
+    neTypeSelection.set("ORDINAL", true);
+    neTypeSelection.set("QUANTITY", true);
+    neTypeSelection.set("EVENT", true);
+    neTypeSelection.set("FAC", true);
+    neTypeSelection.set("LANGUAGE", true);
+    neTypeSelection.set("LAW", true);
+    neTypeSelection.set("NORP", true);
+    neTypeSelection.set("PERCENT", true);
+    neTypeSelection.set("WORK_OF_ART", true);
+    let selectedNeTypes: string[] = [];
+    $: {
+        selectedNeTypes = [];
+        neTypeSelection.forEach((value, key) => {
+            if (value) {
+                selectedNeTypes.push(key);
+            }
+        });
+    }
+    let numEdges: number = 25000;
     let numEdgesOptions: number[] = [10000, 25000, 50000, 100000, 200000];
     let minNodeLength: number = 2;
     let minNodeLengthOptions: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -49,7 +76,7 @@
         "birch",
         "mini-batch-k-means",
     ];
-    let nClusters: number = 11;
+    let nClusters: number = 12;
     let nClustersOptions: number[] = [
         2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
     ];
@@ -164,7 +191,7 @@
         originalGraph.import(displayGraph);
 
         const container = document.getElementById(
-            "sigma-container"
+            "sigma-container2"
         ) as HTMLElement;
 
         renderer = new Sigma(displayGraph, container, {
@@ -228,10 +255,10 @@
         });
 
         searchInput = document.getElementById(
-            "search-input"
+            "search2-input"
         ) as HTMLInputElement;
         searchSuggestions = document.getElementById(
-            "suggestions"
+            "suggestions2"
         ) as HTMLDataListElement;
         searchSuggestions.innerHTML = displayGraph
             .nodes()
@@ -249,7 +276,27 @@
         searchInput.addEventListener("blur", () => {
             setSearchQuery("");
         });
+        filterTypeNodes();
     });
+
+    function filterTypeNodes() {
+        displayGraph.forEachEdge((edge) => displayGraph.dropEdge(edge));
+        displayGraph.forEachNode((node) => displayGraph.dropNode(node));
+        displayGraph.import(originalGraph.export());
+
+        let nodesToRemove: Set<string> = new Set();
+        displayGraph.forEachNode((node, attributes) => {
+            let nodeType = node.split("&&")[1];
+            console.log(nodeType)
+            if (!selectedNeTypes.includes(nodeType)) {
+                nodesToRemove.add(node)
+            }
+            attributes.label = node.split("&&")[0].replaceAll("_", " ");
+        })
+        console.log(selectedNeTypes);
+        console.log(nodesToRemove)
+        nodesToRemove.forEach((node) => displayGraph.dropNode(node));
+    }
 
     async function changeEdgeThreshold(threshold: number) {
         if (displayGraph == null) {
@@ -346,16 +393,17 @@
         displayGraph = displayGraph;
         loading = false;
         controlsAreOpen = false;
+        filterTypeNodes();
     }
 
     $: changeEdgeThreshold(threshold);
     $: toggleEdgelessNodes(displayEdgelessNodes);
 </script>
 
-<title>Text Analytics - Word Graph</title>
+<title>Text Analytics - Named Entities</title>
 
 <div style="display: flex; justify-content: space-between">
-    <h1>Word Graph</h1>
+    <h1>Named Entities</h1>
     <Button
         type="button"
         style="background: rgba(0,0,0,0); color: var(--text-color); border: 0px"
@@ -367,21 +415,21 @@
     <BreadcrumbItem>
         <a href=".">Dashboard</a>
     </BreadcrumbItem>
-    <BreadcrumbItem active>Word Graph</BreadcrumbItem>
+    <BreadcrumbItem active>Named Entities</BreadcrumbItem>
 </Breadcrumb>
-<div id="search" style="position: absolute; top: 8em; right: 30em; z-index: 1">
+<div id="search2" style="position: absolute; top: 8em; right: 30em; z-index: 1">
     <input
-    style="width: 15em"
+        style="width: 15em"
         type="search"
-        id="search-input"
+        id="search2-input"
         list="suggestions"
         placeholder="Try searching for a node..."
     />
-    <datalist id="suggestions" />
+    <datalist id="suggestions2" />
 </div>
-<div id="graph-container">
-    <div id="sigma-container" />
-    <div id="cluster-div">
+<div id="graph-container2">
+    <div id="sigma-container2" />
+    <div id="cluster-div2">
         <Form>
             <FormGroup>
                 <legend>Top Words by Cluster</legend>
@@ -392,7 +440,7 @@
                                 {#each Array.from(clusters.get(cluster))
                                     .sort((nodeA, nodeB) => originalGraph.getNodeAttributes(nodeA).weight - originalGraph.getNodeAttributes(nodeB).weight)
                                     .slice(0, 10) as token}
-                                    <li style="color: {cluster}">{token}</li>
+                                    <li style="color: {cluster}">{token.split("&&")[0].replaceAll("_", " ")}</li>
                                 {/each}
                             </ul>
                         </AccordionItem>
@@ -425,61 +473,108 @@
     </FormGroup>
 </Form>
 <h2>Results</h2>
-<p>These results are suprisingly good, considering the only thing we input was the collocation counts. We have played around a bit with the parameters
-    and found that this combination which is set as standard works best. We interpreted the topics the following way:
+<p>
+    These results are suprisingly good, considering the only thing we input was
+    the collocation counts. We have played around a bit with the parameters and
+    found that this combination which is set as standard works best. We
+    interpreted the topics the following way:
 </p>
 <ul>
-    <li><h4 style="color: #FF0000">The Center Cluster</h4>
-        <p>This cluster probably is the least meaningful one. It's made up of the most frequent words of the corpus. This topic includes: The Argentina
-            vs Saudi Arabia match, the opening ceremony and generally all match announcements.
+    <li>
+        <h4 style="color: #FF0000">The Center Cluster</h4>
+        <p>
+            This cluster probably is the least meaningful one. It's made up of
+            the most frequent words of the corpus. This topic includes: The
+            Argentina vs Saudi Arabia match, the opening ceremony and generally
+            all match announcements.
         </p>
     </li>
-    <li><h4 style="color: #000000">#Cluster</h4>
-        <p>Here we find a cluster consisting mainly of the hashtags used. It is obvious that such a cluster exists, since most people put all Hashtags
-            they use at the end of their Tweet and thus most hashtags frequently appear together. Not too much information can be won from this cluster.
+    <li>
+        <h4 style="color: #000000">#Cluster</h4>
+        <p>
+            Here we find a cluster consisting mainly of the hashtags used. It is
+            obvious that such a cluster exists, since most people put all
+            Hashtags they use at the end of their Tweet and thus most hashtags
+            frequently appear together. Not too much information can be won from
+            this cluster.
         </p>
     </li>
-    <li><h4 style="color: #0008FF">#SayTheirNames</h4>
-        <p>The first real topic! This clusters clearly represents the Iran Conflict discussion. We found that this cluster exists, even if we reduce the 
-            number of clusters to find. So we can assume it is a much discussed and clearly outlined topic. 
+    <li>
+        <h4 style="color: #0008FF">#SayTheirNames</h4>
+        <p>
+            The first real topic! This clusters clearly represents the Iran
+            Conflict discussion. We found that this cluster exists, even if we
+            reduce the number of clusters to find. So we can assume it is a much
+            discussed and clearly outlined topic.
         </p>
     </li>
-    <li><h4 style="color: #004A08">C'mon England!</h4>
-        <p>It's coming home... or maybe not... Like we've seen in the statistics about our data, there are many Tweets from England and thus it was to
-            be expected, that the English football team would be quite a topic. It seems like people or news pages love to talk about english players.
+    <li>
+        <h4 style="color: #004A08">C'mon England!</h4>
+        <p>
+            It's coming home... or maybe not... Like we've seen in the
+            statistics about our data, there are many Tweets from England and
+            thus it was to be expected, that the English football team would be
+            quite a topic. It seems like people or news pages love to talk about
+            english players.
         </p>
     </li>
-    <li><h4 style="color: #00FFED">???</h4>
-        <p>This cluster is hard to classify, we might need to do some more digging on that...
+    <li>
+        <h4 style="color: #00FFED">???</h4>
+        <p>
+            This cluster is hard to classify, we might need to do some more
+            digging on that...
         </p>
     </li>
-    <li><h4 style="color: #FF00C9">Steve Harvey</h4>
-        <p>We call this one the "USA"-Cluster. It appears to be the cluster of topics american accounts tweeted about that are not related to the world
-            cup. Things like Wrestling, Formula 1, Kanye West and... well Steve Harvey. Though we already know the Tweets about Steve Harvey mainly come
-            from one single account, so it's not really a topic many people talk about but simply the result of spam.
+    <li>
+        <h4 style="color: #FF00C9">Steve Harvey</h4>
+        <p>
+            We call this one the "USA"-Cluster. It appears to be the cluster of
+            topics american accounts tweeted about that are not related to the
+            world cup. Things like Wrestling, Formula 1, Kanye West and... well
+            Steve Harvey. Though we already know the Tweets about Steve Harvey
+            mainly come from one single account, so it's not really a topic many
+            people talk about but simply the result of spam.
         </p>
     </li>
-    <li><h4 style="color: #FF8000">SUIIII!!!</h4>
-        <p>Yep. There is a SUII-Cluster. But it's not, as you might suspect the result of Ronaldo fans tweeting about him, but the again the result of a
-            few spam accounts pushing their product. This cluster most likely does not exist because there are so many tweets belonging to it, but because
-            its very unrelated to other things people talked about.
+    <li>
+        <h4 style="color: #FF8000">SUIIII!!!</h4>
+        <p>
+            Yep. There is a SUII-Cluster. But it's not, as you might suspect the
+            result of Ronaldo fans tweeting about him, but the again the result
+            of a few spam accounts pushing their product. This cluster most
+            likely does not exist because there are so many tweets belonging to
+            it, but because its very unrelated to other things people talked
+            about.
         </p>
     </li>
-    <li><h4 style="color: #F3FF00">NFT and Crypto</h4>
-        <p>This cluster is quite similar to the one above. It's a spam cluster about NFTs and Cryptos. It's less specific but just as meaningless.
+    <li>
+        <h4 style="color: #F3FF00">NFT and Crypto</h4>
+        <p>
+            This cluster is quite similar to the one above. It's a spam cluster
+            about NFTs and Cryptos. It's less specific but just as meaningless.
         </p>
     </li>
-    <li><h4 style="color: #BF00FF">你好中国人！</h4>
-        <p>Although we specified in our Twitter API Query, that we only want to collect english Tweets, we got Tweets with chinese and arabic hashtags.
-            At least the chinese hashtags making up this cluster indicate that these Tweets are also scam related.
+    <li>
+        <h4 style="color: #BF00FF">你好中国人！</h4>
+        <p>
+            Although we specified in our Twitter API Query, that we only want to
+            collect english Tweets, we got Tweets with chinese and arabic
+            hashtags. At least the chinese hashtags making up this cluster
+            indicate that these Tweets are also scam related.
         </p>
     </li>
-    <li><h4 style="color: #00FF01">Cluster 10</h4>
-        <p>Another unclassifiable cluster, covering different unrelated topics like Harry and Meghan, some Leak controversy and the GOAT debate.
+    <li>
+        <h4 style="color: #00FF01">Cluster 10</h4>
+        <p>
+            Another unclassifiable cluster, covering different unrelated topics
+            like Harry and Meghan, some Leak controversy and the GOAT debate.
         </p>
     </li>
-    <li><h4 style="color: #808080">Stand with Ukraine</h4>
-        <p>This clusters is made up of Tweets about the war in Ukraine. It's the most isolated cluster.
+    <li>
+        <h4 style="color: #808080">Stand with Ukraine</h4>
+        <p>
+            This clusters is made up of Tweets about the war in Ukraine. It's
+            the most isolated cluster.
         </p>
     </li>
 </ul>
@@ -519,6 +614,24 @@
                         <option>{minNodeLength_}</option>
                     {/each}
                 </Input>
+            </FormGroup>
+            <FormGroup>
+                <Label for="min-node-length-select">Entity types</Label>
+                {#each Array.from(neTypeSelection.keys()) as neType}
+                    <Input
+                        id={neType + "cx"}
+                        type="checkbox"
+                        label={neType}
+                        on:input={() => {
+                            neTypeSelection.set(
+                                neType,
+                                !neTypeSelection.get(neType)
+                            );
+                            neTypeSelection = neTypeSelection;
+                        }}
+                        checked={neTypeSelection.get(neType)}
+                    />
+                {/each}
             </FormGroup>
         </Form>
         <Form>
@@ -577,7 +690,7 @@
 </Modal>
 
 <style lang="scss">
-    #sigma-container {
+    #sigma-container2 {
         width: 100%;
         height: 41em;
         margin: 0;
@@ -585,11 +698,11 @@
         overflow: hidden;
         margin-right: 2em;
     }
-    #graph-container {
+    #graph-container2 {
         display: flex;
         justify-content: space-around;
     }
-    #cluster-div {
+    #cluster-div2 {
         min-width: 25em;
     }
 </style>
