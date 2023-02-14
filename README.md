@@ -18,7 +18,9 @@
 
 - For our dashboard we made use of this template (https://github.com/GeekyAnts/sb-admin-svelte)
   - We rewrote most of the code but copied some pieces that we liked a lot about the template
-- We also use Bootstrap CSS for styling and Icons
+- For the graph frontend (word graph and ne graph) we used code from the 'Explore' example from https://www.sigmajs.org/
+- For the graph clustering we used code from this https://stackoverflow.com/questions/62902871/how-can-i-cluster-a-graph-g-created-in-networkx
+- We used this as training and test data for our sentiment analysis https://www.kaggle.com/datasets/yasserh/twitter-tweets-sentiment-dataset
 
 ## Utilized Libraries
 
