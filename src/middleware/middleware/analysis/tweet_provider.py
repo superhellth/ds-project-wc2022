@@ -72,7 +72,7 @@ class TweetProvider:
             "size": batch_size,
             "_source": ["text"]
         }
-        result = self.es_client.search(index="tweets", body=body, scroll="1m", timeout="1m", request_timeout=30)
+        result = self.es_client.search(index="tweets", body=body, scroll="1m", request_timeout=30)
         scroll_id = result["_scroll_id"]
 
         # Put the tweets in the queue and process them

@@ -41,7 +41,16 @@ class StatProvider:
         """Loads nes_collocations.json into dict.
         """
         f = open(self.path_to_data_files + "nes_collocations.json", "r", encoding="utf_8")
-        self.ne_collocation_counts = json.loads(f.read())
+        string_dict = json.loads(f.read())
+        self.ne_collocation_counts = dict()
+
+        # "(('afra jerry elmer', 'PERSON'), ('bartlett', 'PERSON'))"
+        for key_string in string_dict.keys():
+            # "afra jerry elmer, PERSON, bartlett, PERSON"
+            to_convert = key_string.replace("(", "").replace(")", "").replace("'", "")
+            # ["afra jerry elmer", "PERSON", "bartlett", "PERSON"]
+            parts = to_convert.split(", ")
+            self.ne_collocation_counts[((parts[0], parts[1]), (parts[2], parts[3]))] = string_dict[key_string]
 
     def get_n_grams_as_dict(self, n):
         """Return complete dict of n-gram counts.

@@ -31,11 +31,8 @@
     let threshold: number = 1;
     let displayEdgelessNodes: boolean = true;
     let clusters: Map<string, Set<string>> = new Map<string, Set<string>>();
-    let windowSize: number = 4;
-    let windowSizeOptions: number[] = [2, 3, 4];
-    let numEdges: number = 100000;
+    let numEdges: number = 10000;
     let numEdgesOptions: number[] = [10000, 25000, 50000, 100000, 200000];
-    let includeStopWords: boolean = false;
     let minNodeLength: number = 2;
     let minNodeLengthOptions: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     let embeddingSize: number = 128;
@@ -52,13 +49,12 @@
         "birch",
         "mini-batch-k-means",
     ];
-    let nClusters: number = 12;
+    let nClusters: number = 11;
     let nClustersOptions: number[] = [
         2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
     ];
     let loading: boolean = false;
     let controlsAreOpen: boolean = false;
-    let nesOnly: boolean = false;
 
     // Code taken from https://codesandbox.io/s/github/jacomyal/sigma.js/tree/main/examples/use-reducers
     interface State {
@@ -138,14 +134,14 @@
 
     onMount(async () => {
         const text = await provider.getWordGraph(
-            windowSize,
+            0,
             numEdges,
-            includeStopWords,
+            false,
             minNodeLength,
             embeddingSize,
             clusterAlg,
             nClusters,
-            nesOnly
+            true
         );
 
         const Graph = await import("graphology").then((m) => m.default);
@@ -313,14 +309,14 @@
     async function rebuildGraph() {
         loading = true;
         const text = await provider.getWordGraph(
-            windowSize,
+            0,
             numEdges,
-            includeStopWords,
+            false,
             minNodeLength,
             embeddingSize,
             clusterAlg,
             nClusters,
-            nesOnly
+            true
         );
 
         const Graph = await import("graphology").then((m) => m.default);
@@ -495,19 +491,6 @@
         <Form>
             <legend>Filtering</legend>
             <FormGroup>
-                <Label for="window-size-select">Window Size</Label>
-                <Input
-                    type="select"
-                    name="select"
-                    id="window-size-select"
-                    bind:value={windowSize}
-                >
-                    {#each windowSizeOptions as windowSize}
-                        <option>{windowSize}</option>
-                    {/each}
-                </Input>
-            </FormGroup>
-            <FormGroup>
                 <Label for="num-edges-select"
                     >Number of edges(collocations)</Label
                 >
@@ -536,23 +519,6 @@
                         <option>{minNodeLength_}</option>
                     {/each}
                 </Input>
-            </FormGroup>
-            <FormGroup>
-                <Label for="include-stop-select">Include stop word nodes</Label>
-                <Input
-                    id="r3"
-                    type="radio"
-                    bind:group={includeStopWords}
-                    value={true}
-                    label="Yes"
-                />
-                <Input
-                    id="r4"
-                    type="radio"
-                    bind:group={includeStopWords}
-                    value={false}
-                    label="No"
-                />
             </FormGroup>
         </Form>
         <Form>

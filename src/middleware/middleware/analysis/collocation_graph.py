@@ -29,7 +29,7 @@ class CollocationGraphGenerator:
         self.colors = ["#FF0000", "#FF8000", "#F3FF00", "#00FF01", "#00FFED", "#0008FF", "#BF00FF",
                        "#FF00C9", "#FF0000", "#000000", "#808080", "#004A08", "#6F0000", "#00466F", "#57006F"]
 
-    def to_dict_of_dicts(self, string_dict, include_stop_word_nodes=True, min_node_length=1):
+    def to_dict_of_dicts(self, string_dict, include_stop_word_nodes=True, min_node_length=1, only_nes=False):
         """Converts dict to dict of dicts for networkx to be able to convert it to a graph.
 
         Args:
@@ -42,12 +42,20 @@ class CollocationGraphGenerator:
         """
         stop_words = list(self.nlp.Defaults.stop_words) + ["<link>"]
         dict_of_dicts = defaultdict(dict)
-        for entry in string_dict.items():
-            key_tuple = ast.literal_eval(entry[0])
-            if include_stop_word_nodes or (key_tuple[0] not in stop_words and key_tuple[1] not in stop_words):
-                if len(key_tuple[0]) >= min_node_length and len(key_tuple[1]) >= min_node_length:
-                    dict_of_dicts[key_tuple[0].replace(" ", "_").replace("\n", "")][key_tuple[1].replace(" ", "_").replace("\n", "")] = {
-                        "weight": entry[1]}
+        if only_nes:
+            for entry in string_dict.items():
+                key_tuple = entry[0]
+                if key_tuple[0][0] not in stop_words and key_tuple[1][0] not in stop_words:
+                    if len(key_tuple[0][0]) >= min_node_length and len(key_tuple[1][0]) >= min_node_length:
+                        dict_of_dicts[key_tuple[0][0].replace(" ", "_").replace("\n", "") + "&&" + key_tuple[0][1]][key_tuple[1][0].replace(" ", "_").replace("\n", "") + "&&" + key_tuple[1][1]] = {
+                            "weight": entry[1]}
+        else:
+            for entry in string_dict.items():
+                key_tuple = ast.literal_eval(entry[0])
+                if include_stop_word_nodes or (key_tuple[0] not in stop_words and key_tuple[1] not in stop_words):
+                    if len(key_tuple[0]) >= min_node_length and len(key_tuple[1]) >= min_node_length:
+                        dict_of_dicts[key_tuple[0].replace(" ", "_").replace("\n", "")][key_tuple[1].replace(" ", "_").replace("\n", "")] = {
+                            "weight": entry[1]}
         return dict_of_dicts
 
     def generate_graph(self, window_size, num_edges, include_stop_word_nodes, min_node_length, only_nes=False):
@@ -69,10 +77,10 @@ class CollocationGraphGenerator:
                 :num_edges]
         else:
             edge_dict = self.stat_provider.get_ne_collocations_as_list()[:num_edges]
-        edge_dict = {entry[0]: entry[1] for entry in edge_dict}     
+        edge_dict = {entry[0]: entry[1] for entry in edge_dict}
         print("Converting dict to dict of dicts...")
         edge_dict = self.to_dict_of_dicts(
-            edge_dict, include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length)
+            edge_dict, include_stop_word_nodes=include_stop_word_nodes, min_node_length=min_node_length, only_nes=only_nes)
         graph = nx.from_dict_of_dicts(edge_dict)
         print("Calculating spring layout...")
         pos = nx.spring_layout(graph)
@@ -285,7 +293,5 @@ class CollocationGraphGenerator:
             if color_edges:
                 graph = self.color_edges(graph)
             nx.write_gexf(graph, self.path_to_graph_files + graph_file)
+        print(graph_file)
         return graph_file
-
-
-graph_gen = CollocationGraphGenerator("./src/data/", "./src/data/word-graph/")

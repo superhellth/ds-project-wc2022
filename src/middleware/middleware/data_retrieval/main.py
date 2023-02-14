@@ -158,7 +158,6 @@ async def get_word_graph(window_size=4, num_edges=50000, include_stop_word_nodes
     embedding_size = int(embedding_size)
     n_clusters = int(n_clusters)
     only_nes = only_nes == "True"
-    print(str(only_nes))
     graph_file = graph_generator.generate_and_cluster(window_size=window_size, num_edges=num_edges,
                                                       include_stop_word_nodes=include_stop_word_nodes,
                                                       min_node_length=min_node_length, embedding_size=embedding_size,
