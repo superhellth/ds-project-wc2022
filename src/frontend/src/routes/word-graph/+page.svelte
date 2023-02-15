@@ -58,7 +58,6 @@
     ];
     let loading: boolean = false;
     let controlsAreOpen: boolean = false;
-    let nesOnly: boolean = false;
 
     // Code taken from https://codesandbox.io/s/github/jacomyal/sigma.js/tree/main/examples/use-reducers
     interface State {
@@ -145,7 +144,7 @@
             embeddingSize,
             clusterAlg,
             nClusters,
-            nesOnly
+            false
         );
 
         const Graph = await import("graphology").then((m) => m.default);
@@ -375,7 +374,7 @@
 </Breadcrumb>
 <div id="search" style="position: absolute; top: 8em; right: 30em; z-index: 1">
     <input
-    style="width: 15em"
+        style="width: 15em"
         type="search"
         id="search-input"
         list="suggestions"
@@ -429,64 +428,115 @@
     </FormGroup>
 </Form>
 <h2>Results</h2>
-<p>These results are suprisingly good, considering the only thing we input was the collocation counts. We have played around a bit with the parameters
-    and found that this combination which is set as standard works best. We interpreted the topics the following way:
+<p>
+    These results are suprisingly good, considering the only thing we input was
+    the collocation counts. We have played around a bit with the parameters and
+    found that this combination which is set as standard works best. We
+    interpreted the topics the following way:
 </p>
 <ul>
-    <li><h4 style="color: #FF0000">The Center Cluster</h4>
-        <p>This cluster probably is the least meaningful one. It's made up of the most frequent words of the corpus. This topic includes: The Argentina
-            vs Saudi Arabia match, the opening ceremony and generally all match announcements.
+    <li>
+        <h4 style="color: #FF0000">The Center Cluster</h4>
+        <p>
+            This cluster probably is the least meaningful one. It's made up of
+            the most frequent words of the corpus. This topic includes: The
+            Argentina vs Saudi Arabia match, the opening ceremony and generally
+            all match announcements.
         </p>
     </li>
-    <li><h4 style="color: #000000">#Cluster</h4>
-        <p>Here we find a cluster consisting mainly of the hashtags used. It is obvious that such a cluster exists, since most people put all Hashtags
-            they use at the end of their Tweet and thus most hashtags frequently appear together. Not too much information can be won from this cluster.
+    <li>
+        <h4 style="color: #000000">#Cluster</h4>
+        <p>
+            Here we find a cluster consisting mainly of the hashtags used. It is
+            obvious that such a cluster exists, since most people put all
+            Hashtags they use at the end of their Tweet and thus most hashtags
+            frequently appear together. Not too much information can be won from
+            this cluster.
         </p>
     </li>
-    <li><h4 style="color: #0008FF">#SayTheirNames</h4>
-        <p>The first real topic! This clusters clearly represents the Iran Conflict discussion. We found that this cluster exists, even if we reduce the 
-            number of clusters to find. So we can assume it is a much discussed and clearly outlined topic. 
+    <li>
+        <h4 style="color: #0008FF">#SayTheirNames</h4>
+        <p>
+            The first real topic! This clusters clearly represents the Iran
+            Conflict discussion. We found that this cluster exists, even if we
+            reduce the number of clusters to find. So we can assume it is a much
+            discussed and clearly outlined topic.
         </p>
     </li>
-    <li><h4 style="color: #004A08">C'mon England!</h4>
-        <p>It's coming home... or maybe not... Like we've seen in the statistics about our data, there are many Tweets from England and thus it was to
-            be expected, that the English football team would be quite a topic. It seems like people or news pages love to talk about english players.
+    <li>
+        <h4 style="color: #004A08">C'mon England!</h4>
+        <p>
+            It's coming home... or maybe not... Like we've seen in the
+            statistics about our data, there are many Tweets from England and
+            thus it was to be expected, that the English football team would be
+            quite a topic. It seems like people or news pages love to talk about
+            english players.
         </p>
     </li>
-    <li><h4 style="color: #00FFED">???</h4>
-        <p>This cluster is hard to classify, we might need to do some more digging on that...
+    <li>
+        <h4 style="color: #00FFED">???</h4>
+        <p>
+            This cluster is hard to classify, we might need to do some more
+            digging on that...
         </p>
     </li>
-    <li><h4 style="color: #FF00C9">Steve Harvey</h4>
-        <p>We call this one the "USA"-Cluster. It appears to be the cluster of topics american accounts tweeted about that are not related to the world
-            cup. Things like Wrestling, Formula 1, Kanye West and... well Steve Harvey. Though we already know the Tweets about Steve Harvey mainly come
-            from one single account, so it's not really a topic many people talk about but simply the result of spam.
+    <li>
+        <h4 style="color: #FF00C9">Steve Harvey</h4>
+        <p>
+            We call this one the "USA"-Cluster. It appears to be the cluster of
+            topics american accounts tweeted about that are not related to the
+            world cup. Things like Wrestling, Formula 1, Kanye West and... well
+            Steve Harvey. Though we already know the Tweets about Steve Harvey
+            mainly come from one single account, so it's not really a topic many
+            people talk about but simply the result of spam.
         </p>
     </li>
-    <li><h4 style="color: #FF8000">SUIIII!!!</h4>
-        <p>Yep. There is a SUII-Cluster. But it's not, as you might suspect the result of Ronaldo fans tweeting about him, but the again the result of a
-            few spam accounts pushing their product. This cluster most likely does not exist because there are so many tweets belonging to it, but because
-            its very unrelated to other things people talked about.
+    <li>
+        <h4 style="color: #FF8000">SUIIII!!!</h4>
+        <p>
+            Yep. There is a SUII-Cluster. But it's not, as you might suspect the
+            result of Ronaldo fans tweeting about him, but the again the result
+            of a few spam accounts pushing their product. This cluster most
+            likely does not exist because there are so many tweets belonging to
+            it, but because its very unrelated to other things people talked
+            about.
         </p>
     </li>
-    <li><h4 style="color: #F3FF00">NFT and Crypto</h4>
-        <p>This cluster is quite similar to the one above. It's a spam cluster about NFTs and Cryptos. It's less specific but just as meaningless.
+    <li>
+        <h4 style="color: #F3FF00">NFT and Crypto</h4>
+        <p>
+            This cluster is quite similar to the one above. It's a spam cluster
+            about NFTs and Cryptos. It's less specific but just as meaningless.
         </p>
     </li>
-    <li><h4 style="color: #BF00FF">你好中国人！</h4>
-        <p>Although we specified in our Twitter API Query, that we only want to collect english Tweets, we got Tweets with chinese and arabic hashtags.
-            At least the chinese hashtags making up this cluster indicate that these Tweets are also scam related.
+    <li>
+        <h4 style="color: #BF00FF">你好中国人！</h4>
+        <p>
+            Although we specified in our Twitter API Query, that we only want to
+            collect english Tweets, we got Tweets with chinese and arabic
+            hashtags. At least the chinese hashtags making up this cluster
+            indicate that these Tweets are also scam related.
         </p>
     </li>
-    <li><h4 style="color: #00FF01">Cluster 10</h4>
-        <p>Another unclassifiable cluster, covering different unrelated topics like Harry and Meghan, some Leak controversy and the GOAT debate.
+    <li>
+        <h4 style="color: #00FF01">Cluster 10</h4>
+        <p>
+            Another unclassifiable cluster, covering different unrelated topics
+            like Harry and Meghan, some Leak controversy and the GOAT debate.
         </p>
     </li>
-    <li><h4 style="color: #808080">Stand with Ukraine</h4>
-        <p>This clusters is made up of Tweets about the war in Ukraine. It's the most isolated cluster.
+    <li>
+        <h4 style="color: #808080">Stand with Ukraine</h4>
+        <p>
+            This clusters is made up of Tweets about the war in Ukraine. It's
+            the most isolated cluster.
         </p>
     </li>
 </ul>
+<p>All in all it becomes very clear, that there is a variety of topics discussed in our data, however none of these topics has to do
+    with criticism on Qatar. All the different kinds of scams are more frequent than any criticism on the host nation. This already is
+    a very good indicator to the questions whether or not the world cup was succesful as a sportwashing event.
+</p>
 <Modal
     isOpen={controlsAreOpen}
     toggle={() => (controlsAreOpen = !controlsAreOpen)}
@@ -607,6 +657,17 @@
         {#if loading}
             <Loading displayString="graph" />
         {/if}
+        <p>
+            <br /><Icon name="exclamation-octagon-fill" class="hint" /> Note: We
+            provided files for the unclustered graph in the following configurations:
+            <br />1. Window of 4, No Stop, Min. Node length 2, 10000 Edges
+            <br />2. Window of 4, No Stop, Min. Node length 2, 50000 Edges
+            <br />3. Window of 4, No Stop, Min. Node length 2, 100000 Edges
+            <br />4. Window of 4, No Stop, Min. Node length 2, 200000 Edges
+            <br />All other configurations can be generated, however this could
+            take a while.
+            Applying custom clustering(only changing 'Clustering' settings) should be viable and normally should not take too long.
+        </p>
     </div>
 </Modal>
 

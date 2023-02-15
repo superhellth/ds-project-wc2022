@@ -4,8 +4,6 @@
     import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
     import { Icon } from "sveltestrap";
 
-    let currentTheme: string | null;
-
     let provider: MiddlewareProvider = MiddlewareProvider.getInstance();
     let visible: boolean = false;
     let map: any;
@@ -72,12 +70,11 @@
     });
 </script>
 
-<!-- <h1>Exploring the perception of the 2022 FIFA World Cup</h1> -->
 {#if visible}
     <div in:fly={{ y: 200, duration: 2000 }} out:fade>
         <img src="Qatar-2022-1536x798.png" class="banner" />
         <p style="margin-left: 80em; font-size: 0.8em">
-            <Icon name="exclamation-circle" /> Copyright by
+            <Icon name="exclamation-circle" /> This Logo is owned by the FIFA
         </p>
     </div>
     <div

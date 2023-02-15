@@ -10,12 +10,16 @@
         CardImg,
         Col,
         Icon,
+        Progress,
         Row,
     } from "sveltestrap";
 
     // Define a variable for storing the tweet data
     export let data: Tweet;
     export let showDetails: boolean;
+    export let sentimentMethod: string;
+    export let sentimentScore: any;
+    export let sentimentMethodIndex: number;
 
     // Define a variable for storing the shadow effect
     let shadow = "";
@@ -70,13 +74,9 @@
                 {#if showDetails}
                     <Row>
                         <p>
-                            {data
-                                .getAuthor()
-                                .getFollowerCount()} Follower
-                        <br/>
-                        {data
-                            .getAuthor()
-                            .getTweetCount()} Tweets
+                            {data.getAuthor().getFollowerCount()} Follower
+                            <br />
+                            {data.getAuthor().getTweetCount()} Tweets
                         </p>
                     </Row>
                 {/if}
@@ -86,9 +86,16 @@
                 {data.getText()}
             </CardBody>
             <CardFooter>
+                {#if sentimentMethod != "None"}
+                {#await sentimentScore}
+                    <p>Fetching sentiment score...</p>
+                {:then sentScore} 
+                    <Progress value={(sentScore[sentimentMethodIndex] + 1) / 2 * 100} style="color: red">{sentScore[sentimentMethodIndex]}</Progress>
+                {/await}
+                {/if}
                 <!-- Use an icon to indicate that this is a tweet, and the ageInHours method to show how long ago it was posted -->
                 <Icon name="twitter" />
-                {data.getAgeInHours()}
+                {data.getAgeInHours()} ago
                 {#if showDetails}
                     <p><br />Score: {data.getScore()}</p>
                 {/if}

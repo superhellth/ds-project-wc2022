@@ -58,6 +58,7 @@ th,
 td,
 b.inv,
 li.s-GLbwxcRWqclP,
+li.s-ohTpp-SwD4s-,
 legend,
 label,
 .table-striped>tbody>tr:nth-of-type(odd)>*,
@@ -69,6 +70,7 @@ div.card-footer,
 }
 
 // set text color to elements that stay white
+.progress-bar,
 h5.m-0 {
     color: #000000;
 }
@@ -112,4 +114,8 @@ button.bg-tweet:focus {
 }
 .text-twitter-color {
     color: #1DA1F2 !important;
+}
+
+p.hint {
+    font-size: small;
 }

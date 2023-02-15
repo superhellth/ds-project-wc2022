@@ -12,12 +12,15 @@
     <BreadcrumbItem>
         <a href=".">Dashboard</a>
     </BreadcrumbItem>
+    <BreadcrumbItem>
+        <a href="/statistics">Statistics</a>
+    </BreadcrumbItem>
     <BreadcrumbItem active>n-grams</BreadcrumbItem>
 </Breadcrumb>
 <h4>Welcome to the n-gram page!</h4>
 <p>Here you can take a look at all the n-gram counts we generated. These have been generated using the whole corpus.
     Without further processing these counts don't convey too much information, but still, there are some interesting things to notice here.</p>
-<p>Note: The n-gram counts make take a while to load, if they are not loaded on middleware startup.</p>
+<p>Note: The n-gram counts may take a while to load, if they are not loaded on middleware startup.</p>
 
 <Row>
     <Col>
@@ -44,7 +47,7 @@
                 return provider.getTopKUnigrams(k, false, true, false);
             }}
             header="Common Mentions"
-            footer="Now this already gives us an idea which teams were talked about a lot and which other topics apart from the tournament have found their way into our corpus. As seen on the Home page of this Website most Tweets are from the UK and US, this also explains why the most frequently mentioned football teams are the one of the US '@usmnt' and the one of England '@england'. Furthermore the three BTS mentions '@bts_twt', '@bighit_music' and '@bts_bighit' confirm the assumption from above that the opening ceremony was a well discussed topic. The mentions unrelated to the tournament like '@iamsteveharvey' and '@suinsdapp' emphasize that there are quite some spam Tweets in our Dataset."
+            footer="This already gives us an idea which teams were talked about a lot and which other topics apart from the tournament have found their way into our corpus. As seen on the Home page of this Website most Tweets are from the UK and US, this also explains why the most frequently mentioned football teams are the one of the US '@usmnt' and the one of England '@england'. Furthermore the three BTS mentions '@bts_twt', '@bighit_music' and '@bts_bighit' confirm the assumption from above that the opening ceremony was a well discussed topic. The mentions unrelated to the tournament like '@iamsteveharvey' and '@suinsdapp' emphasize that there are quite some spam Tweets in our Dataset."
             keyColumnName="Mention"
         />
     </Col>

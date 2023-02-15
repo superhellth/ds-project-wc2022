@@ -61,21 +61,8 @@
     let numEdges: number = 25000;
     let numEdgesOptions: number[] = [10000, 25000, 50000, 100000, 200000];
     let minNodeLength: number = 2;
-    let minNodeLengthOptions: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     let embeddingSize: number = 128;
-    let embeddingSizeOptions: number[] = [-1, 1, 10, 128, 200, 300];
     let clusterAlg: string = "agglomerative";
-    let clusterAlgOptions: string[] = [
-        "spectral",
-        "k-means",
-        "agglomerative",
-        "mean-shift",
-        "affinity-propagation",
-        "dbscan",
-        "optics",
-        "birch",
-        "mini-batch-k-means",
-    ];
     let nClusters: number = 12;
     let nClustersOptions: number[] = [
         2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
@@ -287,14 +274,14 @@
         let nodesToRemove: Set<string> = new Set();
         displayGraph.forEachNode((node, attributes) => {
             let nodeType = node.split("&&")[1];
-            console.log(nodeType)
+            console.log(nodeType);
             if (!selectedNeTypes.includes(nodeType)) {
-                nodesToRemove.add(node)
+                nodesToRemove.add(node);
             }
             attributes.label = node.split("&&")[0].replaceAll("_", " ");
-        })
+        });
         console.log(selectedNeTypes);
-        console.log(nodesToRemove)
+        console.log(nodesToRemove);
         nodesToRemove.forEach((node) => displayGraph.dropNode(node));
     }
 
@@ -432,7 +419,7 @@
     <div id="cluster-div2">
         <Form>
             <FormGroup>
-                <legend>Top Words by Cluster</legend>
+                <legend>Top Entities by Cluster</legend>
                 <Accordion id="clusters">
                     {#each Array.from(clusters.keys()) as cluster, i}
                         <AccordionItem header={"Cluster " + (i + 1)}>
@@ -440,7 +427,11 @@
                                 {#each Array.from(clusters.get(cluster))
                                     .sort((nodeA, nodeB) => originalGraph.getNodeAttributes(nodeA).weight - originalGraph.getNodeAttributes(nodeB).weight)
                                     .slice(0, 10) as token}
-                                    <li style="color: {cluster}">{token.split("&&")[0].replaceAll("_", " ")}</li>
+                                    <li style="color: {cluster}">
+                                        {token
+                                            .split("&&")[0]
+                                            .replaceAll("_", " ")}
+                                    </li>
                                 {/each}
                             </ul>
                         </AccordionItem>
@@ -474,110 +465,55 @@
 </Form>
 <h2>Results</h2>
 <p>
-    These results are suprisingly good, considering the only thing we input was
-    the collocation counts. We have played around a bit with the parameters and
-    found that this combination which is set as standard works best. We
-    interpreted the topics the following way:
+    This graph conveys a little less information than the word graph does,
+    however there are some interesting things to note here. The topics/clusters
+    are quite similar to the clusters in the word graph.
 </p>
 <ul>
     <li>
-        <h4 style="color: #FF0000">The Center Cluster</h4>
+        <h4 style="color: #F3FF00">Iran again</h4>
         <p>
-            This cluster probably is the least meaningful one. It's made up of
-            the most frequent words of the corpus. This topic includes: The
-            Argentina vs Saudi Arabia match, the opening ceremony and generally
-            all match announcements.
+            In this graph we also have an Iran cluster. It was to be expected,
+            that the topics would be similar to the word graph topics, still it
+            emphasizes the relevance of this topic in our corpus.
         </p>
     </li>
     <li>
-        <h4 style="color: #000000">#Cluster</h4>
+        <h4 style="color: #004A08">Cricket</h4>
         <p>
-            Here we find a cluster consisting mainly of the hashtags used. It is
-            obvious that such a cluster exists, since most people put all
-            Hashtags they use at the end of their Tweet and thus most hashtags
-            frequently appear together. Not too much information can be won from
-            this cluster.
+            This cluster is new. It is mainly about the T20 Cricket world
+            championship. Just another topic more relevant than critizism about
+            Qatar.
         </p>
     </li>
     <li>
-        <h4 style="color: #0008FF">#SayTheirNames</h4>
+        <h4 style="color: #FF00C9">Israel and palastine</h4>
         <p>
-            The first real topic! This clusters clearly represents the Iran
-            Conflict discussion. We found that this cluster exists, even if we
-            reduce the number of clusters to find. So we can assume it is a much
-            discussed and clearly outlined topic.
+            There seem to be a handful of noticeable things that happened that
+            have to do with the conflict between Israel and Palastine. For
+            example the Israelian Prime Minister publically celebrated the
+            victory of Saudi Arabia over Argentina. Moreover there was an
+            agreement from Qatar with Palastine and Israel to allow people from
+            both nations to come to the world cup.
         </p>
     </li>
     <li>
-        <h4 style="color: #004A08">C'mon England!</h4>
+        <h4 style="color: #FF8000">Messi! Messi! Messi!</h4>
         <p>
-            It's coming home... or maybe not... Like we've seen in the
-            statistics about our data, there are many Tweets from England and
-            thus it was to be expected, that the English football team would be
-            quite a topic. It seems like people or news pages love to talk about
-            english players.
-        </p>
-    </li>
-    <li>
-        <h4 style="color: #00FFED">???</h4>
-        <p>
-            This cluster is hard to classify, we might need to do some more
-            digging on that...
-        </p>
-    </li>
-    <li>
-        <h4 style="color: #FF00C9">Steve Harvey</h4>
-        <p>
-            We call this one the "USA"-Cluster. It appears to be the cluster of
-            topics american accounts tweeted about that are not related to the
-            world cup. Things like Wrestling, Formula 1, Kanye West and... well
-            Steve Harvey. Though we already know the Tweets about Steve Harvey
-            mainly come from one single account, so it's not really a topic many
-            people talk about but simply the result of spam.
-        </p>
-    </li>
-    <li>
-        <h4 style="color: #FF8000">SUIIII!!!</h4>
-        <p>
-            Yep. There is a SUII-Cluster. But it's not, as you might suspect the
-            result of Ronaldo fans tweeting about him, but the again the result
-            of a few spam accounts pushing their product. This cluster most
-            likely does not exist because there are so many tweets belonging to
-            it, but because its very unrelated to other things people talked
-            about.
-        </p>
-    </li>
-    <li>
-        <h4 style="color: #F3FF00">NFT and Crypto</h4>
-        <p>
-            This cluster is quite similar to the one above. It's a spam cluster
-            about NFTs and Cryptos. It's less specific but just as meaningless.
-        </p>
-    </li>
-    <li>
-        <h4 style="color: #BF00FF">你好中国人！</h4>
-        <p>
-            Although we specified in our Twitter API Query, that we only want to
-            collect english Tweets, we got Tweets with chinese and arabic
-            hashtags. At least the chinese hashtags making up this cluster
-            indicate that these Tweets are also scam related.
-        </p>
-    </li>
-    <li>
-        <h4 style="color: #00FF01">Cluster 10</h4>
-        <p>
-            Another unclassifiable cluster, covering different unrelated topics
-            like Harry and Meghan, some Leak controversy and the GOAT debate.
-        </p>
-    </li>
-    <li>
-        <h4 style="color: #808080">Stand with Ukraine</h4>
-        <p>
-            This clusters is made up of Tweets about the war in Ukraine. It's
-            the most isolated cluster.
+            Another thing that stands out is to be seen if you take a look at
+            the graph with only the Person entities(You can do that in the
+            settings menu). If you then take a look at the center of the graph
+            you can see very clearly, that in the middle of all the discussions
+            there is Messi. This puts the found clusters in some perspective, as
+            it shows that the main discussed topic was indeed football and not
+            anything political.
         </p>
     </li>
 </ul>
+<p>
+    So it seems like our findings from the word graph have been confirmed by
+    this graph. There is not too much additional information to be found.
+</p>
 <Modal
     isOpen={controlsAreOpen}
     toggle={() => (controlsAreOpen = !controlsAreOpen)}
@@ -601,22 +537,7 @@
                 </Input>
             </FormGroup>
             <FormGroup>
-                <Label for="min-node-length-select"
-                    >Minimun number of characters in node</Label
-                >
-                <Input
-                    type="select"
-                    name="select"
-                    id="min-node-length-select"
-                    bind:value={minNodeLength}
-                >
-                    {#each minNodeLengthOptions as minNodeLength_}
-                        <option>{minNodeLength_}</option>
-                    {/each}
-                </Input>
-            </FormGroup>
-            <FormGroup>
-                <Label for="min-node-length-select">Entity types</Label>
+                <Label>Entity types</Label>
                 {#each Array.from(neTypeSelection.keys()) as neType}
                     <Input
                         id={neType + "cx"}
@@ -637,19 +558,6 @@
         <Form>
             <legend>Clustering</legend>
             <FormGroup>
-                <Label for="cluster-alg-select">Clustering Algorithm</Label>
-                <Input
-                    type="select"
-                    name="select"
-                    id="cluster-alg-select"
-                    bind:value={clusterAlg}
-                >
-                    {#each clusterAlgOptions as clusterAlg_}
-                        <option>{clusterAlg_}</option>
-                    {/each}
-                </Input>
-            </FormGroup>
-            <FormGroup>
                 <Label for="n-clusters-select"># of clusters</Label>
                 <Input
                     type="select"
@@ -662,21 +570,6 @@
                     {/each}
                 </Input>
             </FormGroup>
-            <FormGroup>
-                <Label for="embedding-size-select"
-                    >Size of Node2Vec embedding</Label
-                >
-                <Input
-                    type="select"
-                    name="select"
-                    id="embedding-size-select"
-                    bind:value={embeddingSize}
-                >
-                    {#each embeddingSizeOptions as embeddingSize_}
-                        <option>{embeddingSize_}</option>
-                    {/each}
-                </Input>
-            </FormGroup>
         </Form>
         <Button
             type="button"
@@ -686,6 +579,15 @@
         {#if loading}
             <Loading displayString="graph" />
         {/if}
+        <p>
+            <br /><Icon name="exclamation-octagon-fill" class="hint" /> Note: We
+            provided files for the unclustered graph in the following configurations:
+            <br />1. 10000 Edges
+            <br />2. 25000 Edges
+            <br />Graphs with the other number of Edges can be generated, however this could
+            take a while.
+            Applying custom clustering(only changing 'Clustering' settings) should be viable and normally should not take too long.
+        </p>
     </div>
 </Modal>
 

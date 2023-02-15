@@ -20,7 +20,8 @@
     import { onMount } from "svelte";
 
     // Our connection to the middleware
-    const elasticProvider: MiddlewareProvider = MiddlewareProvider.getInstance();
+    const elasticProvider: MiddlewareProvider =
+        MiddlewareProvider.getInstance();
 
     // We get  a list of the 50 most recent tweets asynchronously, thus the data type is Promise
     // const tweets: Promise<Array<Tweet>> = elasticHelper.getTweets();
@@ -50,8 +51,15 @@
         "author.public_metrics.listed_count",
     ];
     let currentSort = sortOptions[0];
-    let sortAscending = false;
-    let showDetails = false;
+    let sortAscending: boolean = false;
+    let showDetails: boolean = false;
+    let showSentimentForMethod: Map<string, number> = new Map<string, number>();
+    showSentimentForMethod.set("None", -1);
+    showSentimentForMethod.set("VaderSentiment", 0);
+    showSentimentForMethod.set("SGDClassifierOther", 1);
+    showSentimentForMethod.set("SGDClassifierOwn", 2);
+    showSentimentForMethod.set("BERT", 3);
+    let selectedSentimentMethod: string = "None";
 
     $: {
         checkQueryValidity(query);
@@ -231,6 +239,24 @@
 <Accordion>
     <AccordionItem>
         <h5 class="m-0" slot="header">Sentiment Analysis</h5>
+        <div style="display: flex; justify-content: center">
+            <Form inline>
+                <FormGroup>
+                    <Label>Show sentiment for each Tweet by Method</Label>
+                    <Input
+                        type="select"
+                        name="select"
+                        id="exampleSelect"
+                        style="width: 20em"
+                        bind:value={selectedSentimentMethod}
+                    >
+                        {#each Array.from(showSentimentForMethod.keys()) as sentimentMethod}
+                            <option>{sentimentMethod}</option>
+                        {/each}
+                    </Input>
+                </FormGroup>
+            </Form>
+        </div>
         <Table hover bordered>
             <thead>
                 <tr>
@@ -308,7 +334,7 @@
                             This sentiment score is calculated by the<a
                                 href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english"
                             >
-                                skledistilbert-base-uncased-finetuned-sst-2-englisharn
+                                distilbert-base-uncased-finetuned-sst-2-englisharn
                             </a> model as found on HuggingFace. In order for the
                             tweets to be processed 'properly' we looked at the training
                             data for that model. To keep our input similar we decided
@@ -335,7 +361,7 @@
             {#each tweets_100 as aTweet}
                 <!-- For each tweet, use the TweetCard component to display the tweet -->
                 <div>
-                    <TweetCard data={aTweet} bind:showDetails />
+                    <TweetCard data={aTweet} bind:showDetails sentimentMethod={selectedSentimentMethod} sentimentScore={elasticProvider.getSentimentTweet(aTweet.getText())} sentimentMethodIndex={showSentimentForMethod.get(selectedSentimentMethod)} />
                 </div>
             {/each}
         </Row>

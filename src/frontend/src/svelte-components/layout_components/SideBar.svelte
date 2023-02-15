@@ -118,14 +118,6 @@
                     on:press={() => {
                         theme = "dark";
                     }}
-                    text="Generate Tweet"
-                    href="/tweet-gen"
-                    iconName="dice-5"
-                />
-                <SidebarItem
-                    on:press={() => {
-                        theme = "dark";
-                    }}
                     text="Word embeddings"
                     href="/word-embedding"
                     iconName="body-text"
