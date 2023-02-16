@@ -1,5 +1,8 @@
 <script lang="ts">
+    import Loading from "src/svelte-components/Loading.svelte";
+    import TweetCard from "src/svelte-components/TweetCard.svelte";
     import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
+    import { onMount } from "svelte";
     import {
         Breadcrumb,
         BreadcrumbItem,
@@ -9,6 +12,8 @@
         Label,
         Image,
         Progress,
+        Col,
+        Row,
     } from "sveltestrap";
 
     let provider: MiddlewareProvider = MiddlewareProvider.getInstance();
@@ -36,6 +41,10 @@
         checkIfExists(checkIfExistsString, false);
         checkIfExists(checkIfExistsString2, true);
     }
+
+    onMount(async () => {
+        console.log(await provider.getTweetByID(1594818175929131008n));
+    });
 
     async function checkIfExists(checkIfExistsString: string, second: boolean) {
         if (second) {
@@ -105,14 +114,19 @@
     training parameters have been finetuned to fit out corpus. Our dataset is
     big enough, that things like "Hansi Flick" - "Germany" + "France" = "Didier
     Deschamps" work. However our data is very football specific, so "King" -
-    "Man" + "Woman" does not work quite as good.
+    "Man" + "Woman" does not work quite as well.
 </p>
 <h4>Check for Embedding</h4>
 {#if checkIfExistsValue && checkIfExistsValue2}
     {#await provider.getDistance(preprocessString(checkIfExistsString), preprocessString(checkIfExistsString2)) then distance}
         <div style="margin: 1em">
-            <p style="margin: auto; width: 50%; text-align: center">Distance between Words: {distance}</p>
-            <Progress value={100 - distance * 100} style="margin: auto; width: 50%;" />
+            <p style="margin: auto; width: 50%; text-align: center">
+                Distance between Words: {distance}
+            </p>
+            <Progress
+                value={100 - distance * 100}
+                style="margin: auto; width: 50%;"
+            />
         </div>
     {/await}
 {/if}
@@ -132,7 +146,8 @@
                 src={provider.getTSNEPlotURL(
                     preprocessString(checkIfExistsString),
                     numCloseWords,
-                    numFarWords
+                    numFarWords,
+                    "1"
                 )}
                 alt="plot"
                 style="width: 27em; height: 27em"
@@ -177,7 +192,8 @@
                 src={provider.getTSNEPlotURL(
                     preprocessString(checkIfExistsString2),
                     numCloseWords2,
-                    numFarWords2
+                    numFarWords2,
+                    "2"
                 )}
                 alt="plot"
                 style="width: 27em; height: 27em"
@@ -235,6 +251,55 @@
         valid
     />
 </Form>
+
+<h3>Results</h3>
+<p>
+    First of all it should be noted, that the quality of the embedding is quite
+    good. There is a lot of football knowledge encoded here. The embedding
+    "knows" the players of the popular teams and roughly which teams were in
+    which group. Apart from that the embedding helps getting a better overview
+    about the topics discovered in the Word and Entity Graph. E. g. Looking up
+    the nft embedding shows which platforms have been pushed. However we can
+    also derive some knowledge about the criticism on Qatar. Simply looking at
+    the distance between "Human Rights" and "Qatar" (0.59) shows us, that these
+    two Phrases are connected. The distance is normed so that 0 means the
+    phrases are the same and values >=1 mean that the phrases are not connected
+    at all. But now how large of a distance is 0.59? "Kane" and "England" have a
+    distance of 0.58. "Messi" and "Ronaldo": 0.18. "Qatar" and "Host Nation":
+    0.39. So 0.59 definitely indicates a familiarity, however not a too close
+    one. Furthermore let's just look at the close words of "Human Rights".
+</p>
+<img src="human rights-tsne.png" style="width: 27em; height: 27em" />
+<p>
+    There we can see many obvious neighbors like "Rights Abuses" and "Migrant
+    Workers" which shows that criticsim on the host nations does exist. But why
+    are there also phrases like "Hypocrisy", "Western countries" and
+    "Condemning". Taking a look at the Tweets containing these phrases we can
+    see that there actually is quite some criticism against western countries
+    condemning the Qatari sportswashing.
+</p>
+<Row>
+    {#each [1594350868870168576n, 1606283271431749632n, 1594686111485501441n, 1594302492866711552n] as id}
+        {#await provider.getTweetByID(id)}
+            <Loading displayString="Tweet" />
+        {:then tweet}
+            <Col>
+                <TweetCard
+                    data={tweet}
+                    showDetails={false}
+                    sentimentMethod="None"
+                    sentimentScore={0}
+                    sentimentMethodIndex={-1}
+                />
+            </Col>
+        {/await}
+    {/each}
+</Row>
+
+<p>
+    So it seems like the FIFA and Qatar did manage to present the World Cup in
+    such a way that some people see Qatar more as a victim than an offender.
+</p>
 
 <style>
     img {

@@ -98,6 +98,7 @@
                 {data.getAgeInHours()} ago
                 {#if showDetails}
                     <p><br />Score: {data.getScore()}</p>
+                    <p>ID: {data.getID()}</p>
                 {/if}
             </CardFooter>
         </div>

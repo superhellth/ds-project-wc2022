@@ -53,6 +53,23 @@ class MiddlewareProvider extends Connection {
     }
 
     /**
+     * Fetch a Tweet by ID from ES.
+     * @param id ID of the Tweet to fetch.
+     * @returns The Tweet with the given ID.
+     */
+    public async getTweetByID(id: bigint): Promise<Tweet> {
+        let query = `{"query": {
+            \t"term": {
+            \t\t"id": ` + id + `
+            \t}
+            }}`;
+        let data = await fetch(this.URL + "/query?query=" + query).
+            then((response) => response.json());
+        data = data.hits;
+        return Tweet.fromJson(data[0])
+    }
+
+    /**
      * Count number of matching tweets in es index.
      * @param query The query to be forwarded to es.
      * @returns The number of matching tweets.
@@ -238,8 +255,8 @@ class MiddlewareProvider extends Connection {
      * @param numFarWords Number of far away words to display on plot.
      * @returns Link to generated plot.
      */
-    public getTSNEPlotURL(word: string, numCloseWords: number, numFarWords: number): string {
-        let queryURL: string = this.URL + "/analysis/embedding/tsne?word=" + word + "&num_closest=" + numCloseWords + "&num_furthest=" + numFarWords;
+    public getTSNEPlotURL(word: string, numCloseWords: number, numFarWords: number, filePrefix: string): string {
+        let queryURL: string = this.URL + "/analysis/embedding/tsne?word=" + word + "&num_closest=" + numCloseWords + "&num_furthest=" + numFarWords + "&file_prefix=" + filePrefix;
         return queryURL;
     }
 

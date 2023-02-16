@@ -249,10 +249,10 @@ async def doesnt_match(word: List[str] = Query(default=None)):
     return w2v_model.wv.doesnt_match(word)
 
 @app.get("/analysis/embedding/tsne")
-async def get_tsne(word: str, num_closest="10", num_furthest="0"):
+async def get_tsne(word: str, num_closest: str="10", num_furthest:str="0", file_prefix: str="1"):
     """Return TSNE plot of word."""
     embedder.tsneplot(w2v_model, word, num_closest=int(num_closest), num_furthest=int(num_furthest))
-    path_to_file = PATH_TO_EMBEDDING_DATA + word + "-tsne.png"
+    path_to_file = PATH_TO_EMBEDDING_DATA + file_prefix + "-tsne.png"
     plt.savefig(path_to_file, format="png")
     return FileResponse(path_to_file)
 

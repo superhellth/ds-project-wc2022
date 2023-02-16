@@ -42,7 +42,6 @@ class Tweet {
      * @returns the parsed tweet object.
      */
     public static fromJson(json: any): Tweet {
-        console.log(json)
         const score = json._score;
         json = json._source
         const attachments: any = json.attachments;
