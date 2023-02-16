@@ -7,7 +7,7 @@
 </script>
 
 <title>Statistics - Hashtags and Mentions</title>
-<h1>N-grams</h1>
+<h1>Unigrams</h1>
 <Breadcrumb class="mb-4">
     <BreadcrumbItem>
         <a href=".">Dashboard</a>
@@ -15,12 +15,12 @@
     <BreadcrumbItem>
         <a href="/statistics">Statistics</a>
     </BreadcrumbItem>
-    <BreadcrumbItem active>n-grams</BreadcrumbItem>
+    <BreadcrumbItem active>Unigrams</BreadcrumbItem>
 </Breadcrumb>
-<h4>Welcome to the n-gram page!</h4>
-<p>Here you can take a look at all the n-gram counts we generated. These have been generated using the whole corpus.
+<h4>Welcome to the unigram page!</h4>
+<p>Here you can take a look at all the unigram counts we generated. These have been generated using the whole corpus.
     Without further processing these counts don't convey too much information, but still, there are some interesting things to notice here.</p>
-<p>Note: The n-gram counts may take a while to load, if they are not loaded on middleware startup.</p>
+<p>Note: The unigram counts may take a while to load, if they are not loaded on middleware startup.</p>
 
 <Row>
     <Col>
@@ -59,39 +59,6 @@
             header="Common Hashtags"
             footer="Now this is an interesting one. These hashtags reflected what we already found out from the unigrams and the mentions, but it also shows one new thing. Namely the presence of the Iran Conflict in our Dataset. The hashtags #saytheirnames and #mahsaamini clearly indicate that. The reason this is interesting is, that this is a politic topic mostly unrelated to the tournament only connected by the Iran taking part in the world cup and the gesture they made before their match against Wales. This means the political situation in the Iran is more interesting to people than the political situation in Qatar. A first indicator to the answer to the question whether or not the Sportswashing of Qatar was successful."
             keyColumnName="Hashtag"
-        />
-    </Col>
-</Row>
-<Row>
-    <Col>
-        <CountTableCard
-            providingFunction={(k, includeStop) => {
-                return provider.getTopKNGrams(2, k);
-            }}
-            header="Common Bigrams"
-            keyColumnName="Bigram"
-        />
-    </Col>
-</Row>
-<Row>
-    <Col>
-        <CountTableCard
-            providingFunction={(k, includeStop) => {
-                return provider.getTopKNGrams(3, k);
-            }}
-            header="Common Trigrams"
-            keyColumnName="Trigram"
-        />
-    </Col>
-</Row>
-<Row>
-    <Col>
-        <CountTableCard
-            providingFunction={(k, includeStop) => {
-                return provider.getTopKNGrams(4, k);
-            }}
-            header="Common Fourgrams"
-            keyColumnName="Fourgram"
         />
     </Col>
 </Row>

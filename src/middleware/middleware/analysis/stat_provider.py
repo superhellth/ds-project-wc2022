@@ -101,6 +101,27 @@ class StatProvider:
             self.sorted_n_grams[n-1] = sorted(self.get_n_grams_as_dict(n).items(), key=lambda x: x[1], reverse=True)
         return self.sorted_n_grams[n-1]
 
+    def filter_stop_words(self, n_gram_list):
+        """Filter out n-grams containing at least one stop word from an n-gram list.
+
+        Args:
+            n_gram_list (tuple[str][]): List of n-grams as tuples and their counts.
+
+        Returns:
+            list: Filtered list.
+        """
+        no_stop_list = []
+        for entry in n_gram_list:
+            n_gram_tuple = entry[0]
+            tokens = n_gram_tuple.split(",")
+            contains_stop_word = False
+            for token in tokens:
+                if token.strip().replace("'", "") in self.nlp.Defaults.stop_words:
+                    contains_stop_word = True
+            if not contains_stop_word:
+                no_stop_list.append(entry)
+        return no_stop_list
+
     def get_collocations_as_list(self, window_size):
         """Return complete sorted list of collocations including their counts.
 
@@ -177,6 +198,9 @@ class StatProvider:
 
         return {entry[0]: entry[1] for entry in result}
 
-    def get_top_n_grams(self, n, k=10):
+    def get_top_n_grams(self, n, k=10, no_stop=True):
         """Return top k n-grams."""
-        return {entry[0]: entry[1] for entry in self.get_n_grams_as_list(n)[:k]}
+        n_gram_list = self.get_n_grams_as_list(n)
+        if no_stop:
+            n_gram_list = self.filter_stop_words(n_gram_list)
+        return {entry[0]: entry[1] for entry in n_gram_list[:k]}
