@@ -18,6 +18,7 @@
     import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
     import Label from "@smui/list/src/Label.svelte";
     import { onMount } from "svelte";
+    import { fly } from "svelte/transition";
 
     // Our connection to the middleware
     const elasticProvider: MiddlewareProvider =
@@ -77,10 +78,10 @@
     );
 
     let inner: HTMLTextAreaElement;
-    const resize = () => {
+    function resize() {
         inner.style.height = "auto";
         inner.style.height = 4 + inner.scrollHeight + "px";
-    };
+    }
 
     function getFullQuery(): string {
         let sortString = sortAscending ? `"asc"` : `"desc"`;
@@ -138,8 +139,11 @@
         bertSent = scores[3];
     }
 
+    let visible: boolean = false;
+
     onMount(async () => {
         resize();
+        visible = true;
         let queryInput = document.getElementById("query-input")!;
         queryInput.style.backgroundColor = "var(--side-bar-color)";
         queryInput.style.color = "#FFFFFF";
@@ -236,118 +240,129 @@
 {:then numTweets}
     <p># Tweets matching query: {numTweets}</p>
 {/await}
-<Accordion>
-    <AccordionItem>
-        <h5 class="m-0" slot="header">Sentiment Analysis</h5>
-        <div style="display: flex; justify-content: center">
-            <Form inline>
-                <FormGroup>
-                    <Label>Show sentiment for each Tweet by Method</Label>
-                    <Input
-                        type="select"
-                        name="select"
-                        id="exampleSelect"
-                        style="width: 20em"
-                        bind:value={selectedSentimentMethod}
-                    >
-                        {#each Array.from(showSentimentForMethod.keys()) as sentimentMethod}
-                            <option>{sentimentMethod}</option>
-                        {/each}
-                    </Input>
-                </FormGroup>
-            </Form>
-        </div>
-        <Table hover bordered>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Method (More info on click)</th>
-                    <th>Sentiment Score (-1 to 1, 'negative' to 'positive')</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td id="vaderSentId">
-                        <a href="">vaderSentiment</a>
-                        <Popover placement="right" target="vaderSentId">
-                            <div slot="title">
-                                <b>vaderSentiment</b>
-                            </div>
-                            This sentiment score is calculated by the<a
-                                href="https://github.com/cjhutto/vaderSentiment"
+{#key visible}
+    <div in:fly={{ y: 200, duration: 500, delay: 400 }}>
+        <Accordion>
+            <AccordionItem>
+                <h5 class="m-0" slot="header">Sentiment Analysis</h5>
+                <div style="display: flex; justify-content: center">
+                    <Form inline>
+                        <FormGroup>
+                            <Label
+                                >Show sentiment for each Tweet by Method</Label
                             >
-                                vaderSentiment
-                            </a> SentimentIntensityAnalyzer class. It uses a 'lexicon'
-                            and 'rule-based' approach and is fine-tuned for social
-                            media sentiment analysis.
-                        </Popover>
-                    </td>
-                    <td>{vaderSent}</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td id="tcsgdSent">
-                        <a href="">SGDClassifierOther</a>
-                        <Popover placement="right" target="tcsgdSent">
-                            <div slot="title">
-                                <b>SGDClassifier</b>
-                            </div>
-                            This sentiment score is calculated by the<a
-                                href="https://scikit-learn.org/stable/index.html"
+                            <Input
+                                type="select"
+                                name="select"
+                                id="exampleSelect"
+                                style="width: 20em"
+                                bind:value={selectedSentimentMethod}
                             >
-                                sklearn
-                            </a> SGDClassifier class in combination with a TfidfVectorizer.
-                            It trains using a file with 26000 labeled tweets which
-                            can be found in our repository under 'src/data/Tweets_train.csv'.
-                        </Popover>
-                    </td>
-                    <td>{trainedSent}</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td id="nbSent">
-                        <a href="">SGDClassifierOwn</a>
-                        <Popover placement="right" target="nbSent">
-                            <div slot="title">
-                                <b>SGDClassifierOwn</b>
-                            </div>
-                            This sentiment score is calculated by the<a
-                                href="https://scikit-learn.org/stable/index.html"
+                                {#each Array.from(showSentimentForMethod.keys()) as sentimentMethod}
+                                    <option>{sentimentMethod}</option>
+                                {/each}
+                            </Input>
+                        </FormGroup>
+                    </Form>
+                </div>
+                <Table hover bordered>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Method (More info on click)</th>
+                            <th
+                                >Sentiment Score (-1 to 1, 'negative' to
+                                'positive')</th
                             >
-                                sklearn
-                            </a> SGDClassifier class in combination with a TfidfVectorizer.
-                            It trains using a own self labeled tweets from our dataset
-                            which can be found in our repository under 'src/data/classification_with_text_train.csv'.
-                        </Popover>
-                    </td>
-                    <td>{nbSent}</td>
-                </tr>
-                <tr>
-                    <th scope="row">4</th>
-                    <td id="bertSent">
-                        <a href="">BERT based Classifier</a>
-                        <Popover placement="right" target="bertSent">
-                            <div slot="title">
-                                <b>BERT based Classifier</b>
-                            </div>
-                            This sentiment score is calculated by the<a
-                                href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english"
-                            >
-                                distilbert-base-uncased-finetuned-sst-2-englisharn
-                            </a> model as found on HuggingFace. In order for the
-                            tweets to be processed 'properly' we looked at the training
-                            data for that model. To keep our input similar we decided
-                            to drop all non-ascii symbols. We did not fine-tune the
-                            model.
-                        </Popover>
-                    </td>
-                    <td>{bertSent}</td>
-                </tr>
-            </tbody>
-        </Table>
-    </AccordionItem>
-</Accordion>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td id="vaderSentId">
+                                <a href="">vaderSentiment</a>
+                                <Popover placement="right" target="vaderSentId">
+                                    <div slot="title">
+                                        <b>vaderSentiment</b>
+                                    </div>
+                                    This sentiment score is calculated by the<a
+                                        href="https://github.com/cjhutto/vaderSentiment"
+                                    >
+                                        vaderSentiment
+                                    </a> SentimentIntensityAnalyzer class. It uses
+                                    a 'lexicon' and 'rule-based' approach and is
+                                    fine-tuned for social media sentiment analysis.
+                                </Popover>
+                            </td>
+                            <td>{vaderSent}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td id="tcsgdSent">
+                                <a href="">SGDClassifierOther</a>
+                                <Popover placement="right" target="tcsgdSent">
+                                    <div slot="title">
+                                        <b>SGDClassifier</b>
+                                    </div>
+                                    This sentiment score is calculated by the<a
+                                        href="https://scikit-learn.org/stable/index.html"
+                                    >
+                                        sklearn
+                                    </a> SGDClassifier class in combination with
+                                    a TfidfVectorizer. It trains using a file with
+                                    26000 labeled tweets which can be found in our
+                                    repository under 'src/data/Tweets_train.csv'.
+                                </Popover>
+                            </td>
+                            <td>{trainedSent}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td id="nbSent">
+                                <a href="">SGDClassifierOwn</a>
+                                <Popover placement="right" target="nbSent">
+                                    <div slot="title">
+                                        <b>SGDClassifierOwn</b>
+                                    </div>
+                                    This sentiment score is calculated by the<a
+                                        href="https://scikit-learn.org/stable/index.html"
+                                    >
+                                        sklearn
+                                    </a> SGDClassifier class in combination with
+                                    a TfidfVectorizer. It trains using a own self
+                                    labeled tweets from our dataset which can be
+                                    found in our repository under 'src/data/classification_with_text_train.csv'.
+                                </Popover>
+                            </td>
+                            <td>{nbSent}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">4</th>
+                            <td id="bertSent">
+                                <a href="">BERT based Classifier</a>
+                                <Popover placement="right" target="bertSent">
+                                    <div slot="title">
+                                        <b>BERT based Classifier</b>
+                                    </div>
+                                    This sentiment score is calculated by the<a
+                                        href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english"
+                                    >
+                                        distilbert-base-uncased-finetuned-sst-2-englisharn
+                                    </a> model as found on HuggingFace. In order
+                                    for the tweets to be processed 'properly' we
+                                    looked at the training data for that model. To
+                                    keep our input similar we decided to drop all
+                                    non-ascii symbols. We did not fine-tune the model.
+                                </Popover>
+                            </td>
+                            <td>{bertSent}</td>
+                        </tr>
+                    </tbody>
+                </Table>
+            </AccordionItem>
+        </Accordion>
+    </div>
+{/key}
 <div>
     {#await tweetPromise}
         <!-- Display a loading spinner while the tweets are being retrieved -->
@@ -358,10 +373,20 @@
     {:then tweets_100}
         <!-- Use the Row component from sveltestrap to create a responsive grid -->
         <Row cols={{ xl: 4, lg: 3, md: 2, sm: 1 }}>
-            {#each tweets_100 as aTweet}
+            {#each tweets_100 as aTweet, i}
                 <!-- For each tweet, use the TweetCard component to display the tweet -->
-                <div>
-                    <TweetCard data={aTweet} bind:showDetails sentimentMethod={selectedSentimentMethod} sentimentScore={elasticProvider.getSentimentTweet(aTweet.getText())} sentimentMethodIndex={showSentimentForMethod.get(selectedSentimentMethod)} />
+                <div in:fly={{ y: 200, duration: 500, delay: 200 * i }}>
+                    <TweetCard
+                        data={aTweet}
+                        bind:showDetails
+                        sentimentMethod={selectedSentimentMethod}
+                        sentimentScore={elasticProvider.getSentimentTweet(
+                            aTweet.getText()
+                        )}
+                        sentimentMethodIndex={showSentimentForMethod.get(
+                            selectedSentimentMethod
+                        )}
+                    />
                 </div>
             {/each}
         </Row>

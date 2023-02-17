@@ -22,6 +22,7 @@
     } from "sigma/types.js";
     import Loading from "src/svelte-components/Loading.svelte";
     import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
+    import { fly } from "svelte/transition";
 
     let provider = MiddlewareProvider.getInstance();
 
@@ -135,7 +136,10 @@
         renderer.refresh();
     }
 
+    let visible: boolean = false;
+
     onMount(async () => {
+        visible = true;
         const text = await provider.getWordGraph(
             windowSize,
             numEdges,
@@ -372,61 +376,81 @@
     </BreadcrumbItem>
     <BreadcrumbItem active>Word Graph</BreadcrumbItem>
 </Breadcrumb>
-<div id="search" style="position: absolute; top: 8em; right: 30em; z-index: 1">
-    <input
-        style="width: 15em"
-        type="search"
-        id="search-input"
-        list="suggestions"
-        placeholder="Try searching for a node..."
-    />
-    <datalist id="suggestions" />
-</div>
+
+{#if visible}
+    <div
+        id="search"
+        style="position: absolute; top: 8em; right: 30em; z-index: 1"
+        in:fly={{ y: 400, duration: 1000, delay: 1400 }}
+    >
+        <input
+            style="width: 15em"
+            type="search"
+            id="search-input"
+            list="suggestions"
+            placeholder="Try searching for a node..."
+        />
+        <datalist id="suggestions" />
+    </div>
+{/if}
 <div id="graph-container">
-    <div id="sigma-container" />
-    <div id="cluster-div">
+    {#if visible}
+        <div
+            id="sigma-container"
+            in:fly={{ y: 400, duration: 1000, delay: 1000 }}
+        />
+
+        <div id="cluster-div" in:fly={{ x: 400, duration: 1000, delay: 100 }}>
+            <Form>
+                <FormGroup>
+                    <legend>Top Words by Cluster</legend>
+                    <Accordion id="clusters">
+                        {#each Array.from(clusters.keys()) as cluster, i}
+                            <AccordionItem header={"Cluster " + (i + 1)}>
+                                <ul>
+                                    {#each Array.from(clusters.get(cluster))
+                                        .sort((nodeA, nodeB) => originalGraph.getNodeAttributes(nodeA).weight - originalGraph.getNodeAttributes(nodeB).weight)
+                                        .slice(0, 10) as token}
+                                        <li style="color: {cluster}">
+                                            {token}
+                                        </li>
+                                    {/each}
+                                </ul>
+                            </AccordionItem>
+                        {:else}
+                            <Loading displayString="Cluster" />
+                        {/each}
+                    </Accordion>
+                </FormGroup>
+            </Form>
+        </div>
+    {/if}
+</div>
+
+{#if visible}
+    <div in:fly={{ x: 400, duration: 1000, delay: 100 }}>
         <Form>
             <FormGroup>
-                <legend>Top Words by Cluster</legend>
-                <Accordion id="clusters">
-                    {#each Array.from(clusters.keys()) as cluster, i}
-                        <AccordionItem header={"Cluster " + (i + 1)}>
-                            <ul>
-                                {#each Array.from(clusters.get(cluster))
-                                    .sort((nodeA, nodeB) => originalGraph.getNodeAttributes(nodeA).weight - originalGraph.getNodeAttributes(nodeB).weight)
-                                    .slice(0, 10) as token}
-                                    <li style="color: {cluster}">{token}</li>
-                                {/each}
-                            </ul>
-                        </AccordionItem>
-                    {:else}
-                        <Loading displayString="Cluster" />
-                    {/each}
-                </Accordion>
+                <Label for="edgeThreshold">% of Edges to display</Label>
+                <Input
+                    type="range"
+                    name="range"
+                    id="edgeThreshold"
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    bind:value={threshold}
+                />
+                <Input
+                    id="edgelessNodes"
+                    type="checkbox"
+                    label="Display Nodes without Edges"
+                    bind:checked={displayEdgelessNodes}
+                />
             </FormGroup>
         </Form>
     </div>
-</div>
-<Form>
-    <FormGroup>
-        <Label for="edgeThreshold">% of Edges to display</Label>
-        <Input
-            type="range"
-            name="range"
-            id="edgeThreshold"
-            min={0}
-            max={1}
-            step={0.01}
-            bind:value={threshold}
-        />
-        <Input
-            id="edgelessNodes"
-            type="checkbox"
-            label="Display Nodes without Edges"
-            bind:checked={displayEdgelessNodes}
-        />
-    </FormGroup>
-</Form>
+{/if}
 <h2>Results</h2>
 <p>
     These results are suprisingly good, considering the only thing we input was
@@ -533,9 +557,13 @@
         </p>
     </li>
 </ul>
-<p>All in all it becomes very clear, that there is a variety of topics discussed in our data, however none of these topics has to do
-    with criticism on Qatar. All the different kinds of scams are more frequent than any criticism on the host nation. This already is
-    a very good indicator to the questions whether or not the world cup was succesful as a sportwashing event.
+<p>
+    All in all it becomes very clear, that there is a variety of topics
+    discussed in our data, however none of these topics has to do with criticism
+    on Qatar. All the different kinds of scams are more frequent than any
+    criticism on the host nation. This already is a very good indicator to the
+    questions whether or not the world cup was succesful as a sportwashing
+    event.
 </p>
 <Modal
     isOpen={controlsAreOpen}
@@ -665,8 +693,8 @@
             <br />3. Window of 4, No Stop, Min. Node length 2, 100000 Edges
             <br />4. Window of 4, No Stop, Min. Node length 2, 200000 Edges
             <br />All other configurations can be generated, however this could
-            take a while.
-            Applying custom clustering(only changing 'Clustering' settings) should be viable and normally should not take too long.
+            take a while. Applying custom clustering(only changing 'Clustering'
+            settings) should be viable and normally should not take too long.
         </p>
     </div>
 </Modal>
