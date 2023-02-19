@@ -1,4 +1,6 @@
-import statistics
+import os
+import sys
+from dotenv import load_dotenv
 import json
 import os.path
 from typing import List, Tuple
@@ -16,27 +18,47 @@ from middleware.analysis import basic_stat_provider
 from middleware.analysis import embedding
 from middleware.data_retrieval.file_management import get_sentiment_analyzers
 
-### config ###
+### loading env variables ###
+print("Trying to read preset environment variables...")
+if os.getenv("PATH_TO_DATA_FILES") is None:
+    print("Error.")
+    print("Trying to load local dotenv file...")
+    load_dotenv()
+
+try:
+    PATH_TO_DATA_FILES = os.getenv("PATH_TO_DATA_FILES")
+    ES_URL = os.getenv("ES_URL")
+    ES_INDEX = os.getenv("ES_INDEX")
+    ES_USERNAME = os.getenv("ES_USERNAME")
+    ES_PASSWD = os.getenv("ES_PASSWD")
+except:
+    print("Error.")
+    print("You have to provide the following environment variables: PATH_TO_DATA_FILES, ES_URL, ES_INDEX, ES_USERNAME, ES_PASSWD either as dotenv file or by setting the manually.")
+    sys.exit()
+
+print("Successfully read environment variables!")
+print(f"Reading data from: {PATH_TO_DATA_FILES}")
+
 ## path to data files
 # Bastian: /Users/bastianmuller/Desktop/Studium/Informatik_HD/7_HWS22:23/INF_ITA/Project/code/src/data/
 # Nico: ../../../data/
-PATH_TO_DATA_FILES = "../../../data/"
 PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
 PATH_TO_SENTIMENT_MODELS = PATH_TO_DATA_FILES + "sentiment-models/"
-PATH_TO_OTHER_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets_train.csv"
 PATH_TO_EMBEDDING_DATA = PATH_TO_DATA_FILES + "word-embeddings/"
+PATH_TO_OTHER_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets_train.csv"
 PATH_TO_WORD2VEC_MODEL = PATH_TO_EMBEDDING_DATA + "w2v_epochs=100.emb"
 PATH_TO_OTHER_VALIDATION_DATA = PATH_TO_DATA_FILES + "Tweets_test.csv"
 PATH_TO_OWN_TRAINING_DATA = PATH_TO_DATA_FILES + "classification_with_text_train.csv"
 PATH_TO_OWN_VALIDATION_DATA = PATH_TO_DATA_FILES + "classification_with_text_test.csv"
 
+
 ## loading options
 LOAD_N_GRAMS_ON_STARTUP = False
 
 ## elasticsearch connection
-INDEX_NAME = "tweets"
+INDEX_NAME = ES_INDEX
 es_client = elasticsearch.Elasticsearch(
-    "http://45.13.59.173:9200", http_auth=("elastic", "sicheristsicher"))
+    ES_URL, http_auth=(ES_USERNAME, ES_PASSWD))
 
 ## fastapi config
 app = FastAPI()

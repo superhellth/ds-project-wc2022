@@ -7,7 +7,7 @@ setup(name='middleware',
                 'middleware.tweet_management',
                 'middleware.analysis'],
       install_requires=['tweepy', 'elasticsearch==7.17', 'fastapi[all]', 'pandas', 'spacy', 'gensim', 'matplotlib',
-                        'scikit-learn', 'sklearn', 'numpy', 'seaborn', 'tk', 'ujson', 'networkx', 'node2vec',
-                        'vaderSentiment', 'sklearn', 'transformers', 'torch', 'torchvision', 'gensim']
+                        'scikit-learn', 'numpy', 'seaborn', 'tk', 'ujson', 'networkx', 'node2vec',
+                        'vaderSentiment', 'transformers', 'torch', 'torchvision', 'gensim']
 
       )
