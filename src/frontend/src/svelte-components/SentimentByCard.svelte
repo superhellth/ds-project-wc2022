@@ -28,11 +28,11 @@
     async function updateChart() {
         await getChartData();
 
-        let vsSentData = chartData[byTime.cmd].map(d => d.vs_sent);
-        let bertSentData = chartData[byTime.cmd].map(d => d.bert_sent);
-        let lrcOwnData = chartData[byTime.cmd].map(d => d.lrc_own);
-        let lrcOtherData = chartData[byTime.cmd].map(d => d.lrc_other);
-        let countsData = chartData[byTime.cmd].map(d => d.counts);
+        let vsSentData = chartData[byTime].map(d => d.vs_sent);
+        let bertSentData = chartData[byTime].map(d => d.bert_sent);
+        let lrcOwnData = chartData[byTime].map(d => d.lrc_own);
+        let lrcOtherData = chartData[byTime].map(d => d.lrc_other);
+        let countsData = chartData[byTime].map(d => d.counts);
 
         let datasets = [];
         datasets.push({
@@ -86,7 +86,7 @@
         chart = new Chart(chart_id, {
             type: "line",
             data: {
-                labels: chartData[byTime.cmd].map(d => d.date),
+                labels: chartData[byTime].map(d => d.date),
                 datasets
             },
             options: {
@@ -96,6 +96,7 @@
     }
 
     onMount(async () => {
+        byTime = 'by_days';
         await getChartData();
         await updateChart();
     });
@@ -121,7 +122,7 @@
                         {#each [{id: 0, text: 'by Days', cmd: 'by_days'},
                                 {id: 1, text: 'by Weeks', cmd: 'by_week'},
                                 {id: 2, text: 'by Months', cmd: 'by_month'}] as timeframe}
-                            <option value={timeframe}>{timeframe.text}</option>
+                            <option value={timeframe.cmd}>{timeframe.text}</option>
                         {/each}
                     </Input>
                     </FormGroup>
