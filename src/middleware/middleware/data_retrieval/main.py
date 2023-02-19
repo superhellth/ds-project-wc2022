@@ -254,6 +254,15 @@ async def get_trained_model_performance():
     return [lrcother.accuracy(), lrcother.recall(), lrcother.f1_score(),
             lrcown.accuracy(), lrcown.recall(), lrcown.f1_score()]
 
+@app.get("/analysis/sentiment/sentimentByCategory")
+async def get_sentiment_by_category():
+    """
+    Returns the dictionary that contains the sentiment values by category.
+    """
+    with open(PATH_TO_DATA_FILES + 'category_sent.json') as f:
+        data = json.load(f)
+    return data
+
 ## word embedding
 @app.get("/analysis/embedding/exists")
 async def word_in_w2v_vocab(word: str):

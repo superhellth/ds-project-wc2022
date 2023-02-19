@@ -1,9 +1,9 @@
 <script lang="ts">
     import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
-    import {Alert, Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Label, Row} from "sveltestrap";
+    import {Alert, Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Row} from "sveltestrap";
     import {onMount} from "svelte";
-    import ChartCard from "../../svelte-components/ChartCard.svelte";
     import SentimentByCard from "../../svelte-components/SentimentByCard.svelte";
+    import {fly} from "svelte/transition";
 
     let provider: MiddlewareProvider = MiddlewareProvider.getInstance();
 
@@ -29,6 +29,36 @@
     let lrcAccOwn = 'Waiting...';
     let lrcRecOwn = 'Waiting...';
 
+    // Sent by topic variables
+    const topics_mean = Array(11).fill('Waiting...');
+    const topics_vs_sent = Array(11).fill('Waiting...');
+    const topics_bert_sent = Array(11).fill('Waiting...');
+    const topics_lrc_other = Array(11).fill('Waiting...');
+    const topics_lrc_own = Array(11).fill('Waiting...');
+    const topics_count = Array(11).fill('Waiting...');
+    const titles = [
+        'The Center Cluster', '#Cluster', '#SayTheirNames',
+        'C\'mon England!', '???', 'Steve Harvey',
+        'SUIIII!!!', 'NFT and Crypto', '你好中国人！',
+        'Cluster 10', 'Stand with Ukraine'
+    ];
+    let showTopicSentDetails: boolean = false;
+
+    // Add transition variables
+    let transDuration: number = 600;
+
+
+    async function getSentimentByTopic() {
+        const data = await provider.getSentimentByCategory();
+        for (let i = 0; i < topics_mean.length; i++) {
+            topics_mean[i] = sliceString(data[(i + 1).toString()]['mean_sent'].toString());
+            topics_vs_sent[i] = sliceString(data[(i + 1).toString()]['vs_sent'].toString());
+            topics_bert_sent[i] = sliceString(data[(i + 1).toString()]['bert_sent'].toString());
+            topics_lrc_other[i] = sliceString(data[(i + 1).toString()]['lrc_other'].toString());
+            topics_lrc_own[i] = sliceString(data[(i + 1).toString()]['lrc_own'].toString());
+            topics_count[i] = sliceString(data[(i + 1).toString()]['count'].toString());
+        }
+    }
 
     async function getTrainedModelPerf() {
         const performance = await provider.getTrainedModelPerformance();
@@ -43,29 +73,31 @@
 
     async function getMeanSent() {
         const mean_sent = await provider.getMeanOverallSentiment();
-        vaderSentMean = mean_sent['mean_vs_sent'].toString().slice(0, 8);
-        lrcSentOtherMean = mean_sent['mean_lrc_other_sent'].toString().slice(0, 8);
-        lrcSentOwnMean = mean_sent['mean_lrc_own_sent'].toString().slice(0, 8);
-        bertSentMean = mean_sent['mean_bert_sent'].toString().slice(0, 8);
+        vaderSentMean = sliceString(mean_sent['mean_vs_sent'].toString());
+        lrcSentOtherMean = sliceString(mean_sent['mean_lrc_other_sent'].toString());
+        lrcSentOwnMean = sliceString(mean_sent['mean_lrc_own_sent'].toString());
+        bertSentMean = sliceString(mean_sent['mean_bert_sent'].toString());
     }
 
     async function executeCustomTweetSent() {
         if (userTweet) {
-            const scores = await provider.getSentimentTweet(userTweet)
-            vaderSent = scores[0].toString().slice(0, 8);
-            sgdSentOther = scores[1].toString().slice(0, 8);
-            sgdSentOwn = scores[2].toString().slice(0, 8);
-            bertSent = scores[3].toString().slice(0, 8);
+            const scores = await provider.getSentimentTweet(userTweet);
+            [vaderSent, sgdSentOther, sgdSentOwn, bertSent] = scores.map(score => sliceString(score.toString()));
         }
     }
+
+    const sliceString = (str: string) => {
+        if (str[0] === '-') {
+            return str.slice(0, 7);
+        }
+        return str.slice(0, 6);
+    };
 
     onMount(() => {
         getMeanSent();
         getTrainedModelPerf();
+        getSentimentByTopic();
     })
-
-
-
 
 </script>
 
@@ -81,103 +113,125 @@
 <div>
     <FormGroup>
         <Form>
-            <h4>Welcome!</h4>
-            <p>to the Sentiment Analysis page! Here, you can view sentiment analysis of tweets,
+            <h4 in:fly={{ x: 400, duration: transDuration, delay: 200 }}>Welcome!</h4>
+            <p in:fly={{ x: 400, duration: transDuration, delay: 200 }}>to the Sentiment Analysis page! Here, you can
+                view
+                sentiment analysis of tweets,
                 but you can also input your own "tweet" to see what sentiment it conveys. Furthermore, you can see
                 sentiment analysis by country and track sentiment changes over time. Get an in-depth understanding of
                 the buzz surrounding the World Cup with this sentiment analysis tool.</p>
-            <h4>Overall sentiment</h4>
-            <p>Below, you can take a look at the average sentiment over all tweets by each method. Each method will
-            link to some documentation.</p>
-            <Row>
-                <Col>
-                    <Alert color="primary">
-                        <h5><a href="https://github.com/cjhutto/vaderSentiment">vaderSentiment</a></h5>
-                        {vaderSentMean}
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="warning">
-                        <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOther</a></h5>
-                        {lrcSentOtherMean}
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="success">
-                        <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOtherOwn</a></h5>
-                        {lrcSentOwnMean}
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="danger">
-                        <h5><a href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english">BERT based Classifier</a></h5>
-                        {bertSentMean}
-                    </Alert>
-                </Col>
-            </Row>
+            <h4 in:fly={{ x: 400, duration: transDuration, delay: 200 }}>Overall sentiment</h4>
+            <p in:fly={{ x: 400, duration: transDuration, delay: 200 }}>Below, you can take a look at the average
+                sentiment over all tweets by each method. Each method will
+                link to some documentation.</p>
+            <div in:fly={{ x: 400, duration: transDuration, delay: 200 }}>
+                <Row>
+                    <Col>
+                        <div in:fly={{ x: 400, duration: transDuration*1.5, delay: 600 }}>
+                            <Alert color="primary">
+                                <h5><a href="https://github.com/cjhutto/vaderSentiment">vaderSentiment</a></h5>
+                                {vaderSentMean}
+                            </Alert>
+                        </div>
+                    </Col>
+                    <Col>
+                        <div in:fly={{ x: 400, duration: transDuration*1.5, delay: 700 }}>
+                            <Alert color="warning">
+                                <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOther</a></h5>
+                                {lrcSentOtherMean}
+                            </Alert>
+                        </div>
+
+                    </Col>
+                    <Col>
+                        <div in:fly={{ x: 400, duration: transDuration*1.5, delay: 800 }}>
+                            <Alert color="success">
+                                <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOtherOwn</a></h5>
+                                {lrcSentOwnMean}
+                            </Alert>
+                        </div>
+                    </Col>
+                    <Col>
+                        <div in:fly={{ x: 400, duration: transDuration*1.5, delay: 900 }}>
+                            <Alert color="danger">
+                                <h5><a href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english">BERT
+                                    based
+                                    Classifier</a></h5>
+                                {bertSentMean}
+                            </Alert>
+                        </div>
+                    </Col>
+                </Row>
+            </div>
         </Form>
 
         <Form>
-            <h4>Try it out!</h4>
-            <p>Below, you can write your own 'Tweet' and let it be rated by our classifiers. Don't be surprised if
-            some of our classifiers return 0 if an input is likely neutral!</p>
-            <Row>
-                <Col xs="12" sm="9">
-                    <FormGroup label="Enter your Tweet">
-                        <Input
-                                bind:value={userTweet}
-                        />
-                    </FormGroup>
-                </Col>
-                <Col>
-                    <FormGroup>
-                        <Button type="button" on:click={executeCustomTweetSent}>Perform Sentiment Analysis</Button>
-                    </FormGroup>
-                </Col>
-            </Row>
+            <div in:fly={{ y: 400, duration: transDuration*1.5, delay: 1500 }}>
+                <h4>Try it out!</h4>
+                <p>Below, you can write your own 'Tweet' and let it be rated by our classifiers. Don't be surprised if
+                    some of our classifiers return 0 if an input is likely neutral!</p>
+                <Row>
+                    <Col xs="12" sm="9">
+                        <FormGroup label="Enter your Tweet">
+                            <Input
+                                    bind:value={userTweet}
+                            />
+                        </FormGroup>
+                    </Col>
+                    <Col>
+                        <FormGroup>
+                            <Button type="button" on:click={executeCustomTweetSent}>Perform Sentiment Analysis</Button>
+                        </FormGroup>
+                    </Col>
+                </Row>
 
-            <Row>
-                <Col>
-                    <Alert color="primary">
-                        <h5><a href="https://github.com/cjhutto/vaderSentiment">vaderSentiment</a></h5>
-                        {vaderSent}
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="warning">
-                        <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOther</a></h5>
-                        {sgdSentOther}
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="success">
-                        <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOwn</a></h5>
-                        {sgdSentOwn}
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="danger">
-                        <h5><a href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english">BERT based Classifier</a></h5>
-                        {bertSent}
-                    </Alert>
-                </Col>
-            </Row>
+                <Row>
+                    <Col>
+                        <Alert color="primary">
+                            <h5><a href="https://github.com/cjhutto/vaderSentiment">vaderSentiment</a></h5>
+                            {vaderSent}
+                        </Alert>
+                    </Col>
+                    <Col>
+                        <Alert color="warning">
+                            <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOther</a></h5>
+                            {sgdSentOther}
+                        </Alert>
+                    </Col>
+                    <Col>
+                        <Alert color="success">
+                            <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOwn</a></h5>
+                            {sgdSentOwn}
+                        </Alert>
+                    </Col>
+                    <Col>
+                        <Alert color="danger">
+                            <h5><a href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english">BERT
+                                based
+                                Classifier</a></h5>
+                            {bertSent}
+                        </Alert>
+                    </Col>
+                </Row>
+            </div>
         </Form>
 
         <Form>
-            <h4>Sentiment over time</h4>
-            <p>Below, you can take a look at the average sentiment over time. You are able so sort by timeframe and
-            decide which methods you would like to see.</p>
+            <div in:fly={{ y: 400, duration: transDuration*1.5, delay: 1500 }}>
 
+                <h4>Sentiment over time</h4>
+                <p>Below, you can take a look at the average sentiment over time. You are able so sort by days, weeks or
+                    months and decide which methods you would like to see. The amount of tweets for a given time period
+                    can be seen in the background as a bar chart.</p>
 
-            <Row>
-                <SentimentByCard
-                        header="Sentiment over time by different methods"
-                        footer="This is a test"
-                >
-                </SentimentByCard>
-            </Row>
-
+                <Row>
+                    <SentimentByCard
+                            header="Sentiment over time by different methods"
+                            footer="This graph clearly shows"
+                    >
+                    </SentimentByCard>
+                </Row>
+            </div>
         </Form>
 
         <Form>
@@ -186,59 +240,56 @@
             <p>Below, you can take a look at the average sentiment by different topics that we identified in our corpus.
             </p>
 
-            <Row>
-                <Col>
-                    <Alert color="primary">
-                        Topic X
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="warning">
-                        Topic X
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="success">
-                        Topic X
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="danger">
-                        Topic X
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="danger">
-                        Topic X
-                    </Alert>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Alert color="success">
-                        Topic X
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="warning">
-                        Topic X
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="warning">
-                        Topic X
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="success">
-                        Topic X
-                    </Alert>
-                </Col>
-                <Col>
-                    <Alert color="primary">
-                        Topic X
-                    </Alert>
-                </Col>
+            <FormGroup>
+                <Input
+                        id="showdetailstopicsent"
+                        type="checkbox"
+                        label="Show Details"
+                        bind:checked={showTopicSentDetails}
+                />
+            </FormGroup>
+            <Row cols={{ xl: 4, lg: 3, md: 2, sm: 1 }}>
+                {#each Array(11) as _, i}
+                    <Col>
+                        {#if topics_mean[i] >= 0}
+                            <Alert color="success">
+                                <h5 style="color: black">{titles[i]}</h5>
+                                Mean: {topics_mean[i]}
+                                {#if showTopicSentDetails}
+                                    <hr>
+                                    <br>
+                                    vaderSentiment: {topics_vs_sent[i]}
+                                    <br>
+                                    SGDClassifierOther: {topics_lrc_other[i]}
+                                    <br>
+                                    SGDClassifierOwn: {topics_lrc_own[i]}
+                                    <br>
+                                    BERT based Classifier: {topics_bert_sent[i]}
+                                    <br>
+                                    Based on: {topics_count[i]} Tweets
+                                {/if}
+                            </Alert>
+                        {:else}
+                            <Alert color="danger">
+                                <h5 style="color: black">{titles[i]}</h5>
+                                Mean: {topics_mean[i]}
+                                {#if showTopicSentDetails}
+                                    <hr>
+                                    <br>
+                                    vaderSentiment: {topics_vs_sent[i]}
+                                    <br>
+                                    SGDClassifierOther: {topics_lrc_other[i]}
+                                    <br>
+                                    SGDClassifierOwn: {topics_lrc_own[i]}
+                                    <br>
+                                    BERT based Classifier: {topics_bert_sent[i]}
+                                    <br>
+                                    Based on: {topics_count[i]} Tweets
+                                {/if}
+                            </Alert>
+                        {/if}
+                    </Col>
+                {/each}
             </Row>
         </Form>
 
@@ -261,19 +312,19 @@
             <Row>
                 <Col>
                     <Alert color="success">
-                        <h5>Accuracy</h5>
+                        <h5 style="color: black">Accuracy</h5>
                         {lrcAccOther}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="warning">
-                        <h5>Recall</h5>
+                        <h5 style="color: black">Recall</h5>
                         {lrcRecOther}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="success">
-                        <h5>F1</h5>
+                        <h5 style="color: black">F1</h5>
                         {lrcF1Other}
                     </Alert>
                 </Col>
@@ -281,21 +332,21 @@
             </Row>
             <h5>SGD Classifier with own dataset</h5>
             <Row>
-                                <Col>
+                <Col>
                     <Alert color="danger">
-                        <h5>Accuracy</h5>
+                        <h5 style="color: black">Accuracy</h5>
                         {lrcAccOwn}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="danger">
-                        <h5>Recall</h5>
+                        <h5 style="color: black">Recall</h5>
                         {lrcRecOwn}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="warning">
-                        <h5>F1</h5>
+                        <h5 style="color: black">F1</h5>
                         {lrcF1Own}
                     </Alert>
                 </Col>

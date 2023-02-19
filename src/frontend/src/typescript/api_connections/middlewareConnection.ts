@@ -294,6 +294,11 @@ class MiddlewareProvider extends Connection {
         let queryURL: string = this.URL + "/analysis/sentiment/sentimentOverTime";
         return await fetch(queryURL).then((response) => response.json());
     }
+
+    public async getSentimentByCategory() {
+        let queryURL: string = this.URL + "/analysis/sentiment/sentimentByCategory";
+        return await fetch(queryURL).then((response) => response.json());
+    }
 }
 
 export default MiddlewareProvider;
