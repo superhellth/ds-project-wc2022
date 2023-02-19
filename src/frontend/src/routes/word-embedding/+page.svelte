@@ -3,17 +3,16 @@
     import TweetCard from "src/svelte-components/TweetCard.svelte";
     import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
     import { onMount } from "svelte";
-    import { fly } from "svelte/transition";
+    import { fade, fly } from "svelte/transition";
     import {
         Breadcrumb,
         BreadcrumbItem,
+        Col,
         Form,
         FormGroup,
         Input,
         Label,
-        Image,
         Progress,
-        Col,
         Row,
     } from "sveltestrap";
 
@@ -51,11 +50,11 @@
 
     async function checkIfExists(checkIfExistsString: string, second: boolean) {
         if (second) {
-            checkIfExistsValue = await provider.existsInW2vecVocabulary(
+            checkIfExistsValue2 = await provider.existsInW2vecVocabulary(
                 preprocessString(checkIfExistsString)
             );
         } else {
-            checkIfExistsValue2 = await provider.existsInW2vecVocabulary(
+            checkIfExistsValue = await provider.existsInW2vecVocabulary(
                 preprocessString(checkIfExistsString)
             );
         }
@@ -127,31 +126,38 @@
     <h4 in:fly={{ y: 400, duration: transDuration, delay: transDuration }}>
         Check for Embedding
     </h4>
-{/if}
-{#if checkIfExistsValue && checkIfExistsValue2}
-    {#await provider.getDistance(preprocessString(checkIfExistsString), preprocessString(checkIfExistsString2)) then distance}
-        <div
-            style="margin: 1em"
-            in:fly={{
-                y: 400,
-                duration: transDuration,
-                delay: 0,
-            }}
-        >
+    {#if checkIfExistsValue && checkIfExistsValue2}
+        {#await provider.getDistance(preprocessString(checkIfExistsString), preprocessString(checkIfExistsString2))}
+            <div style="margin: 1em">
+                <p style="margin: auto; width: 50%; text-align: center">
+                    Distance between Words: ...
+                </p>
+                <Progress value={1} style="margin: auto; width: 50%;" />
+            </div>
+        {:then distance}
+            <div style="margin: 1em" in:fade>
+                <p style="margin: auto; width: 50%; text-align: center">
+                    Distance between Words: {distance}
+                </p>
+                <Progress
+                    value={100 - distance * 100}
+                    style="margin: auto; width: 50%;"
+                />
+            </div>
+        {/await}
+    {:else}
+        <div style="margin: 1em">
             <p style="margin: auto; width: 50%; text-align: center">
-                Distance between Words: {distance}
+                Distance between Words: ...
             </p>
-            <Progress
-                value={100 - distance * 100}
-                style="margin: auto; width: 50%;"
-            />
+            <Progress value={1} style="margin: auto; width: 50%;" />
         </div>
-    {/await}
+    {/if}
     <div
-        style="display: flex; justify-content: space-evenly"
+        style="display: flex; justify-content: space-evenly;"
         in:fly={{ y: 400, duration: transDuration, delay: transDuration * 2 }}
     >
-        <div>
+        <div style="width: 45%;">
             <Input
                 type="text"
                 bind:value={checkIfExistsString}
@@ -172,32 +178,32 @@
                     alt="plot"
                     style="width: 27em; height: 27em"
                 />
-                <br />
-                <Label>Number of close Words</Label>
-                <Input
-                    type="range"
-                    name="range"
-                    id="pos1"
-                    min={2}
-                    max={30}
-                    step={1}
-                    bind:value={numCloseWords}
-                    placeholder="Range placeholder"
-                />
-                <Label>Number of far Words</Label>
-                <Input
-                    type="range"
-                    name="range"
-                    id="neg1"
-                    min={0}
-                    max={30}
-                    step={1}
-                    bind:value={numFarWords}
-                    placeholder="Range placeholder"
-                />
             {/if}
+            <br />
+            <Label>Number of close Words</Label>
+            <Input
+                type="range"
+                name="range"
+                id="pos1"
+                min={2}
+                max={30}
+                step={1}
+                bind:value={numCloseWords}
+                placeholder="Range placeholder"
+            />
+            <Label>Number of far Words</Label>
+            <Input
+                type="range"
+                name="range"
+                id="neg1"
+                min={0}
+                max={30}
+                step={1}
+                bind:value={numFarWords}
+                placeholder="Range placeholder"
+            />
         </div>
-        <FormGroup>
+        <div style="width: 45%;">
             <Input
                 type="text"
                 bind:value={checkIfExistsString2}
@@ -207,7 +213,7 @@
                     ? "Embedding exists"
                     : "Embedding does not exist"}
             />
-            {#if checkIfExistsValue}
+            {#if checkIfExistsValue2}
                 <img
                     src={provider.getTSNEPlotURL(
                         preprocessString(checkIfExistsString2),
@@ -242,7 +248,7 @@
                     placeholder="Range placeholder"
                 />
             {/if}
-        </FormGroup>
+        </div>
     </div>
     <div in:fly={{ y: 400, duration: transDuration, delay: transDuration * 3 }}>
         <Form>
@@ -291,7 +297,7 @@
         </Form>
     </div>
 
-    <div in:fly={{ y: 400, duration: transDuration, delay: transDuration * 5}}>
+    <div in:fly={{ y: 400, duration: transDuration, delay: transDuration * 5 }}>
         <h3>Results</h3>
         <p>
             First of all it should be noted, that the quality of the embedding
