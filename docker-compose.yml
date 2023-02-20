@@ -1,12 +1,24 @@
 services:
-  middleware:
+  data-providing-middleware:
     ports:
-      - 8000:8000
+      - "8000:8000"
     build:
       context: .
       dockerfile: DataRetrieval.Dockerfile
     environment:
       PATH_TO_DATA_FILES: ../../../data/
+      ES_URL: http://45.13.59.173:9200
+      ES_INDEX: tweets
+      ES_USERNAME: elastic
+      ES_PASSWD: sicheristsicher
+  data-collecting-middleware:
+    ports:
+      - "8001:8001"
+    build:
+      context: .
+      dockerfile: DataCollection.Dockerfile
+    environment:
+      BEARER_TOKEN: placeholder
       ES_URL: http://45.13.59.173:9200
       ES_INDEX: tweets
       ES_USERNAME: elastic

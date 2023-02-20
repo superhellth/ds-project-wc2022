@@ -2,16 +2,16 @@
 
 FROM python:3.8-slim-buster
 
-# COPY requirements.txt requirements.txt
-
-# RUN pip3 install -r requirements.txt
-
+# project level
 WORKDIR /
 
-COPY . .
+# copy code
+COPY ./src/middleware ./src
 
-RUN pip install -e ./
+WORKDIR /src
+RUN pip install -e .
 
-WORKDIR /middleware/data_collection
+# directory of fastapi script
+WORKDIR /src/middleware/data_collection
 
-CMD [ "python3", "-m" , "uvicorn", "main:app", "--host=0.0.0.0"]
+CMD [ "python3", "-m" , "uvicorn", "main:app", "--host=0.0.0.0", "--port=8001"]

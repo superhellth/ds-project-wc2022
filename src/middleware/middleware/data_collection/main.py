@@ -1,32 +1,46 @@
+import sys
+import os
+from dotenv import load_dotenv
 import elasticsearch
 import tweepy
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import elastic_stream_client
+from middleware.data_collection import elastic_stream_client
+
+### loading env variables ###
+print("Trying to read preset environment variables...")
+if os.getenv("BEARER_TOKEN") is None:
+    print("Error.")
+    print("Trying to load local dotenv file...")
+    load_dotenv()
+
+try:
+    BEARER_TOKEN = os.getenv("BEARER_TOKEN")
+    ES_URL = os.getenv("ES_URL")
+    ES_INDEX = os.getenv("ES_INDEX")
+    ES_USERNAME = os.getenv("ES_USERNAME")
+    ES_PASSWD = os.getenv("ES_PASSWD")
+except:
+    print("Error.")
+    print("You have to provide the following environment variables: BEARER_TOKEN, ES_URL, ES_INDEX, ES_USERNAME, ES_PASSWD either as dotenv file or by setting the manually.")
+    sys.exit()
+
+print("Successfully read environment variables!")
+
+
+# elasticsearch instancing
+es_client = elasticsearch.Elasticsearch(ES_URL, http_auth=(ES_USERNAME, ES_PASSWD))
 
 # twitter api access using tweepy client
-# working with current permissions
-token_file = open('../../twitter-api-bearer-token.txt', 'r', encoding="utf_8")
-bearer_token = token_file.readline().replace("\n", "")
-INDEX_NAME = "tweets"
-
-# elasticsearch instancing: 9200 standard port
-# TODO safe username/pw in separate file, that is not in the repo 
-es_client = elasticsearch.Elasticsearch("http://45.13.59.173:9200", http_auth=("elastic", "sicheristsicher"))
 stream_client = elastic_stream_client.ElasticStreamClient(
-    bearer_token, es_client, INDEX_NAME)
+    BEARER_TOKEN, es_client, ES_INDEX)
 
 # fastapi instance
 app = FastAPI()
 
 # allow access from the following addresses:
 origins = [
-    "http://localhost:5173/",
-    "http://localhost:5173",
-    "http://localhost",
-    "http://localhost/",
-    "http://176.199.208.10/",
-    "http://176.199.208.10"
+    "*"
 ]
 app.add_middleware(
     CORSMiddleware,

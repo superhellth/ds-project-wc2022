@@ -13,7 +13,7 @@ class MiddlewareProvider extends Connection {
 
     public static getInstance(): MiddlewareProvider {
         if (!MiddlewareProvider.instance) {
-            MiddlewareProvider.instance = new MiddlewareProvider("http://127.0.0.1:8000");
+            MiddlewareProvider.instance = new MiddlewareProvider("http://0.0.0.0:8000");
         }
         return MiddlewareProvider.instance;
     }

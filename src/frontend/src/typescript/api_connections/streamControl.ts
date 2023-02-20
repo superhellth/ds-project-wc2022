@@ -13,7 +13,7 @@ class StreamControl extends Connection {
 
     public static getInstance(): StreamControl {
         if (!StreamControl.instance) {
-            StreamControl.instance = new StreamControl("http://45.13.59.173:8000");
+            StreamControl.instance = new StreamControl("http://0.0.0.0:8001");
         }
         return StreamControl.instance;
     }
