@@ -15,19 +15,19 @@
     let bertSentMean = 'Loading ...';
 
     // Try it out variables
-    let vaderSent = 'Waiting...'; // variable to hold the vaderSent score
-    let sgdSentOther = 'Waiting...'; // variable to hold the trainedSent score
-    let sgdSentOwn = 'Waiting...'; // variable to hold the nbSent score
-    let bertSent = "Waiting... (BERT: I\'m a bit slow, sorry!)"; // variable to hold the bertSent score
+    let vaderSent = 'Waiting...';
+    let sgdSentOther = 'Waiting...';
+    let sgdSentOwn = 'Waiting...';
+    let bertSent = "Waiting... (BERT: I\'m a bit slow, sorry!)";
 
 
     // Trained model performance variables
-    let lrcAccOther = 'Waiting...';
-    let lrcRecOther = 'Waiting...';
-    let lrcF1Other = 'Waiting...';
-    let lrcF1Own = 'Waiting...';
-    let lrcAccOwn = 'Waiting...';
-    let lrcRecOwn = 'Waiting...';
+    let otherAccuracyPercentage = 'Waiting...';
+    let otherRecallPercentage = 'Waiting...';
+    let otherF1Percentage = 'Waiting...';
+    let ownF1Percentage = 'Waiting...';
+    let ownAccuracyPercentage = 'Waiting...';
+    let ownRecallPercentage = 'Waiting...';
 
     // Sent by topic variables
     const topics_mean = Array(11).fill('Waiting...');
@@ -48,6 +48,7 @@
     let transDuration: number = 600;
 
 
+    // Function to get the sentiment by topic
     async function getSentimentByTopic() {
         const data = await provider.getSentimentByCategory();
         for (let i = 0; i < topics_mean.length; i++) {
@@ -60,17 +61,26 @@
         }
     }
 
+    // Function to get the trained model performance
     async function getTrainedModelPerf() {
-        const performance = await provider.getTrainedModelPerformance();
-        lrcAccOther = performance[0].toString().slice(0, 4);
-        lrcRecOther = performance[1].toString().slice(0, 4);
-        lrcF1Other = performance[2].toString().slice(0, 4);
-        lrcF1Own = performance[3].toString().slice(0, 4);
-        lrcAccOwn = performance[4].toString().slice(0, 4);
-        lrcRecOwn = performance[5].toString().slice(0, 4);
+        const [
+            otherAccuracy,
+            otherRecall,
+            otherF1,
+            ownF1,
+            ownAccuracy,
+            ownRecall
+        ] = await provider.getTrainedModelPerformance();
+
+        otherAccuracyPercentage = (otherAccuracy * 100).toFixed(2) + '%';
+        otherRecallPercentage = (otherRecall * 100).toFixed(2) + '%';
+        otherF1Percentage = (otherF1 * 100).toFixed(2) + '%';
+        ownF1Percentage = (ownF1 * 100).toFixed(2) + '%';
+        ownAccuracyPercentage = (ownAccuracy * 100).toFixed(2) + '%';
+        ownRecallPercentage = (ownRecall * 100).toFixed(2) + '%';
     }
 
-
+    // Function to get the mean overall sentiment
     async function getMeanSent() {
         const mean_sent = await provider.getMeanOverallSentiment();
         vaderSentMean = sliceString(mean_sent['mean_vs_sent'].toString());
@@ -79,6 +89,7 @@
         bertSentMean = sliceString(mean_sent['mean_bert_sent'].toString());
     }
 
+    // Function to execute the sentiment analysis for a custom tweet
     async function executeCustomTweetSent() {
         if (userTweet) {
             const scores = await provider.getSentimentTweet(userTweet);
@@ -86,6 +97,7 @@
         }
     }
 
+    // Function to slice strings
     const sliceString = (str: string) => {
         if (str[0] === '-') {
             return str.slice(0, 7);
@@ -101,6 +113,7 @@
 
 </script>
 
+
 <title>Text Analytics - Sentiment Analysis</title>
 <h1>Sentiment Analysis</h1>
 <Breadcrumb class="mb-4">
@@ -109,6 +122,7 @@
     </BreadcrumbItem>
     <BreadcrumbItem active>Sentiment</BreadcrumbItem>
 </Breadcrumb>
+
 
 <div>
     <FormGroup>
@@ -123,7 +137,7 @@
             <h4 in:fly={{ x: 400, duration: transDuration, delay: 200 }}>Overall sentiment</h4>
             <p in:fly={{ x: 400, duration: transDuration, delay: 200 }}>Below, you can take a look at the average
                 sentiment over all tweets by each method. Each method will
-                link to some documentation.</p>
+                link to some documentation. To learn more about the methods, please check out the last section.</p>
             <div in:fly={{ x: 400, duration: transDuration, delay: 200 }}>
                 <Row>
                     <Col>
@@ -251,8 +265,26 @@
             <Row cols={{ xl: 4, lg: 3, md: 2, sm: 1 }}>
                 {#each Array(11) as _, i}
                     <Col>
-                        {#if topics_mean[i] >= 0}
+                        {#if topics_mean[i] >= 0.1}
                             <Alert color="success">
+                                <h5 style="color: black">{titles[i]}</h5>
+                                Mean: {topics_mean[i]}
+                                {#if showTopicSentDetails}
+                                    <hr>
+                                    <br>
+                                    vaderSentiment: {topics_vs_sent[i]}
+                                    <br>
+                                    SGDClassifierOther: {topics_lrc_other[i]}
+                                    <br>
+                                    SGDClassifierOwn: {topics_lrc_own[i]}
+                                    <br>
+                                    BERT based Classifier: {topics_bert_sent[i]}
+                                    <br>
+                                    Based on: {topics_count[i]} Tweets
+                                {/if}
+                            </Alert>
+                        {:else if topics_mean[i] >= 0}
+                            <Alert color="warning">
                                 <h5 style="color: black">{titles[i]}</h5>
                                 Mean: {topics_mean[i]}
                                 {#if showTopicSentDetails}
@@ -313,19 +345,19 @@
                 <Col>
                     <Alert color="success">
                         <h5 style="color: black">Accuracy</h5>
-                        {lrcAccOther}
+                        {otherAccuracyPercentage}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="warning">
                         <h5 style="color: black">Recall</h5>
-                        {lrcRecOther}
+                        {otherRecallPercentage}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="success">
                         <h5 style="color: black">F1</h5>
-                        {lrcF1Other}
+                        {otherF1Percentage}
                     </Alert>
                 </Col>
 
@@ -335,19 +367,19 @@
                 <Col>
                     <Alert color="danger">
                         <h5 style="color: black">Accuracy</h5>
-                        {lrcAccOwn}
+                        {ownAccuracyPercentage}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="danger">
                         <h5 style="color: black">Recall</h5>
-                        {lrcRecOwn}
+                        {ownRecallPercentage}
                     </Alert>
                 </Col>
                 <Col>
                     <Alert color="warning">
                         <h5 style="color: black">F1</h5>
-                        {lrcF1Own}
+                        {ownF1Percentage}
                     </Alert>
                 </Col>
 
