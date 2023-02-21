@@ -10,17 +10,22 @@
     // Declare variables that can be passed to the layout
     export let color = "dark";
     export let title = "Dashboard - 2022 World Cup on Twitter";
+
+    let sideBarIsOpen: boolean = true;
 </script>
 
 <body>
     <!-- The layout includes a fixed navigation bar and a fluid main content area -->
     <div class="sb-nav-fixed">
         <!-- Use the NavBar component to create the navigation bar, passing the "color" and "title" variables to customize it -->
-        <NavBar {color} {title} />
+        <NavBar {title} bind:sideBarIsOpen />
         <div id="layoutSidenav">
             <!-- Use the SideBar component to create the sidebar, passing the "color" variable to customize it -->
-            <SideBar theme={color} />
-            <div id="layoutSidenav_content" style="background-color: var(--background-color);">
+            <SideBar theme={color} bind:isOpen={sideBarIsOpen} />
+            <div
+                id="layoutSidenav_content"
+                style="background-color: var(--background-color);"
+            >
                 <main>
                     <!-- Use the Container component from sveltestrap to create a fluid container for the main content of the page -->
                     <Container fluid={true}>

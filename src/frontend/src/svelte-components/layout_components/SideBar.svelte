@@ -9,6 +9,7 @@
     import SidebarItem from "./SidebarItem.svelte";
 
     export let theme: any;
+    export let isOpen: boolean = true;
 
     $: sidenav_theme = `sb-sidenav-${theme}`;
 
@@ -85,7 +86,7 @@
                     on:press={() => {
                         theme = "dark";
                     }}
-                    text="N-Grams insights"
+                    text="Unigrams insights"
                     href="/statistics/unigram-insights"
                     iconName="input-cursor-text"
                 />

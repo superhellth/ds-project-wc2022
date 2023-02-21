@@ -5,9 +5,6 @@ services:
     build:
       context: ./src/frontend
       dockerfile: ../../Frontend.Dockerfile
-    environment:
-      DATA_RETRIEVAL_SERVICE_ADDRESS: $DATA_RETRIEVAL_SERVICE_ADDRESS
-      DATA_COLLECTION_SERVICE_ADDRESS: $DATA_COLLECTION_SERVICE_ADDRESS
   data-providing-middleware:
     ports:
       - "8001:8001"

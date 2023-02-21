@@ -4,14 +4,12 @@
     import NavbarBrand from "sveltestrap/src/NavbarBrand.svelte";
 
     // Import the FormGroup and Input components from the svelte-strap library
-    import {FormGroup, Input} from "sveltestrap";
-
-    // Define a variable for the color of the Navbar
-    export let color: any;
+    import { Button, FormGroup, Icon, Input, NavbarToggler } from "sveltestrap";
 
     // Define a variable for the title of the NavbarBrand
     export let title: string;
 
+    export let sideBarIsOpen: boolean = true;
 
     let currentTheme: string | null;
     function toggleTheme() {
@@ -28,12 +26,23 @@
     }
 </script>
 
-<Navbar class="sb-topnav navbar-expand" style="background-color: var(--nav-bar-color)" dark expand="md">
+<Navbar
+    class="sb-topnav navbar-expand"
+    style="background-color: var(--nav-bar-color)"
+    dark
+    expand="md"
+>
+    <Button style="background: transparent; border: 0" on:click={() => sideBarIsOpen = !sideBarIsOpen}
+        ><Icon name="list" /></Button
+    >
     <NavbarBrand style="color: var(--primary-color)">{title}</NavbarBrand>
-    <!-- TODO: Add Breadcrumbs to navigate  -->
-    <!-- Adds a switch to the right side of the Navbar to toggle on dark mode -->
     <FormGroup>
-        <!-- TODO: Add functionality to dark mode if we decide to use it -->
-        <Input id="c3" type="switch" label="Dark mode" on:input={toggleTheme} checked/>
+        <Input
+            id="c3"
+            type="switch"
+            label="Dark mode"
+            on:input={toggleTheme}
+            checked
+        />
     </FormGroup>
 </Navbar>

@@ -73,7 +73,7 @@
 {#if visible}
     <div in:fly={{ y: 200, duration: 2000 }} out:fade>
         <img src="Qatar-2022-1536x798.png" class="banner" />
-        <p style="margin-left: 80em; font-size: 0.8em">
+        <p style="margin-left: 55vw; font-size: 0.8em">
             <Icon name="exclamation-circle" /> This Logo is owned by the FIFA
         </p>
     </div>
@@ -82,7 +82,7 @@
         in:fly={{ y: 200, duration: 2000, delay: 0 }}
         out:fade
     >
-        <p>
+        <p style="text-align:center">
             We collected <span class="highlight">5.025.511</span> Tweets from
             <span class="highlight">1.521.959</span>
             different users from
