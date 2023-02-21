@@ -6,7 +6,7 @@ FROM python:3.8-slim-buster
 WORKDIR /
 
 # copy code
-COPY ./src/middleware ./src
+COPY . ./src
 
 WORKDIR /src
 RUN pip install -e .
@@ -14,4 +14,4 @@ RUN pip install -e .
 # directory of fastapi script
 WORKDIR /src/middleware/data_collection
 
-CMD [ "python3", "-m" , "uvicorn", "main:app", "--host=0.0.0.0", "--port=8001"]
+CMD [ "python3", "-m" , "uvicorn", "main:app", "--host=0.0.0.0", "--port=8002"]

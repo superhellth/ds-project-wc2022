@@ -1,25 +1,34 @@
 services:
+  frontend:
+    ports:
+      - "5173:5173"
+    build:
+      context: ./src/frontend
+      dockerfile: ../../Frontend.Dockerfile
+    environment:
+      DATA_RETRIEVAL_SERVICE_ADDRESS: $DATA_RETRIEVAL_SERVICE_ADDRESS
+      DATA_COLLECTION_SERVICE_ADDRESS: $DATA_COLLECTION_SERVICE_ADDRESS
   data-providing-middleware:
     ports:
-      - "8000:8000"
+      - "8001:8001"
     build:
       context: .
       dockerfile: DataRetrieval.Dockerfile
     environment:
       PATH_TO_DATA_FILES: ../../../data/
-      ES_URL: http://45.13.59.173:9200
-      ES_INDEX: tweets
-      ES_USERNAME: elastic
-      ES_PASSWD: sicheristsicher
+      ES_URL: $ES_URL
+      ES_INDEX: $ES_INDEX
+      ES_USERNAME: $ES_USERNAME
+      ES_PASSWD: $ES_PASSWD
   data-collecting-middleware:
     ports:
-      - "8001:8001"
+      - "8002:8002"
     build:
-      context: .
-      dockerfile: DataCollection.Dockerfile
+      context: ./src/middleware
+      dockerfile: ../../DataCollection.Dockerfile
     environment:
-      BEARER_TOKEN: placeholder
-      ES_URL: http://45.13.59.173:9200
-      ES_INDEX: tweets
-      ES_USERNAME: elastic
-      ES_PASSWD: sicheristsicher
+      BEARER_TOKEN: $BEARER_TOKEN
+      ES_URL: $ES_URL
+      ES_INDEX: $ES_INDEX
+      ES_USERNAME: $ES_USERNAME
+      ES_PASSWD: $ES_PASSWD

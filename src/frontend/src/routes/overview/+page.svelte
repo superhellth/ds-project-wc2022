@@ -67,13 +67,17 @@
     }
 
     async function checkQueryValidity(query: string) {
-        isValid = await elasticProvider.validateQuery("{" + query + "}");
+        try {
+            isValid = await elasticProvider.validateQuery("{" + query + "}");
+        } catch (error) {
+            console.log("Failed to fetch")
+        }
     }
 
     let tweetPromise: Promise<Array<Tweet>> = elasticProvider.getTweetsThat(
         getFullQuery()
     );
-    let numberOfMatchingTweets: number = elasticProvider.getNumberOfTweets(
+    let numberOfMatchingTweets: Promise<number> = elasticProvider.getNumberOfTweets(
         getFullQuery()
     );
 
@@ -167,7 +171,7 @@
     });
 </script>
 
-<title>Overwiev - Tweets</title>
+<title>Overview - Tweets</title>
 <h1>Tweet Query</h1>
 <Breadcrumb class="mb-4">
     <BreadcrumbItem>

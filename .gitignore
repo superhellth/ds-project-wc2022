@@ -10,7 +10,7 @@ tokenized_tweets*
 tweet_phrases*
 index.csv
 *.joblib
-src/data/word-embeddings/*.png
+**/word-embeddings/*.png
 
 # for security reasons
 twitter-api-bearer-token.txt
