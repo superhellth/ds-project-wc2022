@@ -33,7 +33,8 @@ try:
     ES_PASSWD = os.getenv("ES_PASSWD")
 except:
     print("Error.")
-    print("You have to provide the following environment variables: PATH_TO_DATA_FILES, ES_URL, ES_INDEX, ES_USERNAME, ES_PASSWD either as dotenv file or by setting the manually.")
+    print(
+        "You have to provide the following environment variables: PATH_TO_DATA_FILES, ES_URL, ES_INDEX, ES_USERNAME, ES_PASSWD either as dotenv file or by setting the manually.")
     sys.exit()
 
 print("Successfully read environment variables!")
@@ -44,13 +45,14 @@ print(f"Reading data from: {PATH_TO_DATA_FILES}")
 # Nico: ../../../data/
 PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
 PATH_TO_SENTIMENT_MODELS = PATH_TO_DATA_FILES + "sentiment-models/"
+PATH_TO_SENTIMENT_DATA = PATH_TO_DATA_FILES + "sentiment-data/"
+PATH_TO_GENERATOR_MODEL = PATH_TO_DATA_FILES + "generator-model/"
 PATH_TO_EMBEDDING_DATA = PATH_TO_DATA_FILES + "word-embeddings/"
 PATH_TO_OTHER_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets_train.csv"
 PATH_TO_WORD2VEC_MODEL = PATH_TO_EMBEDDING_DATA + "w2v_epochs=100.emb"
 PATH_TO_OTHER_VALIDATION_DATA = PATH_TO_DATA_FILES + "Tweets_test.csv"
 PATH_TO_OWN_TRAINING_DATA = PATH_TO_DATA_FILES + "classification_with_text_train.csv"
 PATH_TO_OWN_VALIDATION_DATA = PATH_TO_DATA_FILES + "classification_with_text_test.csv"
-
 
 ## loading options
 LOAD_N_GRAMS_ON_STARTUP = False
@@ -72,7 +74,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
 
 ### Loading data on startup ###
 ## n-grams
@@ -103,8 +104,8 @@ if not os.path.exists(PATH_TO_SENTIMENT_MODELS):
 # load models
 print("Loading sentiment models...")
 vs, lrcother, lrcown, berts = get_sentiment_analyzers(PATH_TO_SENTIMENT_MODELS, PATH_TO_OTHER_TRAINING_DATA,
-                                              PATH_TO_OTHER_VALIDATION_DATA, PATH_TO_OWN_TRAINING_DATA,
-                                              PATH_TO_OWN_VALIDATION_DATA)
+                                                      PATH_TO_OTHER_VALIDATION_DATA, PATH_TO_OWN_TRAINING_DATA,
+                                                      PATH_TO_OWN_VALIDATION_DATA)
 
 ## word embeddings
 print("Loading word embedding model...")
@@ -118,6 +119,7 @@ async def query_raw(query: str):
     resp = es_client.search(index=INDEX_NAME, body=query, timeout="2m", request_timeout=60)
     return resp
 
+
 @app.get("/query/")
 async def get_tweets_that(query: str):
     """Returns all tweets that match the criteria"""
@@ -125,10 +127,12 @@ async def get_tweets_that(query: str):
     js = ujson.loads(query)
     return {"hits": resp["hits"]["hits"], "counts": basic_stat_provider.get_number_of_tweets(query=js["query"])}
 
+
 @app.get("/statistics/histogram")
 async def get_histogram(field, interval, histogram_type):
     """Return all days on between the earliest and latest tweet with corresponding number of tweets"""
     return basic_stat_provider.get_histogram(field, interval, histogram_type)
+
 
 @app.get("/validate")
 async def validate_query(query: str = "false"):
@@ -151,6 +155,7 @@ async def get_unigrams(k="10", include_stop_words="False", only_mentions="False"
     return stat_provider.get_top_unigrams(k=k, include_stop_words=include_stop_words, only_mentions=only_mentions,
                                           only_hashtags=only_hashtags)
 
+
 @app.get("/analysis/ngrams/top")
 async def get_n_grams(n, k="10"):
     """Returns top k n-grams."""
@@ -160,6 +165,7 @@ async def get_n_grams(n, k="10"):
 
     return stat_provider.get_top_n_grams(n, k)
 
+
 @app.get("/analysis/ngrams/generateTweet")
 async def generate_tweet_from_n_grams(given, tweet_length, n, percent_n_grams, allow_repitition):
     tweet_length = int(tweet_length)
@@ -167,6 +173,7 @@ async def generate_tweet_from_n_grams(given, tweet_length, n, percent_n_grams, a
     percent_n_grams = float(percent_n_grams)
     allow_repitition = allow_repitition == "True"
     return tweet_generator.gen_tweet_from(given, tweet_length, n, percent_n_grams, allow_repitition)
+
 
 ## colloction graph
 @app.get("/analysis/graph")
@@ -186,6 +193,7 @@ async def get_word_graph(window_size=4, num_edges=50000, include_stop_word_nodes
                                                       cluster_alg=cluster_alg, n_clusters=n_clusters, only_nes=only_nes)
     return FileResponse(PATH_TO_GRAPH_FILES + graph_file)
 
+
 ## sentiment analysis
 @app.post("/analysis/sentiment/tweetsListAvg")
 async def get_average_sentiment_for_tweets_list(tweets_text: List[str]):
@@ -196,6 +204,7 @@ async def get_average_sentiment_for_tweets_list(tweets_text: List[str]):
             lrcother.get_average_sentiment_of_text_list(tweets_text),
             lrcown.get_average_sentiment_of_text_list(tweets_text),
             berts.get_average_sentiment_of_text_list(tweets_text)]
+
 
 @app.post("/analysis/sentiment/tweet")
 async def get_sentiment_for_tweet(tweet_text: dict):
@@ -208,6 +217,7 @@ async def get_sentiment_for_tweet(tweet_text: dict):
             lrcown.get_sentiment_of_text(tweet_text),
             berts.get_sentiment_of_text(tweet_text)]
 
+
 @app.get("/analysis/sentiment/tweetsList")
 async def get_sentiment_for_tweets_list(tweets_text: List[str]):
     """
@@ -217,6 +227,7 @@ async def get_sentiment_for_tweets_list(tweets_text: List[str]):
             lrcother.get_sentiment_of_text_list(tweets_text),
             lrcown.get_sentiment_of_text_list(tweets_text),
             berts.get_sentiment_of_text_list(tweets_text)]
+
 
 @app.get("/analysis/sentiment/tweetsListDate")
 async def get_sentiment_for_tweets_list_by_date(texts: List[Tuple[str, str]]):
@@ -228,23 +239,26 @@ async def get_sentiment_for_tweets_list_by_date(texts: List[Tuple[str, str]]):
             lrcown.get_sentiment_of_text_list_by_date(texts),
             berts.get_sentiment_of_text_list_by_date(texts)]
 
+
 @app.get("/analysis/sentiment/meanSentiment")
 async def get_mean_overall_sentiment():
     """
     Returns the mean overall sentiment calculated by all methods.
     """
-    with open(PATH_TO_DATA_FILES + 'mean_sentiment.json') as f:
+    with open(PATH_TO_SENTIMENT_DATA + 'mean_sentiment.json') as f:
         data = json.load(f)
     return data
+
 
 @app.get("/analysis/sentiment/sentimentOverTime")
 async def get_sentiment_over_time():
     """
     Returns the dictionary that contains the sentiment values over time.
     """
-    with open(PATH_TO_DATA_FILES + 'sentiment_over_time.json') as f:
+    with open(PATH_TO_SENTIMENT_DATA + 'sentiment_over_time.json') as f:
         data = json.load(f)
     return data
+
 
 @app.get("/analysis/sentiment/trainedModelPerformance")
 async def get_trained_model_performance():
@@ -254,14 +268,16 @@ async def get_trained_model_performance():
     return [lrcother.accuracy(), lrcother.recall(), lrcother.f1_score(),
             lrcown.accuracy(), lrcown.recall(), lrcown.f1_score()]
 
+
 @app.get("/analysis/sentiment/sentimentByCategory")
 async def get_sentiment_by_category():
     """
     Returns the dictionary that contains the sentiment values by category.
     """
-    with open(PATH_TO_DATA_FILES + 'category_sent.json') as f:
+    with open(PATH_TO_SENTIMENT_DATA + 'category_sent.json') as f:
         data = json.load(f)
     return data
+
 
 ## word embedding
 @app.get("/analysis/embedding/exists")
@@ -269,23 +285,28 @@ async def word_in_w2v_vocab(word: str):
     """Check for existing Word2Vec Embedding for a word."""
     return word in w2v_model.wv.key_to_index.keys()
 
+
 @app.get("/analysis/embedding/similar")
-async def get_similar(positive: List[str] = Query(default=None), negative: List[str] = Query(default=None), k: int = 10):
+async def get_similar(positive: List[str] = Query(default=None), negative: List[str] = Query(default=None),
+                      k: int = 10):
     """Get similar words."""
     return {"similar": w2v_model.wv.most_similar(positive=positive, negative=negative, topn=k)}
+
 
 @app.get("/analysis/embedding/doesntmatch")
 async def doesnt_match(word: List[str] = Query(default=None)):
     """Find word that doesn't match."""
     return w2v_model.wv.doesnt_match(word)
 
+
 @app.get("/analysis/embedding/tsne")
-async def get_tsne(word: str, num_closest: str="10", num_furthest:str="0", file_prefix: str="1"):
+async def get_tsne(word: str, num_closest: str = "10", num_furthest: str = "0", file_prefix: str = "1"):
     """Return TSNE plot of word."""
     embedder.tsneplot(w2v_model, word, num_closest=int(num_closest), num_furthest=int(num_furthest))
     path_to_file = PATH_TO_EMBEDDING_DATA + file_prefix + "-tsne.png"
     plt.savefig(path_to_file, format="png")
     return FileResponse(path_to_file)
+
 
 @app.get("/analysis/embedding/distance")
 async def get_relative_distance(word1: str, word2: str):
