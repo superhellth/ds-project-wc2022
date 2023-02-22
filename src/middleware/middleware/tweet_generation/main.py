@@ -61,5 +61,7 @@ prompt_ai = aitextgen(model_folder=PATH_TO_GENERATOR_MODEL)
 async def get_n_gen_tweets(prompt=None, n=1):
     res = []
     for _ in range(int(n)):
-        res.append(prompt_ai.generate_one(prompt=prompt)[:-1])
+        res.append(prompt_ai.generate_one(prompt=prompt,
+                                          repetition_penalty=1.2,
+                                          length_penalty=1.2)[:-1])
     return res
