@@ -29,3 +29,16 @@ services:
       ES_INDEX: $ES_INDEX
       ES_USERNAME: $ES_USERNAME
       ES_PASSWD: $ES_PASSWD
+  tweet-generation-middleware:
+    ports:
+      - "8003:8003"
+    build:
+      context: .
+      dockerfile: TweetGeneration.Dockerfile
+    environment:
+      PATH_TO_DATA_FILES: ../../../data/
+      BEARER_TOKEN: $BEARER_TOKEN
+      ES_URL: $ES_URL
+      ES_INDEX: $ES_INDEX
+      ES_USERNAME: $ES_USERNAME
+      ES_PASSWD: $ES_PASSWD
