@@ -1,4 +1,3 @@
-import os
 import sys
 from dotenv import load_dotenv
 import json
@@ -46,13 +45,12 @@ print(f"Reading data from: {PATH_TO_DATA_FILES}")
 PATH_TO_GRAPH_FILES = PATH_TO_DATA_FILES + "word-graph/"
 PATH_TO_SENTIMENT_MODELS = PATH_TO_DATA_FILES + "sentiment-models/"
 PATH_TO_SENTIMENT_DATA = PATH_TO_DATA_FILES + "sentiment-data/"
-PATH_TO_GENERATOR_MODEL = PATH_TO_DATA_FILES + "generator-model/"
 PATH_TO_EMBEDDING_DATA = PATH_TO_DATA_FILES + "word-embeddings/"
-PATH_TO_OTHER_TRAINING_DATA = PATH_TO_DATA_FILES + "Tweets_train.csv"
+PATH_TO_OTHER_TRAINING_DATA = PATH_TO_SENTIMENT_DATA + "Tweets_train.csv"
 PATH_TO_WORD2VEC_MODEL = PATH_TO_EMBEDDING_DATA + "w2v_epochs=100.emb"
-PATH_TO_OTHER_VALIDATION_DATA = PATH_TO_DATA_FILES + "Tweets_test.csv"
-PATH_TO_OWN_TRAINING_DATA = PATH_TO_DATA_FILES + "classification_with_text_train.csv"
-PATH_TO_OWN_VALIDATION_DATA = PATH_TO_DATA_FILES + "classification_with_text_test.csv"
+PATH_TO_OTHER_VALIDATION_DATA = PATH_TO_SENTIMENT_DATA + "Tweets_test.csv"
+PATH_TO_OWN_TRAINING_DATA = PATH_TO_SENTIMENT_DATA + "classification_with_text_train.csv"
+PATH_TO_OWN_VALIDATION_DATA = PATH_TO_SENTIMENT_DATA + "classification_with_text_test.csv"
 
 ## loading options
 LOAD_N_GRAMS_ON_STARTUP = False
