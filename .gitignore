@@ -11,9 +11,7 @@ tweet_phrases*
 index.csv
 *.joblib
 **/word-embeddings/*.png
-
-# for security reasons
-twitter-api-bearer-token.txt
+pytorch_model.bin
 
 # IDEs
 .idea

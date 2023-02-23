@@ -184,7 +184,7 @@ class MiddlewareProvider extends Connection {
      */
     public async getCompletedTweet(given: string, tweetLength: number, n: number, topPercentage: number, allowRepition: boolean): Promise<string> {
         let repitionString: string = allowRepition ? "True" : "False"
-        let queryURL: string = this.URL + "/analysis/ngrams/generateTweet?given=" + given + "&tweet_length=" + tweetLength + "&n=" + n
+        let queryURL: string = this.URL + "/analysis/ngrams/generate?given=" + given + "&tweet_length=" + tweetLength + "&n=" + n
             + "&percent_n_grams=" + topPercentage + "&allow_repitition=" + repitionString;
         const data = await fetch(queryURL).then((response) => response.text());
         return data.replaceAll('"', '');

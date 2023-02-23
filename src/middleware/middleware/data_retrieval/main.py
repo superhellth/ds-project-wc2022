@@ -12,7 +12,6 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from middleware.analysis import stat_provider
 from middleware.analysis import collocation_graph
-from middleware.analysis import tweet_gen
 from middleware.analysis import basic_stat_provider
 from middleware.analysis import embedding
 from middleware.data_retrieval.file_management import get_sentiment_analyzers
@@ -77,7 +76,6 @@ app.add_middleware(
 ## n-grams
 print("Preparing n-gram data...")
 stat_provider = stat_provider.StatProvider(path_to_data_files=PATH_TO_DATA_FILES)
-tweet_generator = tweet_gen.TweetGenerator(provider=stat_provider)
 if LOAD_N_GRAMS_ON_STARTUP:
     print("Loading n-grams from file...")
     stat_provider.load_n_grams(2)
@@ -162,15 +160,6 @@ async def get_n_grams(n, k="10"):
     k = int(k)
 
     return stat_provider.get_top_n_grams(n, k)
-
-
-@app.get("/analysis/ngrams/generateTweet")
-async def generate_tweet_from_n_grams(given, tweet_length, n, percent_n_grams, allow_repitition):
-    tweet_length = int(tweet_length)
-    n = int(n)
-    percent_n_grams = float(percent_n_grams)
-    allow_repitition = allow_repitition == "True"
-    return tweet_generator.gen_tweet_from(given, tweet_length, n, percent_n_grams, allow_repitition)
 
 
 ## colloction graph
