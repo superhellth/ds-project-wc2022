@@ -34,33 +34,32 @@ class SVD:
     #The truncated svd is not working properly since compnents_ is not found
      # Generates the Truncated SVD for a given number of tweets and number of topics
      # This SVD should be calculated much faster but is not as precise
-    """def generate_truncated_svd(self,num_tweets,num_topics=10):
+    def generate_truncated_svd(self,num_tweets,num_topics):
         self.corpus = self.corpus_analyzer.generate_tokenized_tweets(num_tweets=num_tweets)
         self.corpus = [' '.join(row) for row in self.corpus]
 
         self.cv = CountVectorizer()
-        self.vectors = self.cv.fit_transform(self.corpus).todense()
+        self.vectors = self.cv.fit_transform(self.corpus)
         self.vocab = np.array(self.cv.get_feature_names_out())
-        truncated_svd = TruncatedSVD(n_components=100)
-        self.vectors = np.asarray(self.cv.fit_transform(self.corpus).todense())
-        self.u_matrix = truncated_svd.components_
-        self.s_matrix = truncated_svd.singular_values_
-        self.v_matrix = np.dot(self.u_matrix, np.diag(self.s_matrix))
-        return self.u_matrix, self.s_matrix, self.v_matrix"""
+        svd = TruncatedSVD(n_components=num_topics,random_state=42)
+        
+        self.u_matrix = svd.fit_transform(self.vectors)
+        self.s_matrix = np.diag(svd.singular_values_)
+        self.v_matrix = svd.components_
+        return self.u_matrix, self.s_matrix, self.v_matrix
     
 
     # Display the top words for each
     def show_topics(self,num_top_words=8,num_topics=10):
         top_words = lambda t: [self.vocab[i] for i in np.argsort(t)[:-num_top_words-1:-1]]
-        topic_words = ([top_words(t) for t in self.v_matrix[:num_topics]])
+        topic_words = ([top_words(t) for t in self.v_matrix[:num_topics,:]])
         return [' '.join(t) for t in topic_words]
     
     def print_topics(self,num_top_words=8,num_topics=10):
-        u,s,v = self.generate_truncated_svd(num_tweets=1000,num_topics=10)
-        reconstructed_vectors = u @ np.diag(s) @ v
+        reconstructed_vectors = self.u_matrix @ np.diag(self.s_matrix) @ self.v_matrix
         print(np.linalg.norm(reconstructed_vectors - self.vectors))
         print(np.allclose(reconstructed_vectors, self.vectors))
-        print(np.allclose(u.T @ u, np.eye(u.shape[0])))
-        print(np.allclose(v @ v.T, np.eye(v.shape[0])))
+        print(np.allclose(self.u_matrix.T @ self.u_matrix, np.eye(self.u_matrix.shape[0])))
+        print(np.allclose(self.v_matrix @ self.v_matrix.T, np.eye(self.v_matrix.shape[0])))
         print(self.show_topics(num_top_words,num_topics))
 

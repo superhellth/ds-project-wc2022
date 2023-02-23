@@ -3,5 +3,5 @@ from middleware.analysis import svd
 
 tm = svd.SVD()
 
-tm.generate_svd(num_tweets=10000)
-print(tm.show_topics())
+tm.generate_truncated_svd(100000,num_topics=10)
+print(tm.show_topics(num_top_words=8,num_topics=10))
