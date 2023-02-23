@@ -34,16 +34,24 @@ class SVD:
     #The truncated svd is not working properly since compnents_ is not found
      # Generates the Truncated SVD for a given number of tweets and number of topics
      # This SVD should be calculated much faster but is not as precise
-    def generate_truncated_svd(self,num_tweets,num_topics):
-        self.corpus = self.corpus_analyzer.generate_tokenized_tweets(num_tweets=num_tweets)
-        self.corpus = [' '.join(row) for row in self.corpus]
+    def generate_truncated_svd(self,num_topics,num_tweets=-1):
+        if num_tweets == -1:
+            f = open("./src/data/tokenized_tweets_nostop.linesentence", "r", encoding="utf_8")
+            as_str = f.read()
+            self.corpus = as_str.split("\n")
+        else:
+            self.corpus = self.corpus_analyzer.generate_tokenized_tweets(num_tweets=num_tweets)
+            self.corpus = [' '.join(row) for row in self.corpus]
+        print("Loaded corpus")
 
         self.cv = CountVectorizer()
         self.vectors = self.cv.fit_transform(self.corpus)
+        print("Calculated word counts")
         self.vocab = np.array(self.cv.get_feature_names_out())
         svd = TruncatedSVD(n_components=num_topics,random_state=42)
         
         self.u_matrix = svd.fit_transform(self.vectors)
+        print("Calculated SVD")
         self.s_matrix = np.diag(svd.singular_values_)
         self.v_matrix = svd.components_
         return self.u_matrix, self.s_matrix, self.v_matrix
