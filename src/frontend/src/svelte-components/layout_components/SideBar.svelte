@@ -132,6 +132,15 @@
                     href="/settings"
                     iconName="gear"
                 />
+                <div class="sb-sidenav-menu-heading">Experimental</div>
+                <SidebarItem
+                    on:press={() => {
+                        theme = "dark";
+                    }}
+                    text="Tweet Generation"
+                    href="/tweet-gen"
+                    iconName="gear"
+                />
                 <!--<SidebarItem
                         on:press={toggleLayout}
                         class={!isLayoutOpen ? 'collapsed' : ''}
