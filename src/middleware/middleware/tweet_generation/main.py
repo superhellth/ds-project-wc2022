@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 from aitextgen import aitextgen
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from middleware.analysis import stat_provider
+from middleware.analysis import tweet_gen
 
 ### loading env variables ###
 print("Trying to read preset environment variables...")
@@ -12,7 +14,7 @@ if os.getenv("PATH_TO_DATA_FILES") is None:
     print("Error.")
     print("Trying to load local dotenv file...")
     print()
-    load_dotenv('/.env')
+    load_dotenv()
 
 try:
     PATH_TO_DATA_FILES = os.getenv("PATH_TO_DATA_FILES")
@@ -33,6 +35,10 @@ print(f"Reading data from: {PATH_TO_DATA_FILES}")
 # Bastian: /Users/bastianmuller/Desktop/Studium/Informatik_HD/7_HWS22:23/INF_ITA/Project/code/src/data/
 # Nico: ../../../data/
 PATH_TO_GENERATOR_MODEL = PATH_TO_DATA_FILES + "generator-model/"
+
+print("Preparing n-gram data...")
+stat_provider = stat_provider.StatProvider(path_to_data_files=PATH_TO_DATA_FILES)
+tweet_generator = tweet_gen.TweetGenerator(provider=stat_provider)
 
 ## elasticsearch connection
 INDEX_NAME = ES_INDEX
@@ -65,3 +71,12 @@ async def get_n_gen_tweets(prompt=None, n=1):
                                           repetition_penalty=1.2,
                                           length_penalty=1.2)[:-1])
     return res
+
+## generate tweet based on n-grams
+@app.get("/analysis/ngrams/generate")
+async def generate_tweet_from_n_grams(given, tweet_length, n, percent_n_grams, allow_repitition):
+    tweet_length = int(tweet_length)
+    n = int(n)
+    percent_n_grams = float(percent_n_grams)
+    allow_repitition = allow_repitition == "True"
+    return tweet_generator.gen_tweet_from(given, tweet_length, n, percent_n_grams, allow_repitition)
