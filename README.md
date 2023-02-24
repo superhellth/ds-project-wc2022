@@ -5,14 +5,14 @@
 - Raphael Ebner, 4170420, B.Sc. Informatik
 - Nicolas Hellthaler, 4164933, B.Sc. Informatik
 - Bastian Müller, 4138763, B.Sc. Angewandte Informatik
-- chatGPT by OpenAI
+- (chatGPT by OpenAI)
 
 ## Mail Addresses
 
 - raphael.ebner@stud.uni-heidelberg.de
 - nicolas.hellthaler@stud.uni-heidelberg.de
 - bastian.mueller@stud.uni-heidelberg.de
-- Reachable at https://chat.openai.com/chat
+- (At least sometimes) reachable at https://chat.openai.com/chat
 
 ## Existing Code Fragments
 
@@ -32,20 +32,30 @@
 ## Our data
 - Our twitter-api query string looks like this: `#Qatar2022 OR #QatarWorldCup2022 OR  #fifaworldcup2022 OR #Roadto2022 OR @FIFAWorldCup OR @roadto2022en OR (#qatar #lgbtq) OR (#qatar #humanrights) OR context:29.1275806388367720450 OR context:6.1275806388367720450) -is:retweet -is:reply -is:quote lang:en`
 - During the K.O. stage of the World Cup there are some time periods for which we don't have any data since even 3 elevated twitter-api accounts are not enough to capture every tweet.
-- (16.01.2023) Our data consists of 5,025,511 tweets
+- Our data consists of 5,025,511 tweets
 
 ## How to run our Dashboard
-### Running the frontend
+### Running frontend and middleware via Docker
+*Note: Our project is quite large*
+- In the root of the project type `docker compose up`
+- Explore our
+  - dashboard at `localhost:5173`
+  - data-providing middleware at `localhost:8001/docs`
+  - data-collection middleware at `localhost:8002/docs`
+  - tweet-generation middleware at `localhost:8003/docs`
+
+### Running frontend and middleware separately (only recommended for dev purposes)
+#### Running the frontend
 - Navigate to the `src/frontend` directory
 - `npm install`
 - `npm run dev`
-### Running the middleware
+#### Running the middleware
 - Open the `main.py` in the `src/middleware/middleware/data_retrieval` directory and change the path to the data files to the absolute path to the `src/data` directory
 *Only necessary if the default does not work*
 - Navigate to the `src/middleware` directory
 - `pip install [-e] .`
 - Navigate to the `src/middleware/middleware/data_retrieval` directory
-- `python[3] -m uvicorn main:app`
+- `python[3] -m uvicorn main:app --reload`
 
 *Note for Dennis: Many of our data files are too large for git. So without these files some functionalities are unavailable(the middleware just doesn't respond). These functionalities include: Dispaly of n-grams, Tweet generation based on n-grams, Custom collocation-graph building*
 
