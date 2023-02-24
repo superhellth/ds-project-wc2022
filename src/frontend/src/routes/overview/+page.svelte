@@ -352,7 +352,7 @@
                                 This sentiment score is calculated by the<a
                                     href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english"
                             >
-                                distilbert-base-uncased-finetuned-sst-2-englisharn
+                                distilbert-base-uncased-finetuned-sst-2-english
                             </a> model as found on HuggingFace. In order
                                 for the tweets to be processed 'properly' we
                                 looked at the training data for that model. To

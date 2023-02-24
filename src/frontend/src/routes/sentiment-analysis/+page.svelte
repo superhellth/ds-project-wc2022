@@ -1,6 +1,6 @@
 <script lang="ts">
     import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
-    import {Alert, Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Row} from "sveltestrap";
+    import {Alert, Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Row, Tooltip} from "sveltestrap";
     import {onMount} from "svelte";
     import SentimentByCard from "../../svelte-components/SentimentByCard.svelte";
     import {fly} from "svelte/transition";
@@ -18,7 +18,7 @@
     let vaderSent: string = 'Waiting...';
     let sgdSentOther: string = 'Waiting...';
     let sgdSentOwn: string = 'Waiting...';
-    let bertSent: string = "Waiting... (BERT: I\'m a bit slow, sorry!)";
+    let bertSent: string = "Waiting...";
 
     // Trained model performance variables
     let otherAccuracyPercentage: string = 'Waiting...';
@@ -129,50 +129,79 @@
         <Form>
             <h4 in:fly={{ x: 400, duration: transDuration, delay: 200 }}>Welcome!</h4>
             <p in:fly={{ x: 400, duration: transDuration, delay: 200 }}>to the Sentiment Analysis page! Here, you can
-                view
-                sentiment analysis of tweets,
+                view sentiment analysis of tweets,
                 but you can also input your own "tweet" to see what sentiment it conveys. Furthermore, you can see
-                sentiment analysis by country and track sentiment changes over time. Get an in-depth understanding of
+                sentiment analysis by topic and track sentiment changes over time. Get an in-depth understanding of
                 the buzz surrounding the World Cup with this sentiment analysis tool.</p>
             <h4 in:fly={{ x: 400, duration: transDuration, delay: 200 }}>Overall sentiment</h4>
             <p in:fly={{ x: 400, duration: transDuration, delay: 200 }}>Below, you can take a look at the average
-                sentiment over all tweets by each method. Each method will
-                link to some documentation. To learn more about the methods, please check out the last section.</p>
+                sentiment over all tweets by each method. Each method title will
+                link to some documentation. To learn more about the methods, please hover over the blocks or check out
+                the last section.</p>
             <div in:fly={{ x: 400, duration: transDuration, delay: 200 }}>
                 <Row>
                     <Col>
                         <div in:fly={{ x: 400, duration: transDuration*1.5, delay: 600 }}>
-                            <Alert color="primary">
+                            <Alert color="primary" id="vader-sent-alert-id">
                                 <h5><a href="https://github.com/cjhutto/vaderSentiment">vaderSentiment</a></h5>
                                 {vaderSentMean}
                             </Alert>
+                            <Tooltip placement="bottom" target="vader-sent-alert-id">
+                                This score was calculated by the SentimentIntensityAnalyzer class of the vaderSentiment
+                                library.
+                                It uses a 'lexicon' and 'rule-based' approach and is fine-tuned for social media
+                                sentiment analysis.
+                            </Tooltip>
                         </div>
                     </Col>
                     <Col>
                         <div in:fly={{ x: 400, duration: transDuration*1.5, delay: 700 }}>
-                            <Alert color="warning">
+                            <Alert color="primary" id="other-sent-alert-id">
                                 <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOther</a></h5>
                                 {lrcSentOtherMean}
                             </Alert>
+                            <Tooltip placement="bottom" target="other-sent-alert-id">
+                                This sentiment score is calculated by the
+                                sklearn.SGDClassifier class in combination with
+                                a TfidfVectorizer. It trained using a file with
+                                26000 labeled tweets which can be found in our
+                                repository under 'src/data/sentiment-data/Tweets_train.csv'.
+                            </Tooltip>
                         </div>
 
                     </Col>
                     <Col>
                         <div in:fly={{ x: 400, duration: transDuration*1.5, delay: 800 }}>
-                            <Alert color="success">
+                            <Alert color="primary" id="own-sent-alert-id">
                                 <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOtherOwn</a></h5>
                                 {lrcSentOwnMean}
                             </Alert>
+                            <Tooltip placement="bottom" target="own-sent-alert-id">
+                                This sentiment score is calculated by the
+                                sklearn.SGDClassifier class in combination with
+                                a TfidfVectorizer. It trained using a file with
+                                1000 self-labeled tweets from our dataset which can be found in our
+                                repository under 'src/data/sentiment-data/classification_with_text_train.csv'.
+                            </Tooltip>
                         </div>
                     </Col>
                     <Col>
                         <div in:fly={{ x: 400, duration: transDuration*1.5, delay: 900 }}>
-                            <Alert color="danger">
+                            <Alert color="primary" id="bert-sent-alert-id">
                                 <h5><a href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english">BERT
                                     based
                                     Classifier</a></h5>
                                 {bertSentMean}
                             </Alert>
+                            <Tooltip placement="bottom" target="bert-sent-alert-id">
+                                This sentiment score is calculated by the
+                                'distilbert-base-uncased-finetuned-sst-2-english'
+                                model as found on HuggingFace. In order
+                                for the tweets to be processed 'properly' we
+                                looked at the training data for that model. To
+                                keep our input similar we decided to drop for example all
+                                non-ascii symbols. We did not fine-tune the model.
+                            </Tooltip>
                         </div>
                     </Col>
                 </Row>
@@ -207,19 +236,19 @@
                         </Alert>
                     </Col>
                     <Col>
-                        <Alert color="warning">
+                        <Alert color="primary">
                             <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOther</a></h5>
                             {sgdSentOther}
                         </Alert>
                     </Col>
                     <Col>
-                        <Alert color="success">
+                        <Alert color="primary">
                             <h5><a href="https://scikit-learn.org/stable/index.html">SGDClassifierOwn</a></h5>
                             {sgdSentOwn}
                         </Alert>
                     </Col>
                     <Col>
-                        <Alert color="danger">
+                        <Alert color="primary">
                             <h5><a href="https://huggingface.co/distilbert-base-uncased-finetuned-sst-2-english">BERT
                                 based
                                 Classifier</a></h5>
