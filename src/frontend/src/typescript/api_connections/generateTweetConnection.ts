@@ -18,8 +18,13 @@ class GenerateTweetProvider extends Connection {
         return GenerateTweetProvider.instance;
     }
 
-    public async getFineTunedTweets(prompt: string, n: string) {
-        const queryURL = this.URL + '/analysis/finetunedgptneo/generate?prompt=' + prompt + "&n=" + n;
+    public async getFineTunedTweets(prompt: string, temperature: string, repetition_penalty: string,
+                                    length_penalty: string, n: string) {
+        const queryURL = this.URL + '/analysis/finetunedgptneo/generate?prompt=' + prompt +
+            "&temperature=" + temperature +
+            "&repetition_penalty=" + repetition_penalty +
+            "&length_penalty=" + length_penalty +
+            "&n=" + n;
         const data = await fetch(queryURL).then((response) => response.json());
         return await data;
     }

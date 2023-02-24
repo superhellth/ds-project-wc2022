@@ -21,6 +21,9 @@
     let textGPT: string = "";
     let tweetsGPT: Array<string> = [];
     let amountTweets: number = 4;
+    let temperature: number = 0.7;
+    let repetition_penalty: number = 1.2;
+    let length_penalty: number = 1.2;
     let showTooltipGPT: boolean = false;
     let loadingGPT: boolean = false;
 
@@ -48,7 +51,8 @@
 
     async function completeTweet() {
         loadingGPT = true;
-        tweetsGPT = await provider.getFineTunedTweets(textGPT, amountTweets.toString());
+        tweetsGPT = await provider.getFineTunedTweets(textGPT, temperature.toString(), repetition_penalty.toString(),
+            length_penalty.toString(), amountTweets.toString());
         loadingGPT = false;
     }
 
@@ -180,13 +184,52 @@
                     </Input>
                 </Form>
                 <Form style="margin-left: 2em">
+                    <Label for="temperature-select">Temperature</Label>
+                    <Input
+                            type="select"
+                            name="select"
+                            id="temperature-select"
+                            bind:value={temperature}
+                    >
+                        {#each [0.5, 0.7, 1, 1.2] as n_}
+                            <option>{n_}</option>
+                        {/each}
+                    </Input>
+                </Form>
+                <Form style="margin-left: 2em">
+                    <Label for="repetition-select">Repetition Penalty</Label>
+                    <Input
+                            type="select"
+                            name="select"
+                            id="repetition-select"
+                            bind:value={repetition_penalty}
+                    >
+                        {#each [0.7, 1, 1.2, 1.5] as n_}
+                            <option>{n_}</option>
+                        {/each}
+                    </Input>
+                </Form>
+                <Form style="margin-left: 2em">
+                    <Label for="length-select">Length Penalty</Label>
+                    <Input
+                            type="select"
+                            name="select"
+                            id="length-select"
+                            bind:value={length_penalty}
+                    >
+                        {#each [0.7, 1, 1.2, 1.5] as n_}
+                            <option>{n_}</option>
+                        {/each}
+                    </Input>
+                </Form>
+                <Form style="margin-left: 2em">
                     <Label>Complete Tweet</Label>
                     <Button type="button" id="complete-gpt-tweet-button" on:click={() => completeTweet()}
                     >Complete
                     </Button
                     >
                     <Tooltip bind:isOpen={showTooltipGPT} placement="right" target="complete-gpt-tweet-button">
-                        May need some time.
+                        May take some time.
                     </Tooltip>
                 </Form>
                 {#if loadingGPT}
