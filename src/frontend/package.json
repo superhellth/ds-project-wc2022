@@ -42,6 +42,7 @@
 		"@popperjs/core": "^2.11.6",
 		"chart.js": "^4.0.1",
 		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
 		"graphology": "^0.25.1",
 		"graphology-gexf": "^0.10.3",
 		"leaflet": "^1.9.3",

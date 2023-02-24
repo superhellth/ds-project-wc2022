@@ -13,7 +13,7 @@ class GenerateTweetProvider extends Connection {
 
     public static getInstance(): GenerateTweetProvider {
         if (!GenerateTweetProvider.instance) {
-            GenerateTweetProvider.instance = new GenerateTweetProvider("http://0.0.0.0:8003");
+            GenerateTweetProvider.instance = new GenerateTweetProvider("http://localhost:8003");
         }
         return GenerateTweetProvider.instance;
     }

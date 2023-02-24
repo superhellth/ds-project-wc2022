@@ -13,7 +13,7 @@ class StreamControl extends Connection {
 
     public static getInstance(): StreamControl {
         if (!StreamControl.instance) {
-            StreamControl.instance = new StreamControl("http://0.0.0.0:8002");
+            StreamControl.instance = new StreamControl("http://localhost:8002");
         }
         return StreamControl.instance;
     }
