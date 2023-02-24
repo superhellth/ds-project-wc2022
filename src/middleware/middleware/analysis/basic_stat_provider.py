@@ -8,7 +8,7 @@ class BasicStatProvider:
     def __init__(self) -> None:
         self.es_client = TweetProvider().get_client()
 
-    def get_number_of_tweets(self, query={"match_all": {}}):
+    def get_number_of_tweets(self, query=None) -> int:
         """Count the number of documents matching the query.
 
         Args:
@@ -17,16 +17,18 @@ class BasicStatProvider:
         Returns:
             int: Number of matches.
         """
+        if query is None:
+            query = {"match_all": {}}
         res = self.es_client.search(index="tweets", query=query, size=0, track_total_hits=True, timeout="1m")
         return res["hits"]["total"]["value"]
 
-    def get_histogram(self, field, interval, histogram_type="histogram"):
+    def get_histogram(self, field: str, interval: str, histogram_type: str = "histogram") -> dict:
         """Calculate histogram on a specified field.
 
         Args:
             field (str): field name to perform histogram on.
             interval (int): bucket size. This is interpreted as size if type=terms.
-            histogram_size (str): type of the histogram, one of: date_histogram, histogram, terms
+            histogram_type (str): type of the histogram, one of: date_histogram, histogram, terms
 
         Returns:
             dict: keys are buckets, values are doc counts.

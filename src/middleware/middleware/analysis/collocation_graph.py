@@ -1,5 +1,7 @@
 from collections import defaultdict
 import ast
+from typing import Any
+
 import numpy as np
 import networkx as nx
 import spacy
@@ -20,7 +22,7 @@ from middleware.analysis import stat_provider
 class CollocationGraphGenerator:
     """This class generates collocation graphs using the collocations files."""
 
-    def __init__(self, path_to_data_files, path_to_graph_files):
+    def __init__(self, path_to_data_files: str, path_to_graph_files: str) -> None:
         self.nlp = spacy.load("en_core_web_sm")
         self.stat_provider = stat_provider.StatProvider(path_to_data_files)
         self.path_to_graph_files = path_to_graph_files
@@ -29,13 +31,15 @@ class CollocationGraphGenerator:
         self.colors = ["#FF0000", "#FF8000", "#F3FF00", "#00FF01", "#00FFED", "#0008FF", "#BF00FF",
                        "#FF00C9", "#FF0000", "#000000", "#808080", "#004A08", "#6F0000", "#00466F", "#57006F"]
 
-    def to_dict_of_dicts(self, string_dict, include_stop_word_nodes=True, min_node_length=1, only_nes=False):
+    def to_dict_of_dicts(self, string_dict: dict, include_stop_word_nodes: bool = True, min_node_length: int = 1,
+                         only_nes: bool = False):
         """Converts dict to dict of dicts for networkx to be able to convert it to a graph.
 
         Args:
             string_dict (dict): Dictionary containing tuples of collocations as keys and counts as values.
             include_stop_word_nodes (bool, optional): Keep nodes that are stop words. Defaults to True.
             min_node_length (int, optional): Minimum length of nodes to keep. Defaults to 1.
+            only_nes (bool, optional): If only nes should be used
 
         Returns:
             dict: dict of dicts fitting networkx requirements.
@@ -60,7 +64,8 @@ class CollocationGraphGenerator:
                             "weight": entry[1]}
         return dict_of_dicts
 
-    def generate_graph(self, window_size, num_edges, include_stop_word_nodes, min_node_length, only_nes=False):
+    def generate_graph(self, window_size: int, num_edges: int, include_stop_word_nodes: bool, min_node_length: int,
+                       only_nes: bool = False) -> nx.Graph:
         """Generate graph with given parameters. Applies spring layout.
 
         Args:
@@ -107,7 +112,8 @@ class CollocationGraphGenerator:
             graph.nodes[node]["color"] = "grey"
         return graph
 
-    def get_graph(self, window_size, num_edges=100, include_stop_word_nodes=True, min_node_length=1, only_nes=False):
+    def get_graph(self, window_size: int, num_edges: int = 100, include_stop_word_nodes: bool = True,
+                  min_node_length: int = 1, only_nes: bool = False) -> nx.Graph:
         """Read graph file. If not exists: generate graph.
 
         Args:
@@ -138,7 +144,7 @@ class CollocationGraphGenerator:
             nx.write_gexf(G, self.path_to_graph_files + unclusterd_graph_file)
         return G
 
-    def color_edges(self, graph: nx.Graph):
+    def color_edges(self, graph: nx.Graph) -> nx.Graph:
         """Color edges between nodes of the same color with the according color.
 
         Args:
@@ -152,7 +158,7 @@ class CollocationGraphGenerator:
                 graph.edges[(u, v)]["color"] = graph.nodes[v]["color"]
         return graph
 
-    def color_nodes(self, graph: nx.Graph, n_cluster: int, node_to_cluster: dict):
+    def color_nodes(self, graph: nx.Graph, n_cluster: int, node_to_cluster: dict) -> nx.Graph:
         """Color nodes according to cluster.
 
         Args:
@@ -171,7 +177,7 @@ class CollocationGraphGenerator:
                 graph.nodes[node]["color"] = cluster_color
         return graph
 
-    def learn_node2vec(self, graph: nx.Graph, embedding_size):
+    def learn_node2vec(self, graph: nx.Graph, embedding_size: int) -> Any:
         """Generate a node2vec embedding for the given graph.
 
         Args:
@@ -185,7 +191,7 @@ class CollocationGraphGenerator:
         print("Learning embedding...")
         return node2vec.fit(window=10, min_count=1)
 
-    def get_embedding(self, graph, window_size, num_edges, embedding_size):
+    def get_embedding(self, graph: nx.Graph, window_size: int, num_edges: int, embedding_size: int) -> Any:
         """Read embedding file. If not exists: generate embedding."""
         embedding_file = "embedding_" + "windowsize=" + \
                          str(window_size) + "-edges=" + str(num_edges) + \
@@ -202,7 +208,7 @@ class CollocationGraphGenerator:
         return np.loadtxt(self.path_to_graph_files + embedding_file, skiprows=1, dtype=str, encoding="utf_8",
                           delimiter=" ", comments=None)
 
-    def cluster(self, graph: nx.Graph, n_clusters, algorithm: str, embedding: np.array = None):
+    def cluster(self, graph: nx.Graph, n_clusters: int, algorithm: str, embedding: np.array = None) -> nx.Graph:
         """Cluster the given graph using the given clusterer.
 
         Args:
@@ -259,8 +265,10 @@ class CollocationGraphGenerator:
             node_to_cluster = dict(zip(original_labels, node_clusters))
         return self.color_nodes(graph, n_clusters, node_to_cluster)
 
-    def generate_and_cluster(self, window_size, num_edges, include_stop_word_nodes, min_node_length, embedding_size,
-                             cluster_alg, n_clusters=-1, color_edges=False, only_nes=False):
+    def generate_and_cluster(self, window_size: int, num_edges: int, include_stop_word_nodes: bool,
+                             min_node_length: int, embedding_size: int,
+                             cluster_alg: str, n_clusters: int = -1, color_edges: bool = False,
+                             only_nes: bool = False) -> str:
         """Generates and clusters graph with the given parameters. Saves to file. -1 embedding size to not use embedding.
 
         Args:
