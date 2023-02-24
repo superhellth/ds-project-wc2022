@@ -95,7 +95,7 @@ class LogRegClass(SentimentBase, ABC):
         joblib.dump(vectorizer, self.path_to_model + "vectorizer" + ".joblib")
         self.did_train = True
 
-    def accuracy(self):
+    def accuracy(self) -> float:
         # Load the test data
         tweets = pd.read_csv(self.path_to_test_data)
         tweets.dropna(inplace=True)
@@ -114,7 +114,7 @@ class LogRegClass(SentimentBase, ABC):
         # Calculate the accuracy of the classifier
         return accuracy_score(true_labels, predicted_labels)
 
-    def recall(self):
+    def recall(self) -> float:
         # Load the test data
         tweets = pd.read_csv(self.path_to_test_data)
         tweets.dropna(inplace=True)
@@ -133,7 +133,7 @@ class LogRegClass(SentimentBase, ABC):
         # Calculate the recall of the classifier
         return recall_score(true_labels, predicted_labels, average='macro')
 
-    def f1_score(self):
+    def f1_score(self) -> float:
         # Load the test data
         tweets = pd.read_csv(self.path_to_test_data)
         tweets.dropna(inplace=True)

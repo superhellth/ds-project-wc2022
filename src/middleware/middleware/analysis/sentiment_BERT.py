@@ -15,7 +15,7 @@ class BERTSentiment(SentimentBase, ABC):
         if not self.did_train:
             self.train_and_save_model()
 
-    def preprocess_text(self, text):
+    def preprocess_text(self, text: str) -> str:
         new_text = []
         for t in text.split(" "):
             t = t if re.match(r'[A-Za-z0-9\'\s]', t) else ""
@@ -25,7 +25,7 @@ class BERTSentiment(SentimentBase, ABC):
         return " ".join(new_text)
 
     @staticmethod
-    def __map_sent_to_number(sentiment_dict):
+    def __map_sent_to_number(sentiment_dict: dict) -> float:
         score = sentiment_dict[0]['score']
         if sentiment_dict[0]['label'] == 'negative':
             return score * -1
@@ -34,16 +34,16 @@ class BERTSentiment(SentimentBase, ABC):
         else:
             return 0
 
-    def get_sentiment_of_text(self, text) -> float:
+    def get_sentiment_of_text(self, text: str) -> float:
         return self.__map_sent_to_number(self.pipe(self.preprocess_text(text)))
 
-    def get_sentiment_of_text_list(self, texts) -> List[float]:
+    def get_sentiment_of_text_list(self, texts: List[str]) -> List[float]:
         res = []
         for text in texts:
             res.append(self.__map_sent_to_number(self.pipe(self.preprocess_text(text))))
         return res
 
-    def get_average_sentiment_of_text_list(self, texts) -> float:
+    def get_average_sentiment_of_text_list(self, texts: List[str]) -> float:
         res = []
         for text in texts:
             res.append(self.__map_sent_to_number(self.pipe(self.preprocess_text(text))))

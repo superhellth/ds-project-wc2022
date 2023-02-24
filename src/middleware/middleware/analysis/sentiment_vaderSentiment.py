@@ -10,7 +10,7 @@ class VaderSentiment(SentimentBase, ABC):
         super().__init__(model_name)
         self.model = SentimentIntensityAnalyzer()
 
-    def preprocess_text(self, text):
+    def preprocess_text(self, text: str):
         pass
 
     def get_sentiment_of_text(self, text) -> float:
