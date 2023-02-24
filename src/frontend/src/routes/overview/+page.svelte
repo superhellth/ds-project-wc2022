@@ -24,17 +24,16 @@
     const elasticProvider: MiddlewareProvider =
         MiddlewareProvider.getInstance();
 
-    // We get  a list of the 50 most recent tweets asynchronously, thus the data type is Promise
-    // const tweets: Promise<Array<Tweet>> = elasticHelper.getTweets();
+    // Declaring variables to store the query, the validity of the query, options for size, sorting, and sentiment analysis.
     let query = `"query": {
 \t"match": {
 \t\t"text": "Infantino"
 \t}
 }`;
-    let isValid = true;
-    let sizeOptions = [10, 20, 50, 100];
-    let currentSize = sizeOptions[0];
-    let sortOptions = [
+    let isValid: boolean = true;
+    let sizeOptions: Array<number> = [10, 20, 50, 100];
+    let currentSize: number = sizeOptions[0];
+    let sortOptions: string[] = [
         "_score",
         "created_at",
         "possibly_sensitive",
@@ -51,7 +50,7 @@
         "author.public_metrics.tweet_count",
         "author.public_metrics.listed_count",
     ];
-    let currentSort = sortOptions[0];
+    let currentSort: string = sortOptions[0];
     let sortAscending: boolean = false;
     let showDetails: boolean = false;
     let showSentimentForMethod: Map<string, number> = new Map<string, number>();
@@ -114,22 +113,19 @@
         );
         loaded_tweets = await tweetPromise;
         await analyzeSentiment();
-        console.log("Vader Sentiment Score: ", vaderSent);
-        console.log("Trained Sentiment Score: ", trainedSent);
     }
 
     // Sentiment stuff
     let loaded_tweets: Array<Tweet>; // variable to hold the tweets
-    let vaderSent = "Waiting..."; // variable to hold the vaderSent score
-    let trainedSent = "Waiting..."; // variable to hold the trainedSent score
-    let nbSent = "Waiting..."; // variable to hold the nbSent score
-    let bertSent = "Waiting... (BERT: I'm a bit slow, sorry!)"; // variable to hold the bertSent score
+    let vaderSent: string = "Waiting..."; // variable to hold the vaderSent score
+    let trainedSent: string = "Waiting..."; // variable to hold the trainedSent score
+    let nbSent: string = "Waiting..."; // variable to hold the nbSent score
+    let bertSent: string = "Waiting... (BERT: I'm a bit slow, sorry!)"; // variable to hold the bertSent score
 
     // function to send tweets text to the sentiment analysis endpoint
     async function analyzeSentiment() {
         // Extract the text of each tweet
         let tweets_text = loaded_tweets.map((t) => t.getText());
-        console.log(tweets_text);
         // Send the tweets text to the sentiment analysis endpoint
         vaderSent = "Waiting...";
         trainedSent = "Waiting...";
@@ -154,20 +150,23 @@
         queryInput.style.color = "#FFFFFF";
         queryInput.addEventListener("keydown", function (e) {
             if (e.key == "Tab") {
+                // Prevent the default behavior of the "Tab" key
                 e.preventDefault();
+                // Get the start and end positions of the text selection
                 var start = this.selectionStart;
                 var end = this.selectionEnd;
 
-                // set textarea value to: text before caret + tab + text after caret
+                // Insert a tab character into the textarea at the current caret position
                 this.value =
                     this.value.substring(0, start) +
                     "\t" +
                     this.value.substring(end);
 
-                // put caret at right position again
+                // Reset the caret position to be immediately after the inserted tab character
                 this.selectionStart = this.selectionEnd = start + 1;
             }
         });
+        // Wait for the `executeQuery` function to complete before continuing
         await executeQuery();
     });
 </script>

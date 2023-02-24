@@ -20,7 +20,6 @@
     let sgdSentOwn = 'Waiting...';
     let bertSent = "Waiting... (BERT: I\'m a bit slow, sorry!)";
 
-
     // Trained model performance variables
     let otherAccuracyPercentage = 'Waiting...';
     let otherRecallPercentage = 'Waiting...';
@@ -97,7 +96,7 @@
         }
     }
 
-    // Function to slice strings
+    // Function to slice strings such that all sentiment values have the same amount of decimal places
     const sliceString = (str: string) => {
         if (str[0] === '-') {
             return str.slice(0, 7);
@@ -106,6 +105,7 @@
     };
 
     onMount(() => {
+        // Fill the mean sent, topic sent and trained model performance values on mount
         getMeanSent();
         getTrainedModelPerf();
         getSentimentByTopic();
