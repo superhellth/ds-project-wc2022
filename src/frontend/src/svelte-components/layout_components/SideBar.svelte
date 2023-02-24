@@ -55,7 +55,7 @@
     >
         <div class="sb-sidenav-menu">
             <Nav>
-                <div class="sb-sidenav-menu-heading">Overview</div>
+                <!--                <div class="sb-sidenav-menu-heading">Overview</div>-->
                 <SidebarItem
                         on:press={() => {
                         theme = "dark";
@@ -139,7 +139,15 @@
                     }}
                         text="Tweet Generation"
                         href="/tweet-gen"
-                        iconName="gear"
+                        iconName="chat-text"
+                />
+                <SidebarItem
+                        on:press={() => {
+                        theme = "dark";
+                    }}
+                        text="Scrap Yard"
+                        href="/scrap-yard"
+                        iconName="trash"
                 />
                 <!--<SidebarItem
                         on:press={toggleLayout}
