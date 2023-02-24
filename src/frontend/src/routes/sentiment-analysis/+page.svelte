@@ -9,33 +9,33 @@
 
     // Overall Sentiment variables
     let userTweet: string = '';
-    let vaderSentMean = 'Loading...';
-    let lrcSentOtherMean = 'Loading...';
-    let lrcSentOwnMean = 'Loading ...';
-    let bertSentMean = 'Loading ...';
+    let vaderSentMean: string = 'Loading...';
+    let lrcSentOtherMean: string = 'Loading...';
+    let lrcSentOwnMean: string = 'Loading ...';
+    let bertSentMean: string = 'Loading ...';
 
     // Try it out variables
-    let vaderSent = 'Waiting...';
-    let sgdSentOther = 'Waiting...';
-    let sgdSentOwn = 'Waiting...';
-    let bertSent = "Waiting... (BERT: I\'m a bit slow, sorry!)";
+    let vaderSent: string = 'Waiting...';
+    let sgdSentOther: string = 'Waiting...';
+    let sgdSentOwn: string = 'Waiting...';
+    let bertSent: string = "Waiting... (BERT: I\'m a bit slow, sorry!)";
 
     // Trained model performance variables
-    let otherAccuracyPercentage = 'Waiting...';
-    let otherRecallPercentage = 'Waiting...';
-    let otherF1Percentage = 'Waiting...';
-    let ownF1Percentage = 'Waiting...';
-    let ownAccuracyPercentage = 'Waiting...';
-    let ownRecallPercentage = 'Waiting...';
+    let otherAccuracyPercentage: string = 'Waiting...';
+    let otherRecallPercentage: string = 'Waiting...';
+    let otherF1Percentage: string = 'Waiting...';
+    let ownF1Percentage: string = 'Waiting...';
+    let ownAccuracyPercentage: string = 'Waiting...';
+    let ownRecallPercentage: string = 'Waiting...';
 
     // Sent by topic variables
-    const topics_mean = Array(11).fill('Waiting...');
-    const topics_vs_sent = Array(11).fill('Waiting...');
-    const topics_bert_sent = Array(11).fill('Waiting...');
-    const topics_lrc_other = Array(11).fill('Waiting...');
-    const topics_lrc_own = Array(11).fill('Waiting...');
-    const topics_count = Array(11).fill('Waiting...');
-    const titles = [
+    const topics_mean: string[] = Array(11).fill('Waiting...');
+    const topics_vs_sent: string[] = Array(11).fill('Waiting...');
+    const topics_bert_sent: string[] = Array(11).fill('Waiting...');
+    const topics_lrc_other: string[] = Array(11).fill('Waiting...');
+    const topics_lrc_own: string[] = Array(11).fill('Waiting...');
+    const topics_count: string[] = Array(11).fill('Waiting...');
+    const titles: string[] = [
         'The Center Cluster', '#Cluster', '#SayTheirNames',
         'C\'mon England!', '???', 'Steve Harvey',
         'SUIIII!!!', 'NFT and Crypto', '你好中国人！',
@@ -81,7 +81,7 @@
 
     // Function to get the mean overall sentiment
     async function getMeanSent() {
-        const mean_sent = await provider.getMeanOverallSentiment();
+        const mean_sent: any = await provider.getMeanOverallSentiment();
         vaderSentMean = sliceString(mean_sent['mean_vs_sent'].toString());
         lrcSentOtherMean = sliceString(mean_sent['mean_lrc_other_sent'].toString());
         lrcSentOwnMean = sliceString(mean_sent['mean_lrc_own_sent'].toString());
@@ -91,7 +91,7 @@
     // Function to execute the sentiment analysis for a custom tweet
     async function executeCustomTweetSent() {
         if (userTweet) {
-            const scores = await provider.getSentimentTweet(userTweet);
+            const scores: any = await provider.getSentimentTweet(userTweet);
             [vaderSent, sgdSentOther, sgdSentOwn, bertSent] = scores.map(score => sliceString(score.toString()));
         }
     }

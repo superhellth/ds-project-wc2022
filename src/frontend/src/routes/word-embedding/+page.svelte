@@ -18,6 +18,7 @@
 
     let provider: MiddlewareProvider = MiddlewareProvider.getInstance();
 
+    // Declare variables for use in the component
     let checkIfExistsString: string = "Human Rights";
     let checkIfExistsString2: string = "Qatar";
     let checkIfExistsValue: boolean = false;
@@ -36,18 +37,19 @@
     let x2: string = "Didier Deschamps";
     let x2IsValid: boolean = true;
     let y2: any = [[]];
+    let visible: boolean = false;
 
+    // Call the `checkIfExists` function when the component is rendered
     $: {
         checkIfExists(checkIfExistsString, false);
         checkIfExists(checkIfExistsString2, true);
     }
 
-    let visible: boolean = false;
-
     onMount(async () => {
         visible = true;
     });
 
+    // Async function to check if a string exists in the W2Vec vocabulary
     async function checkIfExists(checkIfExistsString: string, second: boolean) {
         if (second) {
             checkIfExistsValue2 = await provider.existsInW2vecVocabulary(
@@ -60,10 +62,12 @@
         }
     }
 
+    // Call the `doesNotMatch` function when the component is rendered
     $: {
         doesNotMatch(doesntMatchString);
     }
 
+    // Async function to check if a string does not match in the W2Vec vocabulary
     async function doesNotMatch(doesntMatchString: string) {
         let words: string[] = doesntMatchString.split(",");
         for (let i = 0; i < words.length; i++) {
@@ -73,10 +77,12 @@
         doesntMatchValue = res.replaceAll("_", " ");
     }
 
+    // Call the `x1IsToy2Likex2IsTo` function when the component is rendered
     $: {
         x1IsToy2Likex2IsTo(x1, y1, x2);
     }
 
+    // Async function to find the match given a relation and a new word
     async function x1IsToy2Likex2IsTo(x1: string, y1: string, x2: string) {
         x1IsValid = await provider.existsInW2vecVocabulary(
             preprocessString(x1)

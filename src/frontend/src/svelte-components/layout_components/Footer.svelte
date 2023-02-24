@@ -4,9 +4,6 @@
 
     // Define a variable for the background color of the footer
     export let color = "";
-
-    // Create a variable for the class name for the background color
-    let bg_color = "bg-" + color;
 </script>
 
 

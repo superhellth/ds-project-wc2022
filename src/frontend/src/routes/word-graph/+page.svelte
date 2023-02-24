@@ -26,6 +26,7 @@
 
     let provider = MiddlewareProvider.getInstance();
 
+    // Declare variables for use in the component
     let renderer: Sigma;
     let displayGraph: Graph;
     let originalGraph: Graph = new Graph();
