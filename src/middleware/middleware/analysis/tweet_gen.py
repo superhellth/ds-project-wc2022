@@ -24,7 +24,7 @@ class TweetGenerator:
         """
         current_words = current_string.split()
         if n > 1:
-            current_last_words = " ".join(current_words[-(n-1):])
+            current_last_words = " ".join(current_words[-(n - 1):])
         else:
             current_last_words = ""
         next_n_gram = self.stat_provider.get_n_gram_that(

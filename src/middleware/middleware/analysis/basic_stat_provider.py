@@ -1,5 +1,6 @@
 from middleware.analysis.tweet_provider import TweetProvider
 
+
 class BasicStatProvider:
     """Provides basic statistics about our tweet corpus.
     """
@@ -18,7 +19,7 @@ class BasicStatProvider:
         """
         res = self.es_client.search(index="tweets", query=query, size=0, track_total_hits=True, timeout="1m")
         return res["hits"]["total"]["value"]
-    
+
     def get_histogram(self, field, interval, histogram_type="histogram"):
         """Calculate histogram on a specified field.
 

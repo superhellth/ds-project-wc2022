@@ -68,7 +68,8 @@ class BERTSentiment(SentimentBase, ABC):
 
     def train_and_save_model(self):
         self.tokenizer = AutoTokenizer.from_pretrained("cardiffnlp/twitter-roberta-base-sentiment-latest")
-        self.model = AutoModelForSequenceClassification.from_pretrained("cardiffnlp/twitter-roberta-base-sentiment-latest")
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            "cardiffnlp/twitter-roberta-base-sentiment-latest")
         self.pipe = pipeline("sentiment-analysis", model=self.model, tokenizer=self.tokenizer, max_length=512,
                              truncation=True)
         self.did_train = True

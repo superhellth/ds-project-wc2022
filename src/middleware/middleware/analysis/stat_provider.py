@@ -2,6 +2,7 @@ import json
 import ast
 import spacy
 
+
 class StatProvider:
     """Provides dicts and lists of n-grams and collocations. Also filters n-grams and collocations."""
 
@@ -23,9 +24,9 @@ class StatProvider:
         Args:
             n (int): n-gram size.
         """
-        f = open(self.path_to_data_files + self.n_gram_files[n-1], "r", encoding="utf_8")
+        f = open(self.path_to_data_files + self.n_gram_files[n - 1], "r", encoding="utf_8")
         n_gram_dict = json.loads(f.read())
-        self.n_grams[n-1] = n_gram_dict
+        self.n_grams[n - 1] = n_gram_dict
 
     def load_collocation_counts(self, window_size):
         """Loads collocations*.json into dict.
@@ -61,9 +62,9 @@ class StatProvider:
         Returns:
             dict: dict of n-grams. Keys are the n-grams as tuple. For unigrams keys are just strings. Values are their respective counts.
         """
-        if not self.n_grams[n-1]:
+        if not self.n_grams[n - 1]:
             self.load_n_grams(n)
-        return self.n_grams[n-1]
+        return self.n_grams[n - 1]
 
     def get_collocations_as_dict(self, window_size):
         """Return complete dict of collocation counts.
@@ -97,9 +98,9 @@ class StatProvider:
         Returns:
             list: List of n-grams and their counts sorted by count.
         """
-        if not self.sorted_n_grams[n-1]:
-            self.sorted_n_grams[n-1] = sorted(self.get_n_grams_as_dict(n).items(), key=lambda x: x[1], reverse=True)
-        return self.sorted_n_grams[n-1]
+        if not self.sorted_n_grams[n - 1]:
+            self.sorted_n_grams[n - 1] = sorted(self.get_n_grams_as_dict(n).items(), key=lambda x: x[1], reverse=True)
+        return self.sorted_n_grams[n - 1]
 
     def filter_stop_words(self, n_gram_list):
         """Filter out n-grams containing at least one stop word from an n-gram list.
@@ -132,7 +133,8 @@ class StatProvider:
             list: List of collocations and their counts sorted by count.
         """
         if not self.sorted_collocation_counts[window_size - 2]:
-            self.sorted_collocation_counts[window_size - 2] = sorted(self.get_collocations_as_dict(window_size).items(), key=lambda x: x[1], reverse=True)
+            self.sorted_collocation_counts[window_size - 2] = sorted(self.get_collocations_as_dict(window_size).items(),
+                                                                     key=lambda x: x[1], reverse=True)
         return self.sorted_collocation_counts[window_size - 2]
 
     def get_ne_collocations_as_list(self):
@@ -142,7 +144,8 @@ class StatProvider:
             list: containing tuples of collocations and their counts. Sorted by counts desc.
         """
         if not self.sorted_ne_collocation_counts:
-            self.sorted_ne_collocation_counts = sorted(self.get_ne_collocations_as_dict().items(), key=lambda x: x[1], reverse=True)
+            self.sorted_ne_collocation_counts = sorted(self.get_ne_collocations_as_dict().items(), key=lambda x: x[1],
+                                                       reverse=True)
         return self.sorted_ne_collocation_counts
 
     def get_n_gram_that(self, n, starts_with, not_in=[], top_percent=0.2):

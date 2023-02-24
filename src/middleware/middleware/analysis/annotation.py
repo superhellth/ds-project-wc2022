@@ -23,7 +23,7 @@ def load_more_tweets():
     global tweets
     num_classified = len(df_class["tweet_id"].tolist())
     tweets += provider.get_tweet_list(size=300, body={"from": num_classified, "query": {
-                                      "match_all": {}}, "sort": {"author.username": "asc"}})
+        "match_all": {}}, "sort": {"author.username": "asc"}})
 
 
 load_more_tweets()
@@ -126,9 +126,11 @@ label_button_dict = dict()
 for label_id, label_text in LABELS.items():
     def make_lambda(label):
         return lambda event=None: toggle_label(label)
+
+
     window.bind(str(label_id), make_lambda(label_text))
     button = tk.Button(master=window, text=str(label_id) +
-                       ": " + label_text, command=make_lambda(label_text))
+                                           ": " + label_text, command=make_lambda(label_text))
     label_button_dict[label_text] = button
 
 label_button_dict["positive"].grid(row=START_ROW + 4, column=CENTER_COLUMN - 1)

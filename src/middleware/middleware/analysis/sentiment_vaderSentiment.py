@@ -50,4 +50,3 @@ class VaderSentiment(SentimentBase, ABC):
         No training required.
         """
         self.did_train = True
-

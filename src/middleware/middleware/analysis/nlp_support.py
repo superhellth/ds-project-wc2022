@@ -13,7 +13,7 @@ class CorpusAnalyzer:
 
         # tokenization
         self.nlp = spacy.load("en_core_web_sm", disable=[
-                              "ner", "tagger", "lemmatizer", "parser"])
+            "ner", "tagger", "lemmatizer", "parser"])
         self.ner_nlp = spacy.load("en_core_web_sm", disable=["lemmatizer", "tagger", "parser"])
         self.HASHTAG_SUBSTITUTE = "dswcprojecthashtag"
 
@@ -74,7 +74,6 @@ class CorpusAnalyzer:
                   and '\n' not in token]
         # Remove any token of length less than 1
         tokens = [token for token in tokens if len(token) > 1]
-
 
         return tokens
 
@@ -223,7 +222,7 @@ class CorpusAnalyzer:
         self.execute_task(self.count_nes_collocations, num_threads, batch_size, num_tweets)
         print()
         return self.counts
-    
+
     def generate_nes_counts(self, batch_size=1000, num_tweets=-1, num_threads=multiprocessing.cpu_count()):
         """Generate named entity counts from the corpus.
         Args:
@@ -239,4 +238,3 @@ class CorpusAnalyzer:
         self.execute_task(self.count_nes, num_threads, batch_size, num_tweets)
         print()
         return self.counts
-    

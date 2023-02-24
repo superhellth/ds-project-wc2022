@@ -48,7 +48,8 @@ class Embedder:
                     print(f"Loaded {i} Tweets from file...")
 
         # write into linesentence format without phrases
-        with open(self.path_to_embed_files + "tokenized_tweets_nostop_nohashtag.linesentence", "w", encoding="utf_8") as f:
+        with open(self.path_to_embed_files + "tokenized_tweets_nostop_nohashtag.linesentence", "w",
+                  encoding="utf_8") as f:
             for tweet in tweet_list:
                 f.write(" ".join(tweet) + "\n")
 
@@ -57,12 +58,13 @@ class Embedder:
                               "tokenized_tweets_nostop_nohashtag.linesentence", limit=limit)
         phrases = Phrases(stream, min_count=min_count, threshold=threshold)
         file_name = "tweet_phrases_nostop_nohashtag_mc=" + \
-            str(min_count) + "_th=" + str(threshold) + ".linesentence"
+                    str(min_count) + "_th=" + str(threshold) + ".linesentence"
         with open(self.path_to_embed_files + file_name, "w", encoding="utf_8") as f:
             for tweet in stream:
                 f.write(" ".join(phrases[tweet]) + "\n")
 
-    def create_w2vec_model(self, min_count=2, vector_size=100, alpha=0.03, negative=20, window=3, min_alpha=0.0001, workers=4, sample=6e-5, epochs=100):
+    def create_w2vec_model(self, min_count=2, vector_size=100, alpha=0.03, negative=20, window=3, min_alpha=0.0001,
+                           workers=4, sample=6e-5, epochs=100):
         """Create and train Word2Vec model with the given parameters.
 
         Args:
@@ -99,7 +101,6 @@ class Embedder:
         color_list = ["green"]
 
         embs = np.append(embs, [model.wv[word]], axis=0)
-
 
         close_words = model.wv.most_similar(word, topn=num_closest)
         # adds the vector for each of the closest words to the array
@@ -152,7 +153,7 @@ class Embedder:
                     weight="normal"
                     ).set_size(15)
 
-        plt.xlim(Y[:, 0].min()-50, Y[:, 0].max()+50)
-        plt.ylim(Y[:, 1].min()-50, Y[:, 1].max()+50)
+        plt.xlim(Y[:, 0].min() - 50, Y[:, 0].max() + 50)
+        plt.ylim(Y[:, 1].min() - 50, Y[:, 1].max() + 50)
 
         plt.title("t-SNE visualization for {}".format(word.title()))
