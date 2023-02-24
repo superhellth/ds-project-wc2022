@@ -22,11 +22,11 @@ try:
     ES_PASSWD = os.getenv("ES_PASSWD")
 except:
     print("Error.")
-    print("You have to provide the following environment variables: BEARER_TOKEN, ES_URL, ES_INDEX, ES_USERNAME, ES_PASSWD either as dotenv file or by setting the manually.")
+    print(
+        "You have to provide the following environment variables: BEARER_TOKEN, ES_URL, ES_INDEX, ES_USERNAME, ES_PASSWD either as dotenv file or by setting the manually.")
     sys.exit()
 
 print("Successfully read environment variables!")
-
 
 # elasticsearch instancing
 es_client = elasticsearch.Elasticsearch(ES_URL, http_auth=(ES_USERNAME, ES_PASSWD))
@@ -89,9 +89,10 @@ async def start_stream():
     """Starts the stream"""
     stream_client.filter(tweet_fields=["attachments", "author_id", "context_annotations", "conversation_id",
                                        "created_at", "edit_controls", "entities", "in_reply_to_user_id", "lang",
-                                       "possibly_sensitive", "public_metrics", "referenced_tweets", "reply_settings", "source", "withheld"],
+                                       "possibly_sensitive", "public_metrics", "referenced_tweets", "reply_settings",
+                                       "source", "withheld"],
                          user_fields=["created_at", "description", "entities", "location",
-                                                    "pinned_tweet_id", "profile_image_url", "protected",
+                                      "pinned_tweet_id", "profile_image_url", "protected",
                                       "public_metrics", "url", "verified", "withheld"],
                          expansions="author_id",
                          threaded=True)

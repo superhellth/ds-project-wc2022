@@ -18,7 +18,7 @@ class ElasticStreamClient(tweepy.StreamingClient):
         self.count += 1
         print(f"Tweet received! This is number {self.count}")
         raw_data = json.loads(raw_data)
-        try: 
+        try:
             tweet = twitter_tweet.Tweet(raw_data)
             resp = self.es_client.index(
                 index=self.index_name, document=tweet.get_as_es_doc(), id=tweet.get_id())
