@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import {onMount} from "svelte";
     import Sigma from "sigma";
     import Graph from "graphology";
     import {
@@ -22,7 +22,7 @@
     } from "sigma/types.js";
     import Loading from "src/svelte-components/Loading.svelte";
     import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
-    import { fly } from "svelte/transition";
+    import {fly} from "svelte/transition";
 
     let provider = MiddlewareProvider.getInstance();
 
@@ -83,7 +83,8 @@
         // State derived from hovered node:
         hoveredNeighbors?: Set<string>;
     }
-    const state: State = { searchQuery: "" };
+
+    const state: State = {searchQuery: ""};
     let searchInput: any;
     let searchSuggestions: any;
 
@@ -101,7 +102,7 @@
                     id: n,
                     label: displayGraph.getNodeAttribute(n, "label") as string,
                 }))
-                .filter(({ label }) => label.toLowerCase().includes(lcQuery));
+                .filter(({label}) => label.toLowerCase().includes(lcQuery));
 
             // If we have a single perfect match, them we remove the suggestions, and
             // we consider the user has selected a node through the datalist
@@ -121,7 +122,7 @@
             // Else, we display the suggestions list:
             else {
                 state.selectedNode = undefined;
-                state.suggestions = new Set(suggestions.map(({ id }) => id));
+                state.suggestions = new Set(suggestions.map(({id}) => id));
             }
         }
         // If the query is empty, then we reset the selectedNode / suggestions state:
@@ -163,7 +164,7 @@
         );
 
         const Graph = await import("graphology").then((m) => m.default);
-        const { parse } = await import("graphology-gexf/browser");
+        const {parse} = await import("graphology-gexf/browser");
         displayGraph = parse(Graph, text);
 
         displayGraph.forEachNode((node, attributes) => {
@@ -190,7 +191,7 @@
             maxCameraRatio: 10,
         });
 
-        renderer.on("enterNode", ({ node }) => {
+        renderer.on("enterNode", ({node}) => {
             setHoveredNode(node);
         });
         renderer.on("leaveNode", () => {
@@ -198,7 +199,7 @@
         });
 
         renderer.setSetting("nodeReducer", (node, data) => {
-            const res: Partial<NodeDisplayData> = { ...data };
+            const res: Partial<NodeDisplayData> = {...data};
 
             if (
                 state.hoveredNeighbors &&
@@ -225,7 +226,7 @@
         // 2. If there is a query, the edge is only visible if it connects two
         //    suggestions
         renderer.setSetting("edgeReducer", (edge, data) => {
-            const res: Partial<EdgeDisplayData> = { ...data };
+            const res: Partial<EdgeDisplayData> = {...data};
 
             if (
                 state.hoveredNode &&
@@ -358,7 +359,7 @@
         );
 
         const Graph = await import("graphology").then((m) => m.default);
-        const { parse } = await import("graphology-gexf/browser");
+        const {parse} = await import("graphology-gexf/browser");
         let newGraph = parse(Graph, text);
 
         displayGraph.forEachEdge((edge) => displayGraph.dropEdge(edge));
@@ -396,10 +397,13 @@
 <div style="display: flex; justify-content: space-between">
     <h1>Named Entities</h1>
     <Button
-        type="button"
-        style="background: rgba(0,0,0,0); color: var(--text-color); border: 0px"
-        on:click={() => (controlsAreOpen = !controlsAreOpen)}
-        ><Icon name="gear" /> Settings</Button
+            type="button"
+            style="background: rgba(0,0,0,0); color: var(--text-color); border: 0px"
+            on:click={() => (controlsAreOpen = !controlsAreOpen)}
+    >
+        <Icon name="gear"/>
+        Settings
+    </Button
     >
 </div>
 <Breadcrumb style="float: clear">
@@ -410,25 +414,25 @@
 </Breadcrumb>
 {#if visible}
     <div
-        id="search2"
-        style="position: absolute; top: 8em; right: 30em; z-index: 1"
-        in:fly={{ y: 400, duration: 1000, delay: 1400 }}
+            id="search2"
+            style="position: absolute; top: 8em; right: 30em; z-index: 1"
+            in:fly={{ y: 400, duration: 1000, delay: 1400 }}
     >
         <input
-            style="width: 15em"
-            type="search"
-            id="search2-input"
-            list="suggestions"
-            placeholder="Try searching for a node..."
+                style="width: 15em"
+                type="search"
+                id="search2-input"
+                list="suggestions"
+                placeholder="Try searching for a node..."
         />
-        <datalist id="suggestions2" />
+        <datalist id="suggestions2"/>
     </div>
 {/if}
 <div id="graph-container2">
     {#if visible}
         <div
-            id="sigma-container2"
-            in:fly={{ y: 400, duration: 1000, delay: 1000 }}
+                id="sigma-container2"
+                in:fly={{ y: 400, duration: 1000, delay: 1000 }}
         />
         <div id="cluster-div2" in:fly={{ x: 400, duration: 1000, delay: 100 }}>
             <Form>
@@ -450,7 +454,7 @@
                                 </ul>
                             </AccordionItem>
                         {:else}
-                            <Loading displayString="Cluster" />
+                            <Loading displayString="Cluster"/>
                         {/each}
                     </Accordion>
                 </FormGroup>
@@ -464,19 +468,19 @@
             <FormGroup>
                 <Label for="edgeThreshold">% of Edges to display</Label>
                 <Input
-                    type="range"
-                    name="range"
-                    id="edgeThreshold"
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    bind:value={threshold}
+                        type="range"
+                        name="range"
+                        id="edgeThreshold"
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        bind:value={threshold}
                 />
                 <Input
-                    id="edgelessNodes"
-                    type="checkbox"
-                    label="Display Nodes without Edges"
-                    bind:checked={displayEdgelessNodes}
+                        id="edgelessNodes"
+                        type="checkbox"
+                        label="Display Nodes without Edges"
+                        bind:checked={displayEdgelessNodes}
                 />
             </FormGroup>
         </Form>
@@ -534,21 +538,21 @@
     this graph. There is not too much additional information to be found.
 </p>
 <Modal
-    isOpen={controlsAreOpen}
-    toggle={() => (controlsAreOpen = !controlsAreOpen)}
+        isOpen={controlsAreOpen}
+        toggle={() => (controlsAreOpen = !controlsAreOpen)}
 >
     <div id="graph-chooser" style="margin: 2em">
         <Form>
             <legend>Filtering</legend>
             <FormGroup>
                 <Label for="num-edges-select"
-                    >Number of edges(collocations)</Label
+                >Number of edges(collocations)</Label
                 >
                 <Input
-                    type="select"
-                    name="select"
-                    id="num-edges-select"
-                    bind:value={numEdges}
+                        type="select"
+                        name="select"
+                        id="num-edges-select"
+                        bind:value={numEdges}
                 >
                     {#each numEdgesOptions as numEdges_}
                         <option>{numEdges_}</option>
@@ -559,17 +563,17 @@
                 <Label>Entity types</Label>
                 {#each Array.from(neTypeSelection.keys()) as neType}
                     <Input
-                        id={neType + "cx"}
-                        type="checkbox"
-                        label={neType}
-                        on:input={() => {
+                            id={neType + "cx"}
+                            type="checkbox"
+                            label={neType}
+                            on:input={() => {
                             neTypeSelection.set(
                                 neType,
                                 !neTypeSelection.get(neType)
                             );
                             neTypeSelection = neTypeSelection;
                         }}
-                        checked={neTypeSelection.get(neType)}
+                            checked={neTypeSelection.get(neType)}
                     />
                 {/each}
             </FormGroup>
@@ -579,10 +583,10 @@
             <FormGroup>
                 <Label for="n-clusters-select"># of clusters</Label>
                 <Input
-                    type="select"
-                    name="select"
-                    id="n-clusters-select"
-                    bind:value={nClusters}
+                        type="select"
+                        name="select"
+                        id="n-clusters-select"
+                        bind:value={nClusters}
                 >
                     {#each nClustersOptions as nClusters_}
                         <option>{nClusters_}</option>
@@ -591,19 +595,22 @@
             </FormGroup>
         </Form>
         <Button
-            type="button"
-            on:click={() => rebuildGraph()}
-            style="background: blue">Rebuild Graph</Button
+                type="button"
+                on:click={() => rebuildGraph()}
+                style="background: blue">Rebuild Graph
+        </Button
         >
         {#if loading}
-            <Loading displayString="graph" />
+            <Loading displayString="graph"/>
         {/if}
         <p>
-            <br /><Icon name="exclamation-octagon-fill" class="hint" /> Note: We
+            <br/>
+            <Icon name="exclamation-octagon-fill" class="hint"/>
+            Note: We
             provided files for the unclustered graph in the following configurations:
-            <br />1. 10000 Edges
-            <br />2. 25000 Edges
-            <br />Graphs with the other number of Edges can be generated,
+            <br/>1. 10000 Edges
+            <br/>2. 25000 Edges
+            <br/>Graphs with the other number of Edges can be generated,
             however this could take a while. Applying custom clustering(only
             changing 'Clustering' settings) should be viable and normally should
             not take too long.
@@ -612,19 +619,21 @@
 </Modal>
 
 <style lang="scss">
-    #sigma-container2 {
-        width: 100%;
-        height: 41em;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        margin-right: 2em;
-    }
-    #graph-container2 {
-        display: flex;
-        justify-content: space-around;
-    }
-    #cluster-div2 {
-        min-width: 25em;
-    }
+  #sigma-container2 {
+    width: 100%;
+    height: 41em;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    margin-right: 2em;
+  }
+
+  #graph-container2 {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #cluster-div2 {
+    min-width: 25em;
+  }
 </style>

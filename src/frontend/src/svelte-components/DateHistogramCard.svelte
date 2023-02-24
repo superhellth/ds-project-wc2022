@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { Chart } from "chart.js/auto";
+    import {Chart} from "chart.js/auto";
     import ChartCard from "src/svelte-components/ChartCard.svelte";
     import Loading from "src/svelte-components/Loading.svelte";
     import ElasticProvider from "src/typescript/api_connections/middlewareConnection";
-    import { onMount } from "svelte";
-    import { Col, Input, Row } from "sveltestrap";
+    import {onMount} from "svelte";
+    import {Col, Input, Row} from "sveltestrap";
 
     // Chart
     let chart: Chart;
@@ -76,9 +76,9 @@
             <Row>
                 <Col>
                     <Input
-                        type="switch"
-                        label="Line Graph"
-                        on:input={onLineToggle}
+                            type="switch"
+                            label="Line Graph"
+                            on:input={onLineToggle}
                     />
                 </Col>
             </Row>

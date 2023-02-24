@@ -25,8 +25,7 @@ class MiddlewareProvider extends Connection {
      */
     public async queryESRaw(query: string): Promise<any> {
         // async request
-        let data = await fetch(this.URL + "/query/raw?query=" + query).
-            then((response) => response.json());
+        let data = await fetch(this.URL + "/query/raw?query=" + query).then((response) => response.json());
         return data;
     }
 
@@ -37,8 +36,7 @@ class MiddlewareProvider extends Connection {
      */
     public async getTweetsThat(query: string): Promise<Array<Tweet>> {
         // async request
-        let data = await fetch(this.URL + "/query?query=" + query).
-            then((response) => response.json());
+        let data = await fetch(this.URL + "/query?query=" + query).then((response) => response.json());
 
         // convert to classes
         data = data.hits;
@@ -47,7 +45,9 @@ class MiddlewareProvider extends Connection {
             tweetList.push(Tweet.fromJson(data[i]));
         }
 
-        tweetList.sort(function (tweetA, tweetB) { return tweetB.getCreatedAt() - tweetA.getCreatedAt() });
+        tweetList.sort(function (tweetA, tweetB) {
+            return tweetB.getCreatedAt() - tweetA.getCreatedAt()
+        });
 
         return tweetList;
     }
@@ -63,8 +63,7 @@ class MiddlewareProvider extends Connection {
             \t\t"id": ` + id + `
             \t}
             }}`;
-        let data = await fetch(this.URL + "/query?query=" + query).
-            then((response) => response.json());
+        let data = await fetch(this.URL + "/query?query=" + query).then((response) => response.json());
         data = data.hits;
         return Tweet.fromJson(data[0])
     }
@@ -76,8 +75,7 @@ class MiddlewareProvider extends Connection {
      */
     public async getNumberOfTweets(query: string): Promise<number> {
         // async request
-        let data = await fetch(this.URL + "/query?query=" + query).
-            then((response) => response.json());
+        let data = await fetch(this.URL + "/query?query=" + query).then((response) => response.json());
 
         return data.counts;
     }
@@ -89,8 +87,7 @@ class MiddlewareProvider extends Connection {
      * @returns Map from date to tweet count.
      */
     public async getDateHistogram(field: string, interval: string): Promise<Map<Date, number>> {
-        const data = await fetch(this.URL + "/statistics/histogram?histogram_type=date_histogram&interval=" + interval + "&field=" + field).
-            then((response) => response.json());
+        const data = await fetch(this.URL + "/statistics/histogram?histogram_type=date_histogram&interval=" + interval + "&field=" + field).then((response) => response.json());
 
         const map: Map<Date, number> = new Map(Object.entries(data).map(([key, value]) => [new Date(key), Number(value)]));
 
@@ -104,8 +101,7 @@ class MiddlewareProvider extends Connection {
      * @returns Histogram as Map<string, number>.
      */
     public async getTermHistogram(field: string, size: number): Promise<Map<string, number>> {
-        const data = await fetch(this.URL + "/statistics/histogram?histogram_type=terms&interval=" + size + "&field=" + field).
-            then((response) => response.json());
+        const data = await fetch(this.URL + "/statistics/histogram?histogram_type=terms&interval=" + size + "&field=" + field).then((response) => response.json());
 
         const map: Map<string, number> = new Map(Object.entries(data).map(([key, value]) => [String(key), Number(value)]));
 
@@ -265,7 +261,7 @@ class MiddlewareProvider extends Connection {
         const response = await fetch(queryURL, {
             method: "POST",
             body: JSON.stringify(tweetsList),
-            headers: { "Content-Type": "application/json" },
+            headers: {"Content-Type": "application/json"},
         });
         return await response.json();
     }
@@ -274,8 +270,8 @@ class MiddlewareProvider extends Connection {
         const queryURL = this.URL + '/analysis/sentiment/tweet';
         const response = await fetch(queryURL, {
             method: "POST",
-            body: JSON.stringify({ tweet_text: tweet }),
-            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({tweet_text: tweet}),
+            headers: {"Content-Type": "application/json"},
         });
         return await response.json();
     }

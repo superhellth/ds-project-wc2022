@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { Chart } from "chart.js/auto";
+    import {Chart} from "chart.js/auto";
     import ChartCard from "src/svelte-components/ChartCard.svelte";
     import Loading from "src/svelte-components/Loading.svelte";
-    import { onMount } from "svelte";
+    import {onMount} from "svelte";
 
     // Chart
     let chart: any;
@@ -52,7 +52,7 @@
 </script>
 
 {#await onMount}
-    <Loading displayString="Graph" />
+    <Loading displayString="Graph"/>
 {:then ignored}
-    <ChartCard {header} {footer} chart_id={chartID} />
+    <ChartCard {header} {footer} chart_id={chartID}/>
 {/await}

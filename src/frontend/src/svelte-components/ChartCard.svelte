@@ -8,9 +8,11 @@
 </script>
 
 <BasicCard {header} {footer}>
-    <div slot="card-header-controls"><slot name="card-header-controls" /></div>
+    <div slot="card-header-controls">
+        <slot name="card-header-controls"/>
+    </div>
 
     <div slot="body">
-        <canvas id={chart_id} />
+        <canvas id={chart_id}/>
     </div>
 </BasicCard>

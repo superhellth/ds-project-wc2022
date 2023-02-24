@@ -1,6 +1,6 @@
 <script lang="ts">
     import CountTable from "./CountTable.svelte";
-    import { Input } from "sveltestrap";
+    import {Input} from "sveltestrap";
     import BasicCard from "./BasicCard.svelte";
     import Loading from "./Loading.svelte";
 
@@ -25,16 +25,16 @@
 </script>
 
 {#await readyPromise}
-    <Loading displayString={header} />
+    <Loading displayString={header}/>
 {:then ignored}
     <BasicCard {header} {footer}>
         <div slot="card-header-controls">
             <Input
-                color="dark"
-                type="select"
-                name="select"
-                style="width: 5em"
-                bind:value={displayedRows}
+                    color="dark"
+                    type="select"
+                    name="select"
+                    style="width: 5em"
+                    bind:value={displayedRows}
             >
                 {#each options as option}
                     <option>{option}</option>
@@ -42,13 +42,13 @@
             </Input>
             {#if showStopWordSwitch}
                 <Input
-                    id="c3"
-                    type="switch"
-                    label="Include Stop Words"
-                    bind:checked={includeStopWords}
+                        id="c3"
+                        type="switch"
+                        label="Include Stop Words"
+                        bind:checked={includeStopWords}
                 />
             {/if}
         </div>
-        <CountTable map={countMap} keyColumnName={keyColumnName} slot="body" />
+        <CountTable map={countMap} keyColumnName={keyColumnName} slot="body"/>
     </BasicCard>
 {/await}

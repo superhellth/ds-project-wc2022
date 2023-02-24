@@ -50,96 +50,96 @@
 
 <div id="layoutSidenav_nav" class="sb-nav-fixed">
     <Nav
-        class="sb-sidenav {sidenav_theme} accordion sb-nav-fixed"
-        id="sidenavAccordion" style="background-color: var(--side-bar-color)"
+            class="sb-sidenav {sidenav_theme} accordion sb-nav-fixed"
+            id="sidenavAccordion" style="background-color: var(--side-bar-color)"
     >
         <div class="sb-sidenav-menu">
             <Nav>
                 <div class="sb-sidenav-menu-heading">Overview</div>
                 <SidebarItem
-                    on:press={() => {
+                        on:press={() => {
                         theme = "dark";
                     }}
-                    text="Home"
-                    href="/"
-                    iconName="house-heart-fill"
+                        text="Home"
+                        href="/"
+                        iconName="house-heart-fill"
                 />
                 <SidebarItem
-                    on:press={() => {
+                        on:press={() => {
                         theme = "dark";
                     }}
-                    text="Twitter Feed"
-                    href="/overview"
-                    iconName="twitter"
+                        text="Twitter Feed"
+                        href="/overview"
+                        iconName="twitter"
                 />
 
                 <div class="sb-sidenav-menu-heading">Statistics</div>
                 <SidebarItem
-                    on:press={() => {
+                        on:press={() => {
                         theme = "dark";
                     }}
-                    text="Collected Data"
-                    href="/statistics"
-                    iconName="graph-up"
+                        text="Collected Data"
+                        href="/statistics"
+                        iconName="graph-up"
                 />
                 <SidebarItem
-                    on:press={() => {
+                        on:press={() => {
                         theme = "dark";
                     }}
-                    text="Unigrams insights"
-                    href="/statistics/unigram-insights"
-                    iconName="input-cursor-text"
+                        text="Unigrams insights"
+                        href="/statistics/unigram-insights"
+                        iconName="input-cursor-text"
                 />
                 <div class="sb-sidenav-menu-heading">Text Analytics</div>
                 <SidebarItem
-                    on:press={() => {
+                        on:press={() => {
                         theme = "dark";
                     }}
-                    text="Word Graph"
-                    href="/word-graph"
-                    iconName="bounding-box"
+                        text="Word Graph"
+                        href="/word-graph"
+                        iconName="bounding-box"
                 />
                 <SidebarItem
-                    on:press={() => {
+                        on:press={() => {
                         theme = "dark";
                     }}
-                    text="Named entity Graph"
-                    href="/ne-graph"
-                    iconName="bounding-box"
+                        text="Named entity Graph"
+                        href="/ne-graph"
+                        iconName="bounding-box"
                 />
                 <SidebarItem
-                    on:press={() => {
+                        on:press={() => {
                         theme = "dark";
                     }}
-                    text="Sentiment Analysis"
-                    href="/sentiment-analysis"
-                    iconName="emoji-smile-upside-down"
+                        text="Sentiment Analysis"
+                        href="/sentiment-analysis"
+                        iconName="emoji-smile-upside-down"
                 />
                 <SidebarItem
-                    on:press={() => {
+                        on:press={() => {
                         theme = "dark";
                     }}
-                    text="Word embeddings"
-                    href="/word-embedding"
-                    iconName="body-text"
+                        text="Word embeddings"
+                        href="/word-embedding"
+                        iconName="body-text"
                 />
                 <div class="sb-sidenav-menu-heading">Settings</div>
                 <SidebarItem
-                    on:press={() => {
+                        on:press={() => {
                         theme = "dark";
                     }}
-                    text="Stream control"
-                    href="/settings"
-                    iconName="gear"
+                        text="Stream control"
+                        href="/settings"
+                        iconName="gear"
                 />
                 <div class="sb-sidenav-menu-heading">Experimental</div>
                 <SidebarItem
-                    on:press={() => {
+                        on:press={() => {
                         theme = "dark";
                     }}
-                    text="Tweet Generation"
-                    href="/tweet-gen"
-                    iconName="gear"
+                        text="Tweet Generation"
+                        href="/tweet-gen"
+                        iconName="gear"
                 />
                 <!--<SidebarItem
                         on:press={toggleLayout}

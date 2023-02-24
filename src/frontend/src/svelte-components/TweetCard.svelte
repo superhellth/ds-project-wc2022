@@ -40,11 +40,11 @@
         <!-- Add a class to the div, which will be used to apply the hover effect -->
         <!-- svelte-ignore a11y-mouse-events-have-key-events -->
         <div
-            on:mouseover={() => {
+                on:mouseover={() => {
                 onOver();
             }}
-            class="{shadow} bg-tweet hover-effect"
-            on:mouseleave={() => {
+                class="{shadow} bg-tweet hover-effect"
+                on:mouseleave={() => {
                 onLeave();
             }}
         >
@@ -55,7 +55,7 @@
                         <!-- Wrap the image in a div to properly size it -->
                         <div>
                             <CardImg
-                                src={data.getAuthor().getProfileImageURL()}
+                                    src={data.getAuthor().getProfileImageURL()}
                             />
                         </div>
                     </Col>
@@ -66,8 +66,8 @@
                                 href="https://www.twitter.com/{data
                                     .getAuthor()
                                     .getUsername()}"
-                                >@{data.getAuthor().getUsername()}</a
-                            >)
+                        >@{data.getAuthor().getUsername()}</a
+                        >)
                         </h5>
                     </Col>
                 </Row>
@@ -75,7 +75,7 @@
                     <Row>
                         <p>
                             {data.getAuthor().getFollowerCount()} Follower
-                            <br />
+                            <br/>
                             {data.getAuthor().getTweetCount()} Tweets
                         </p>
                     </Row>
@@ -87,17 +87,18 @@
             </CardBody>
             <CardFooter>
                 {#if sentimentMethod != "None"}
-                {#await sentimentScore}
-                    <p>Fetching sentiment score...</p>
-                {:then sentScore} 
-                    <Progress value={(sentScore[sentimentMethodIndex] + 1) / 2 * 100} style="color: red">{sentScore[sentimentMethodIndex]}</Progress>
-                {/await}
+                    {#await sentimentScore}
+                        <p>Fetching sentiment score...</p>
+                    {:then sentScore}
+                        <Progress value={(sentScore[sentimentMethodIndex] + 1) / 2 * 100}
+                                  style="color: red">{sentScore[sentimentMethodIndex]}</Progress>
+                    {/await}
                 {/if}
                 <!-- Use an icon to indicate that this is a tweet, and the ageInHours method to show how long ago it was posted -->
-                <Icon name="twitter" />
+                <Icon name="twitter"/>
                 {data.getAgeInHours()} ago
                 {#if showDetails}
-                    <p><br />Score: {data.getScore()}</p>
+                    <p><br/>Score: {data.getScore()}</p>
                     <p>ID: {data.getID()}</p>
                 {/if}
             </CardFooter>

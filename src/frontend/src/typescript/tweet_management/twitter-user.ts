@@ -17,8 +17,9 @@ class TwitterUser {
     private username: string;
     private verified: boolean;
 
-    public constructor(created_at: Date, description: string, id: string, location: string, name: string, profile_image_url: string,
-        follower_count: number, following_count: number, tweet_count: number, listed_count: number, url: string, username: string, verified: boolean) {
+    public constructor(created_at: Date, description: string, id: string, location: string, name: string,
+                       profile_image_url: string, follower_count: number, following_count: number, tweet_count: number,
+                       listed_count: number, url: string, username: string, verified: boolean) {
         this.created_at = created_at;
         this.description = description;
         this.id = id;

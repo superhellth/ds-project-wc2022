@@ -2,8 +2,8 @@
     import Loading from "src/svelte-components/Loading.svelte";
     import TweetCard from "src/svelte-components/TweetCard.svelte";
     import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
-    import { onMount } from "svelte";
-    import { fade, fly } from "svelte/transition";
+    import {onMount} from "svelte";
+    import {fade, fly} from "svelte/transition";
     import {
         Breadcrumb,
         BreadcrumbItem,
@@ -132,7 +132,7 @@
                 <p style="margin: auto; width: 50%; text-align: center">
                     Distance between Words: ...
                 </p>
-                <Progress value={1} style="margin: auto; width: 50%;" />
+                <Progress value={1} style="margin: auto; width: 50%;"/>
             </div>
         {:then distance}
             <div style="margin: 1em" in:fade>
@@ -140,8 +140,8 @@
                     Distance between Words: {distance}
                 </p>
                 <Progress
-                    value={100 - distance * 100}
-                    style="margin: auto; width: 50%;"
+                        value={100 - distance * 100}
+                        style="margin: auto; width: 50%;"
                 />
             </div>
         {/await}
@@ -150,102 +150,102 @@
             <p style="margin: auto; width: 50%; text-align: center">
                 Distance between Words: ...
             </p>
-            <Progress value={1} style="margin: auto; width: 50%;" />
+            <Progress value={1} style="margin: auto; width: 50%;"/>
         </div>
     {/if}
     <div
-        style="display: flex; justify-content: space-evenly;"
-        in:fly={{ y: 400, duration: transDuration, delay: transDuration * 2 }}
+            style="display: flex; justify-content: space-evenly;"
+            in:fly={{ y: 400, duration: transDuration, delay: transDuration * 2 }}
     >
         <div style="width: 45%;">
             <Input
-                type="text"
-                bind:value={checkIfExistsString}
-                valid={checkIfExistsValue}
-                invalid={!checkIfExistsValue}
-                feedback={checkIfExistsValue
+                    type="text"
+                    bind:value={checkIfExistsString}
+                    valid={checkIfExistsValue}
+                    invalid={!checkIfExistsValue}
+                    feedback={checkIfExistsValue
                     ? "Embedding exists"
                     : "Embedding does not exist"}
             />
             {#if checkIfExistsValue}
                 <img
-                    src={provider.getTSNEPlotURL(
+                        src={provider.getTSNEPlotURL(
                         preprocessString(checkIfExistsString),
                         numCloseWords,
                         numFarWords,
                         "1"
                     )}
-                    alt="plot"
-                    style="width: 27em; height: 27em"
+                        alt="plot"
+                        style="width: 27em; height: 27em"
                 />
             {/if}
-            <br />
+            <br/>
             <Label>Number of close Words</Label>
             <Input
-                type="range"
-                name="range"
-                id="pos1"
-                min={2}
-                max={30}
-                step={1}
-                bind:value={numCloseWords}
-                placeholder="Range placeholder"
-            />
-            <Label>Number of far Words</Label>
-            <Input
-                type="range"
-                name="range"
-                id="neg1"
-                min={0}
-                max={30}
-                step={1}
-                bind:value={numFarWords}
-                placeholder="Range placeholder"
-            />
-        </div>
-        <div style="width: 45%;">
-            <Input
-                type="text"
-                bind:value={checkIfExistsString2}
-                valid={checkIfExistsValue2}
-                invalid={!checkIfExistsValue2}
-                feedback={checkIfExistsValue2
-                    ? "Embedding exists"
-                    : "Embedding does not exist"}
-            />
-            {#if checkIfExistsValue2}
-                <img
-                    src={provider.getTSNEPlotURL(
-                        preprocessString(checkIfExistsString2),
-                        numCloseWords2,
-                        numFarWords2,
-                        "2"
-                    )}
-                    alt="plot"
-                    style="width: 27em; height: 27em"
-                />
-                <br />
-                <Label>Number of close Words</Label>
-                <Input
                     type="range"
                     name="range"
                     id="pos1"
                     min={2}
                     max={30}
                     step={1}
-                    bind:value={numCloseWords2}
+                    bind:value={numCloseWords}
                     placeholder="Range placeholder"
-                />
-                <Label>Number of far Words</Label>
-                <Input
+            />
+            <Label>Number of far Words</Label>
+            <Input
                     type="range"
                     name="range"
                     id="neg1"
                     min={0}
                     max={30}
                     step={1}
-                    bind:value={numFarWords2}
+                    bind:value={numFarWords}
                     placeholder="Range placeholder"
+            />
+        </div>
+        <div style="width: 45%;">
+            <Input
+                    type="text"
+                    bind:value={checkIfExistsString2}
+                    valid={checkIfExistsValue2}
+                    invalid={!checkIfExistsValue2}
+                    feedback={checkIfExistsValue2
+                    ? "Embedding exists"
+                    : "Embedding does not exist"}
+            />
+            {#if checkIfExistsValue2}
+                <img
+                        src={provider.getTSNEPlotURL(
+                        preprocessString(checkIfExistsString2),
+                        numCloseWords2,
+                        numFarWords2,
+                        "2"
+                    )}
+                        alt="plot"
+                        style="width: 27em; height: 27em"
+                />
+                <br/>
+                <Label>Number of close Words</Label>
+                <Input
+                        type="range"
+                        name="range"
+                        id="pos1"
+                        min={2}
+                        max={30}
+                        step={1}
+                        bind:value={numCloseWords2}
+                        placeholder="Range placeholder"
+                />
+                <Label>Number of far Words</Label>
+                <Input
+                        type="range"
+                        name="range"
+                        id="neg1"
+                        min={0}
+                        max={30}
+                        step={1}
+                        bind:value={numFarWords2}
+                        placeholder="Range placeholder"
                 />
             {/if}
         </div>
@@ -255,10 +255,10 @@
             <FormGroup>
                 <h4>Doesn't match</h4>
                 <Input
-                    type="text"
-                    bind:value={doesntMatchString}
-                    feedback={doesntMatchValue + " does not match"}
-                    invalid={true}
+                        type="text"
+                        bind:value={doesntMatchString}
+                        feedback={doesntMatchValue + " does not match"}
+                        invalid={true}
                 />
             </FormGroup>
         </Form>
@@ -267,32 +267,32 @@
         <h4>x is to y like z is to...</h4>
         <Form inline>
             <Input
-                type="text"
-                bind:value={x1}
-                valid={x1IsValid}
-                invalid={!x1IsValid}
+                    type="text"
+                    bind:value={x1}
+                    valid={x1IsValid}
+                    invalid={!x1IsValid}
             />
             <Label style="margin: 5px">is to</Label>
             <Input
-                type="text"
-                bind:value={y1}
-                valid={y1IsValid}
-                invalid={!y1IsValid}
+                    type="text"
+                    bind:value={y1}
+                    valid={y1IsValid}
+                    invalid={!y1IsValid}
             />
             <Label style="margin: 5px">like</Label>
             <Input
-                type="text"
-                bind:value={x2}
-                valid={x2IsValid}
-                invalid={!x2IsValid}
+                    type="text"
+                    bind:value={x2}
+                    valid={x2IsValid}
+                    invalid={!x2IsValid}
             />
             <Label style="margin: 5px">is to</Label>
             <Input
-                type="text"
-                disabled
-                bind:value={y2[0][0]}
-                feedback={y2.slice(0, 3)}
-                valid
+                    type="text"
+                    disabled
+                    bind:value={y2[0][0]}
+                    feedback={y2.slice(0, 3)}
+                    valid
             />
         </Form>
     </div>
@@ -317,7 +317,7 @@
             a familiarity, however not a too close one. Furthermore let's just
             look at the close words of "Human Rights".
         </p>
-        <img src="human rights-tsne.png" style="width: 27em; height: 27em" />
+        <img src="human rights-tsne.png" style="width: 27em; height: 27em"/>
         <p>
             There we can see many obvious neighbors like "Rights Abuses" and
             "Migrant Workers" which shows that criticsim on the host nations
@@ -330,15 +330,15 @@
         <Row>
             {#each [1594350868870168576n, 1606283271431749632n, 1594686111485501441n, 1594302492866711552n] as id}
                 {#await provider.getTweetByID(id)}
-                    <Loading displayString="Tweet" />
+                    <Loading displayString="Tweet"/>
                 {:then tweet}
                     <Col>
                         <TweetCard
-                            data={tweet}
-                            showDetails={false}
-                            sentimentMethod="None"
-                            sentimentScore={0}
-                            sentimentMethodIndex={-1}
+                                data={tweet}
+                                showDetails={false}
+                                sentimentMethod="None"
+                                sentimentScore={0}
+                                sentimentMethodIndex={-1}
                         />
                     </Col>
                 {/await}

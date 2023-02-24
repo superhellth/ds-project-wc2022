@@ -48,7 +48,7 @@
                 data: vsSentData,
                 label: "VS Sent",
                 fill: false,
-            yAxisID: 'y2'
+                yAxisID: 'y2'
             });
         }
         if (useMethodBertSent) {
@@ -57,7 +57,7 @@
                 data: bertSentData,
                 label: "Bert Sent",
                 fill: false,
-            yAxisID: 'y2'
+                yAxisID: 'y2'
             });
         }
         if (useMethodLrcOwn) {
@@ -66,7 +66,7 @@
                 data: lrcOwnData,
                 label: "LRC Own",
                 fill: false,
-            yAxisID: 'y2'
+                yAxisID: 'y2'
             });
         }
         if (useMethodLrcOther) {
@@ -75,7 +75,7 @@
                 data: lrcOtherData,
                 label: "LRC Other",
                 fill: false,
-            yAxisID: 'y2'
+                yAxisID: 'y2'
             });
         }
 
@@ -110,72 +110,72 @@
         <div slot="card-header-controls">
             <div class="float-left">
                 <Row>
-                <Col>
-                    <FormGroup style="margin-left: 2em">
-                        <Label for="timeframe-select"><b>Timeframe selection</b></Label>
-                        <Input
-                            type="select"
-                            id="timeframe-select"
-                            on:change={() => updateChart()}
-                            bind:value={byTime}
-                        >
-                        {#each [{id: 0, text: 'by Days', cmd: 'by_days'},
-                                {id: 1, text: 'by Weeks', cmd: 'by_week'},
-                                {id: 2, text: 'by Months', cmd: 'by_month'}] as timeframe}
-                            <option value={timeframe.cmd}>{timeframe.text}</option>
-                        {/each}
-                    </Input>
-                    </FormGroup>
-                </Col>
-                <Col>
-                    <b class="inv">Sentiment methods</b>
-                    <Row>
                     <Col>
-                          <FormGroup>
+                        <FormGroup style="margin-left: 2em">
+                            <Label for="timeframe-select"><b>Timeframe selection</b></Label>
                             <Input
-                                    id="cvs"
-                                    type="checkbox"
-                                    label="vaderSentiment"
-                                    bind:checked={useMethodVsSent}
+                                    type="select"
+                                    id="timeframe-select"
                                     on:change={() => updateChart()}
-                            />
-                          </FormGroup>
+                                    bind:value={byTime}
+                            >
+                                {#each [{id: 0, text: 'by Days', cmd: 'by_days'},
+                                    {id: 1, text: 'by Weeks', cmd: 'by_week'},
+                                    {id: 2, text: 'by Months', cmd: 'by_month'}] as timeframe}
+                                    <option value={timeframe.cmd}>{timeframe.text}</option>
+                                {/each}
+                            </Input>
+                        </FormGroup>
                     </Col>
                     <Col>
-                          <FormGroup>
-                            <Input
-                                    id="ccother"
-                                    type="checkbox"
-                                    label="SGDClassifierOther"
-                                    bind:checked={useMethodLrcOther}
-                                    on:change={() => updateChart()}
-                            />
-                          </FormGroup>
+                        <b class="inv">Sentiment methods</b>
+                        <Row>
+                            <Col>
+                                <FormGroup>
+                                    <Input
+                                            id="cvs"
+                                            type="checkbox"
+                                            label="vaderSentiment"
+                                            bind:checked={useMethodVsSent}
+                                            on:change={() => updateChart()}
+                                    />
+                                </FormGroup>
+                            </Col>
+                            <Col>
+                                <FormGroup>
+                                    <Input
+                                            id="ccother"
+                                            type="checkbox"
+                                            label="SGDClassifierOther"
+                                            bind:checked={useMethodLrcOther}
+                                            on:change={() => updateChart()}
+                                    />
+                                </FormGroup>
+                            </Col>
+                            <Col>
+                                <FormGroup>
+                                    <Input
+                                            id="ccown"
+                                            type="checkbox"
+                                            label="SGDClassifierOwn"
+                                            bind:checked={useMethodLrcOwn}
+                                            on:change={() => updateChart()}
+                                    />
+                                </FormGroup>
+                            </Col>
+                            <Col>
+                                <FormGroup>
+                                    <Input
+                                            id="cbc"
+                                            type="checkbox"
+                                            label="BERT based Classifier"
+                                            bind:checked={useMethodBertSent}
+                                            on:change={() => updateChart()}
+                                    />
+                                </FormGroup>
+                            </Col>
+                        </Row>
                     </Col>
-                    <Col>
-                          <FormGroup>
-                            <Input
-                                    id="ccown"
-                                    type="checkbox"
-                                    label="SGDClassifierOwn"
-                                    bind:checked={useMethodLrcOwn}
-                                    on:change={() => updateChart()}
-                            />
-                          </FormGroup>
-                    </Col>
-                    <Col>
-                          <FormGroup>
-                            <Input
-                                    id="cbc"
-                                    type="checkbox"
-                                    label="BERT based Classifier"
-                                    bind:checked={useMethodBertSent}
-                                    on:change={() => updateChart()}
-                            />
-                          </FormGroup>
-                    </Col>
-                    </Row>
-                </Col>
                 </Row>
             </div>
         </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import {onMount} from "svelte";
     import Sigma from "sigma";
     import Graph from "graphology";
     import {
@@ -22,7 +22,7 @@
     } from "sigma/types.js";
     import Loading from "src/svelte-components/Loading.svelte";
     import MiddlewareProvider from "src/typescript/api_connections/middlewareConnection";
-    import { fly } from "svelte/transition";
+    import {fly} from "svelte/transition";
 
     let provider = MiddlewareProvider.getInstance();
 
@@ -72,7 +72,8 @@
         // State derived from hovered node:
         hoveredNeighbors?: Set<string>;
     }
-    const state: State = { searchQuery: "" };
+
+    const state: State = {searchQuery: ""};
     let searchInput: any;
     let searchSuggestions: any;
 
@@ -90,7 +91,7 @@
                     id: n,
                     label: displayGraph.getNodeAttribute(n, "label") as string,
                 }))
-                .filter(({ label }) => label.toLowerCase().includes(lcQuery));
+                .filter(({label}) => label.toLowerCase().includes(lcQuery));
 
             // If we have a single perfect match, them we remove the suggestions, and
             // we consider the user has selected a node through the datalist
@@ -110,7 +111,7 @@
             // Else, we display the suggestions list:
             else {
                 state.selectedNode = undefined;
-                state.suggestions = new Set(suggestions.map(({ id }) => id));
+                state.suggestions = new Set(suggestions.map(({id}) => id));
             }
         }
         // If the query is empty, then we reset the selectedNode / suggestions state:
@@ -152,7 +153,7 @@
         );
 
         const Graph = await import("graphology").then((m) => m.default);
-        const { parse } = await import("graphology-gexf/browser");
+        const {parse} = await import("graphology-gexf/browser");
         displayGraph = parse(Graph, text);
 
         displayGraph.forEachNode((node, attributes) => {
@@ -179,7 +180,7 @@
             maxCameraRatio: 10,
         });
 
-        renderer.on("enterNode", ({ node }) => {
+        renderer.on("enterNode", ({node}) => {
             setHoveredNode(node);
         });
         renderer.on("leaveNode", () => {
@@ -187,7 +188,7 @@
         });
 
         renderer.setSetting("nodeReducer", (node, data) => {
-            const res: Partial<NodeDisplayData> = { ...data };
+            const res: Partial<NodeDisplayData> = {...data};
 
             if (
                 state.hoveredNeighbors &&
@@ -214,7 +215,7 @@
         // 2. If there is a query, the edge is only visible if it connects two
         //    suggestions
         renderer.setSetting("edgeReducer", (edge, data) => {
-            const res: Partial<EdgeDisplayData> = { ...data };
+            const res: Partial<EdgeDisplayData> = {...data};
 
             if (
                 state.hoveredNode &&
@@ -327,7 +328,7 @@
         );
 
         const Graph = await import("graphology").then((m) => m.default);
-        const { parse } = await import("graphology-gexf/browser");
+        const {parse} = await import("graphology-gexf/browser");
         let newGraph = parse(Graph, text);
 
         displayGraph.forEachEdge((edge) => displayGraph.dropEdge(edge));
@@ -364,10 +365,13 @@
 <div style="display: flex; justify-content: space-between">
     <h1>Word Graph</h1>
     <Button
-        type="button"
-        style="background: rgba(0,0,0,0); color: var(--text-color); border: 0px"
-        on:click={() => (controlsAreOpen = !controlsAreOpen)}
-        ><Icon name="gear" /> Settings</Button
+            type="button"
+            style="background: rgba(0,0,0,0); color: var(--text-color); border: 0px"
+            on:click={() => (controlsAreOpen = !controlsAreOpen)}
+    >
+        <Icon name="gear"/>
+        Settings
+    </Button
     >
 </div>
 <Breadcrumb style="float: clear">
@@ -379,25 +383,25 @@
 
 {#if visible}
     <div
-        id="search"
-        style="position: absolute; top: 8em; right: 30em; z-index: 1"
-        in:fly={{ y: 400, duration: 1000, delay: 1400 }}
+            id="search"
+            style="position: absolute; top: 8em; right: 30em; z-index: 1"
+            in:fly={{ y: 400, duration: 1000, delay: 1400 }}
     >
         <input
-            style="width: 15em"
-            type="search"
-            id="search-input"
-            list="suggestions"
-            placeholder="Try searching for a node..."
+                style="width: 15em"
+                type="search"
+                id="search-input"
+                list="suggestions"
+                placeholder="Try searching for a node..."
         />
-        <datalist id="suggestions" />
+        <datalist id="suggestions"/>
     </div>
 {/if}
 <div id="graph-container">
     {#if visible}
         <div
-            id="sigma-container"
-            in:fly={{ y: 400, duration: 1000, delay: 1000 }}
+                id="sigma-container"
+                in:fly={{ y: 400, duration: 1000, delay: 1000 }}
         />
 
         <div id="cluster-div" in:fly={{ x: 400, duration: 1000, delay: 100 }}>
@@ -418,7 +422,7 @@
                                 </ul>
                             </AccordionItem>
                         {:else}
-                            <Loading displayString="Cluster" />
+                            <Loading displayString="Cluster"/>
                         {/each}
                     </Accordion>
                 </FormGroup>
@@ -433,19 +437,19 @@
             <FormGroup>
                 <Label for="edgeThreshold">% of Edges to display</Label>
                 <Input
-                    type="range"
-                    name="range"
-                    id="edgeThreshold"
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    bind:value={threshold}
+                        type="range"
+                        name="range"
+                        id="edgeThreshold"
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        bind:value={threshold}
                 />
                 <Input
-                    id="edgelessNodes"
-                    type="checkbox"
-                    label="Display Nodes without Edges"
-                    bind:checked={displayEdgelessNodes}
+                        id="edgelessNodes"
+                        type="checkbox"
+                        label="Display Nodes without Edges"
+                        bind:checked={displayEdgelessNodes}
                 />
             </FormGroup>
         </Form>
@@ -566,8 +570,8 @@
     event.
 </p>
 <Modal
-    isOpen={controlsAreOpen}
-    toggle={() => (controlsAreOpen = !controlsAreOpen)}
+        isOpen={controlsAreOpen}
+        toggle={() => (controlsAreOpen = !controlsAreOpen)}
 >
     <div id="graph-chooser" style="margin: 2em">
         <Form>
@@ -575,10 +579,10 @@
             <FormGroup>
                 <Label for="window-size-select">Window Size</Label>
                 <Input
-                    type="select"
-                    name="select"
-                    id="window-size-select"
-                    bind:value={windowSize}
+                        type="select"
+                        name="select"
+                        id="window-size-select"
+                        bind:value={windowSize}
                 >
                     {#each windowSizeOptions as windowSize}
                         <option>{windowSize}</option>
@@ -587,13 +591,13 @@
             </FormGroup>
             <FormGroup>
                 <Label for="num-edges-select"
-                    >Number of edges(collocations)</Label
+                >Number of edges(collocations)</Label
                 >
                 <Input
-                    type="select"
-                    name="select"
-                    id="num-edges-select"
-                    bind:value={numEdges}
+                        type="select"
+                        name="select"
+                        id="num-edges-select"
+                        bind:value={numEdges}
                 >
                     {#each numEdgesOptions as numEdges_}
                         <option>{numEdges_}</option>
@@ -602,13 +606,13 @@
             </FormGroup>
             <FormGroup>
                 <Label for="min-node-length-select"
-                    >Minimun number of characters in node</Label
+                >Minimun number of characters in node</Label
                 >
                 <Input
-                    type="select"
-                    name="select"
-                    id="min-node-length-select"
-                    bind:value={minNodeLength}
+                        type="select"
+                        name="select"
+                        id="min-node-length-select"
+                        bind:value={minNodeLength}
                 >
                     {#each minNodeLengthOptions as minNodeLength_}
                         <option>{minNodeLength_}</option>
@@ -618,18 +622,18 @@
             <FormGroup>
                 <Label for="include-stop-select">Include stop word nodes</Label>
                 <Input
-                    id="r3"
-                    type="radio"
-                    bind:group={includeStopWords}
-                    value={true}
-                    label="Yes"
+                        id="r3"
+                        type="radio"
+                        bind:group={includeStopWords}
+                        value={true}
+                        label="Yes"
                 />
                 <Input
-                    id="r4"
-                    type="radio"
-                    bind:group={includeStopWords}
-                    value={false}
-                    label="No"
+                        id="r4"
+                        type="radio"
+                        bind:group={includeStopWords}
+                        value={false}
+                        label="No"
                 />
             </FormGroup>
         </Form>
@@ -638,10 +642,10 @@
             <FormGroup>
                 <Label for="cluster-alg-select">Clustering Algorithm</Label>
                 <Input
-                    type="select"
-                    name="select"
-                    id="cluster-alg-select"
-                    bind:value={clusterAlg}
+                        type="select"
+                        name="select"
+                        id="cluster-alg-select"
+                        bind:value={clusterAlg}
                 >
                     {#each clusterAlgOptions as clusterAlg_}
                         <option>{clusterAlg_}</option>
@@ -651,10 +655,10 @@
             <FormGroup>
                 <Label for="n-clusters-select"># of clusters</Label>
                 <Input
-                    type="select"
-                    name="select"
-                    id="n-clusters-select"
-                    bind:value={nClusters}
+                        type="select"
+                        name="select"
+                        id="n-clusters-select"
+                        bind:value={nClusters}
                 >
                     {#each nClustersOptions as nClusters_}
                         <option>{nClusters_}</option>
@@ -663,13 +667,13 @@
             </FormGroup>
             <FormGroup>
                 <Label for="embedding-size-select"
-                    >Size of Node2Vec embedding</Label
+                >Size of Node2Vec embedding</Label
                 >
                 <Input
-                    type="select"
-                    name="select"
-                    id="embedding-size-select"
-                    bind:value={embeddingSize}
+                        type="select"
+                        name="select"
+                        id="embedding-size-select"
+                        bind:value={embeddingSize}
                 >
                     {#each embeddingSizeOptions as embeddingSize_}
                         <option>{embeddingSize_}</option>
@@ -678,21 +682,24 @@
             </FormGroup>
         </Form>
         <Button
-            type="button"
-            on:click={() => rebuildGraph()}
-            style="background: blue">Rebuild Graph</Button
+                type="button"
+                on:click={() => rebuildGraph()}
+                style="background: blue">Rebuild Graph
+        </Button
         >
         {#if loading}
-            <Loading displayString="graph" />
+            <Loading displayString="graph"/>
         {/if}
         <p>
-            <br /><Icon name="exclamation-octagon-fill" class="hint" /> Note: We
+            <br/>
+            <Icon name="exclamation-octagon-fill" class="hint"/>
+            Note: We
             provided files for the unclustered graph in the following configurations:
-            <br />1. Window of 4, No Stop, Min. Node length 2, 10000 Edges
-            <br />2. Window of 4, No Stop, Min. Node length 2, 50000 Edges
-            <br />3. Window of 4, No Stop, Min. Node length 2, 100000 Edges
-            <br />4. Window of 4, No Stop, Min. Node length 2, 200000 Edges
-            <br />All other configurations can be generated, however this could
+            <br/>1. Window of 4, No Stop, Min. Node length 2, 10000 Edges
+            <br/>2. Window of 4, No Stop, Min. Node length 2, 50000 Edges
+            <br/>3. Window of 4, No Stop, Min. Node length 2, 100000 Edges
+            <br/>4. Window of 4, No Stop, Min. Node length 2, 200000 Edges
+            <br/>All other configurations can be generated, however this could
             take a while. Applying custom clustering(only changing 'Clustering'
             settings) should be viable and normally should not take too long.
         </p>
@@ -700,19 +707,21 @@
 </Modal>
 
 <style lang="scss">
-    #sigma-container {
-        width: 100%;
-        height: 41em;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        margin-right: 2em;
-    }
-    #graph-container {
-        display: flex;
-        justify-content: space-around;
-    }
-    #cluster-div {
-        min-width: 25em;
-    }
+  #sigma-container {
+    width: 100%;
+    height: 41em;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    margin-right: 2em;
+  }
+
+  #graph-container {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #cluster-div {
+    min-width: 25em;
+  }
 </style>

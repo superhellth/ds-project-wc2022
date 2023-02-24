@@ -20,7 +20,7 @@ class Tweet {
     private score: number;
 
     constructor(attachments: any, author: TwitterUser, created_at: Date, geo: string, id: string, lang: string, possibly_sensitive: boolean,
-        retweet_count: number, reply_count: number, like_count: number, quote_count: number, text: string, score: number) {
+                retweet_count: number, reply_count: number, like_count: number, quote_count: number, text: string, score: number) {
         this.attachments = attachments;
         this.author = author;
         this.created_at = created_at;
@@ -132,11 +132,11 @@ class Tweet {
         return this.text;
     }
 
-    
-    public getScore() : number {
+
+    public getScore(): number {
         return this.score;
     }
-    
+
 
 }
 

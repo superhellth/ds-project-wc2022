@@ -19,10 +19,10 @@ class StreamControl extends Connection {
     }
 
     /**
-   * Updates the rule of the stream.
-   * @param rule the new rule that was set.
-   * @returns the new rule of the stream. Mainly for display purposes.
-   */
+     * Updates the rule of the stream.
+     * @param rule the new rule that was set.
+     * @returns the new rule of the stream. Mainly for display purposes.
+     */
     public async setRule(rule: string): Promise<string> {
         const encodedRule = rule.replaceAll("#", "hashtag");
         const data = await fetch(this.URL + "/stream/setRule/?rule=" + encodedRule).then((response) => response.json());
@@ -51,7 +51,7 @@ class StreamControl extends Connection {
     }
 
     /**
-     * Toggles the stream: 
+     * Toggles the stream:
      * turns it off, if its on,
      * turn it on, if its off.
      * @returns the new running state of the stream.
@@ -69,7 +69,7 @@ class StreamControl extends Connection {
     }
 
     /**
-     * 
+     *
      * @returns the current rule of the stream.
      */
     public async getRule(): Promise<string> {
@@ -82,7 +82,7 @@ class StreamControl extends Connection {
     }
 
     /**
-     * 
+     *
      * @returns the current running state of the stream
      */
     public async isStreamRunning(): Promise<boolean> {
