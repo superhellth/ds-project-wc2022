@@ -55,7 +55,7 @@
     >
         <div class="sb-sidenav-menu">
             <Nav>
-                <!--                <div class="sb-sidenav-menu-heading">Overview</div>-->
+                <div class="sb-sidenav-menu-heading">Overview</div>
                 <SidebarItem
                         on:press={() => {
                         theme = "dark";
