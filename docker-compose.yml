@@ -1,16 +1,22 @@
 services:
   frontend:
     ports:
-      - "5173:5173"
+      - 5173:5173
     build:
-      context: ./src/frontend
-      dockerfile: ../../Frontend.Dockerfile
+      context: .
+      dockerfile: Frontend.Dockerfile
+    environment:
+      PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT: $PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT
+      PUBLIC_DATA_COLLECTION_MIDDLEWARE_PORT: $PUBLIC_DATA_COLLECTION_MIDDLEWARE_PORT
+      PUBLIC_TWEET_GENERATION_MIDDLEWARE_PORT: $PUBLIC_TWEET_GENERATION_MIDDLEWARE_PORT
   data-providing-middleware:
     ports:
-      - "8001:8001"
+      - $PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT:$PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT
     build:
       context: .
       dockerfile: DataRetrieval.Dockerfile
+      args:
+        PORT: $PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT
     environment:
       PATH_TO_DATA_FILES: ../../../data/
       ES_URL: $ES_URL
@@ -19,10 +25,12 @@ services:
       ES_PASSWD: $ES_PASSWD
   data-collecting-middleware:
     ports:
-      - "8002:8002"
+      - $PUBLIC_DATA_COLLECTION_MIDDLEWARE_PORT:$PUBLIC_DATA_COLLECTION_MIDDLEWARE_PORT
     build:
       context: ./src/middleware
       dockerfile: ../../DataCollection.Dockerfile
+      args:
+        PORT: $PUBLIC_DATA_COLLECTION_MIDDLEWARE_PORT
     environment:
       BEARER_TOKEN: $BEARER_TOKEN
       ES_URL: $ES_URL
@@ -31,10 +39,12 @@ services:
       ES_PASSWD: $ES_PASSWD
   tweet-generation-middleware:
     ports:
-      - "8003:8003"
+      - $PUBLIC_TWEET_GENERATION_MIDDLEWARE_PORT:$PUBLIC_TWEET_GENERATION_MIDDLEWARE_PORT
     build:
       context: .
       dockerfile: TweetGeneration.Dockerfile
+      args:
+        PORT: $PUBLIC_TWEET_GENERATION_MIDDLEWARE_PORT
     environment:
       PATH_TO_DATA_FILES: ../../../data/
       BEARER_TOKEN: $BEARER_TOKEN

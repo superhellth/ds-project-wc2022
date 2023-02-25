@@ -1,5 +1,8 @@
 import Tweet from "../tweet_management/tweet";
 import Connection from "./connection";
+import {
+    PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT
+} from '$env/static/public';
 
 /**
  * This singeleton class manages all data retrieval tasks related to the middleware.
@@ -13,7 +16,8 @@ class MiddlewareProvider extends Connection {
 
     public static getInstance(): MiddlewareProvider {
         if (!MiddlewareProvider.instance) {
-            MiddlewareProvider.instance = new MiddlewareProvider("http://localhost:8001");
+            MiddlewareProvider.instance = new MiddlewareProvider("http://localhost:" + PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT);
+            console.log("http://localhost:" + PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT)
         }
         return MiddlewareProvider.instance;
     }
@@ -261,7 +265,7 @@ class MiddlewareProvider extends Connection {
         const response = await fetch(queryURL, {
             method: "POST",
             body: JSON.stringify(tweetsList),
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
         });
         return await response.json();
     }
@@ -270,8 +274,8 @@ class MiddlewareProvider extends Connection {
         const queryURL = this.URL + '/analysis/sentiment/tweet';
         const response = await fetch(queryURL, {
             method: "POST",
-            body: JSON.stringify({tweet_text: tweet}),
-            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ tweet_text: tweet }),
+            headers: { "Content-Type": "application/json" },
         });
         return await response.json();
     }

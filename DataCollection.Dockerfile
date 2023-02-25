@@ -2,6 +2,10 @@
 
 FROM python:3.8-slim-buster
 
+# define build args
+ARG PORT
+ENV PORT=${PORT}
+
 # project level
 WORKDIR /
 
@@ -14,4 +18,4 @@ RUN pip install -e .
 # directory of fastapi script
 WORKDIR /src/middleware/data_collection
 
-CMD [ "python3", "-m" , "uvicorn", "main:app", "--host=0.0.0.0", "--port=8002"]
+CMD python3 -m uvicorn main:app --host 0.0.0.0 --port $PORT
