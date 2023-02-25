@@ -1,4 +1,7 @@
 import Connection from "./connection";
+import {
+    PUBLIC_DATA_COLLECTION_MIDDLEWARE_PORT
+} from '$env/static/public';
 
 /**
  * Singleton class that controls and provides data about the twitter-api stream.
@@ -13,7 +16,7 @@ class StreamControl extends Connection {
 
     public static getInstance(): StreamControl {
         if (!StreamControl.instance) {
-            StreamControl.instance = new StreamControl("http://localhost:8002");
+            StreamControl.instance = new StreamControl("http://localhost:" + PUBLIC_DATA_COLLECTION_MIDDLEWARE_PORT);
         }
         return StreamControl.instance;
     }

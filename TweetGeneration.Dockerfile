@@ -2,6 +2,10 @@
 
 FROM python:3.8-slim-buster
 
+# define build args
+ARG PORT
+ENV PORT=${PORT}
+
 # project level
 WORKDIR /
 # copy data folder
@@ -14,4 +18,4 @@ RUN pip install pytorch-lightning==1.7.7 fastapi[all] aitextgen uvicorn elastics
 # directory of fastapi script
 WORKDIR /src/middleware/tweet_generation
 
-CMD [ "python3", "-m" , "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8003"]
+CMD python3 -m uvicorn main:app --host 0.0.0.0 --port $PORT
