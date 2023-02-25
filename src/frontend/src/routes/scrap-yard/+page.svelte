@@ -7,7 +7,7 @@
     import {fly} from "svelte/transition";
 </script>
 
-<title>Overview - Tweets</title>
+<title>Experimental - Scrap Yard</title>
 <h1>Tweet Query</h1>
 <Breadcrumb class="mb-4">
     <BreadcrumbItem>
