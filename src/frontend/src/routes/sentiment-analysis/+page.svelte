@@ -500,7 +500,7 @@
                         <br>
                         SD: {qatarSentiment['before'][3]}
                         <br>
-                        <b>SGDClassifierOtherOwn</b>:
+                        <b>SGDClassifierOwn</b>:
                         <br>
                         Mean: {qatarSentiment['before'][4]}
                         <br>
@@ -530,7 +530,7 @@
                         <br>
                         SD: {qatarSentiment['during'][3]}
                         <br>
-                        <b>SGDClassifierOtherOwn</b>:
+                        <b>SGDClassifierOwn</b>:
                         <br>
                         Mean: {qatarSentiment['during'][4]}
                         <br>
@@ -560,7 +560,7 @@
                         <br>
                         SD: {qatarSentiment['after'][3]}
                         <br>
-                        <b>SGDClassifierOtherOwn</b>:
+                        <b>SGDClassifierOwn</b>:
                         <br>
                         Mean: {qatarSentiment['after'][4]}
                         <br>
