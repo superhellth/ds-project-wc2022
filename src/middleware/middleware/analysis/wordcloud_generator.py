@@ -7,7 +7,8 @@ import re
 class WordCloudGenerator:
     """This class generates wordcloud graphics from unigrams, bigrams, trigrams and fourgrams.
     The resulting png data will be saved in the top-level folder of the project.
-    The ngram.json files need to be saved first in the folder specified in the path."""
+    The ngram.json files need to be saved first in the folder specified in the path.
+    All methods have no return value, they generated png directly."""
 
     def generate_wordcloud_unigrams(self):
         """Generates wordcloud from unigrams. Excludes words including non-ascii characters, even placeholders for emojis etc., or custom stopwords.
@@ -38,6 +39,8 @@ class WordCloudGenerator:
         wordcloud.to_file("wordcloud_unigrams_filtered.png")
 
     def generate_wordcloud_bigrams(self):
+        """Generates wordcloud from bigrams. Excludes words including non-ascii characters, even placeholders for emojis etc., or custom stopwords.
+        """
 
         #Defining the stopwords
         custom_stop_words = {"<link>","link","live","stream"}
@@ -72,6 +75,9 @@ class WordCloudGenerator:
         
 
     def generate_wordcloud_trigrams(self):
+        """Generates wordcloud from trigrams. Excludes tupels either including non-ascii characters, even placeholders for emojis etc., or custom stopwords.
+        """
+
         #Defining the stopwords
         custom_stop_words = {"<link>", "link", "live", "stream"}
         nlp = spacy.load('en_core_web_sm')
@@ -104,6 +110,8 @@ class WordCloudGenerator:
         wordcloud.to_file("wordcloud_trigrams_filtered.png")
 
     def generate_wordcloud_fourgrams(self):
+        """Generates wordcloud from fourgrams. Excludes tupels either including non-ascii characters, even placeholders for emojis etc., or custom stopwords.
+        """
 
         #Defining the stopwords
         custom_stop_words = {"<link>", "link", "live", "stream"}
