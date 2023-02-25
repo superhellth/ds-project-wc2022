@@ -19,7 +19,14 @@
 <div in:fly={{ x: 400, duration: 400, delay: 200 }}>
     <h4>NMF</h4>
     <p>
-        This did not work because...
+        NMF (Non-negative Matrix Factorization) originates from Linear Algebra and is a technique widely used in topic modeling. The goal of this algorithm is extracting the underlying topics of our dataset
+        It is one of the less sophisticated methods since it is operating onyl the Document-Term-Matrix, where each tweet is considered as an individual document, performing transformations.
+        NMF decomposes the Document-Term-Matrix into a Document-Topic matrix and a Topic-Term matrix.
+        <li></li>
+        As it is easy to see the NMF does not provide easy to read topics in our application. This could be the case for several reasons:
+        First of all this is probaly a consequence of traing the NMF on the whole dataset which includes a wide range of topics where many of them are not relevant e.g. spam post etc. 
+        Furthermore is NMF a releativly simple algorithm which is not as sophisticated as for example transformer-based models. Finally we did not made a selection on the tweets so it is likely that the amount of noise in the training datset is high which would defintely worsen the results.
+
     </p>
     <h4>SVD</h4>
     <p>
@@ -37,7 +44,7 @@
         <li>'vs brazil england croatia argentina 2022 usa fifa netherlands worldcup2022 qatar2022 japan iran france wales'</li>
 
         It is easy to see that the most important topics according to SVD are all strongly related to the World Championship with focus on the football itself.
-        Furthermore there are many countries highly prominent e.g. Argentinia or Saui Arabia and some hashtags like #FIFAWORLDCUP2022. Additionally Messi is highly important since both Messi and Lionel appear.
+        Furthermore there are many countries highly prominent e.g. Argentinia or Saudi Arabia and some hashtags like #FIFAWORLDCUP2022. Additionally Messi is highly important since both Messi and Lionel appear.
         However, the output you provided is not the best result because it lacks context and specificity. The topics generated are too broad and generic, which makes it difficult to gain any insights or draw meaningful conclusions from them.
         This is probably a result of training the SVD on the whole dataset without further cleaning and preparation. This results for example in the appearance of words which are highly associated with spam tweets in our dataset e.g. streaming, live etc.
         Additionally it is to mention that we used the truncated SVD, a less precise deviation from the original algorithm which has a better performance. This was necessary since our dataset is very extensive. This probably worsens our results as well.
