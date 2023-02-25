@@ -88,11 +88,11 @@
         qatarAmountTweets['after'] = data['after']['amount']
 
         bertQatarT = (qatarSentiment['after'][6] - qatarSentiment['before'][6]) / (Math.sqrt(
-            (qatarSentiment['after'][7]/qatarAmountTweets['after']) + (qatarSentiment['before'][7]/qatarAmountTweets['before'])
+            (qatarSentiment['after'][7] / qatarAmountTweets['after']) + (qatarSentiment['before'][7] / qatarAmountTweets['before'])
         ))
 
         vsQatarT = (qatarSentiment['after'][0] - qatarSentiment['before'][0]) / (Math.sqrt(
-            (qatarSentiment['after'][1]/qatarAmountTweets['after']) + (qatarSentiment['before'][1]/qatarAmountTweets['before'])
+            (qatarSentiment['after'][1] / qatarAmountTweets['after']) + (qatarSentiment['before'][1] / qatarAmountTweets['before'])
         ))
     }
 
@@ -153,12 +153,31 @@
         return str.slice(0, 6);
     };
 
+    let MathJax;
+    let H0 = "$$ H_0: \\mu_{after} - \\mu_{before} = 0 $$";
+    let H1 = "$$ H_0: \\mu_{after} - \\mu_{before} \\neq 0 $$";
+    let p = '\\(p = 0.01\\)';
+    let T = "$$T = \\frac{\\mu_{after} - \\mu_{before}}{\\sqrt{\\frac{\\sigma^2_{after}}{n_{after}} + \\frac{\\sigma^2_{before}}{n_{before}}}}$$";
+    let Tbert = "\\(T_{bert} = \\)";
+    let Tvs = "\\(T_{vs} = \\)";
+    let z = "\\(\\varphi(0.99) = 2.5758\\)";
+
     onMount(() => {
         // Fill the mean sent, topic sent and trained model performance values on mount
         getMeanSent();
         getTrainedModelPerf();
         getSentimentByTopic();
         getQatarSentiment();
+        let script = document.createElement('script');
+        script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+        document.head.append(script);
+
+        script.onload = () => {
+            MathJax = {
+                tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]},
+                svg: {fontCache: 'global'}
+            };
+        };
     })
 
 </script>
@@ -586,22 +605,35 @@
             </h4>
             <p>
                 Both methods show a significant increase in sentiment after the world cup! (Of course this could be the
-                result of something that has nothing to do with Qatar, as mentioned before.) But is it really significant?
+                result of something that has nothing to do with Qatar, as mentioned before.) But is it really
+                significant?
                 Well, this gives me the opportunity to get out my old statistics book and check. Here we go:
             </p>
             <p>
-                To confirm that the test result is actually significant, we have to pick a significance level.
-                <br>
-                Let's pick 99% because, why not. Then we calculate the 'Teststatistik' (sorry, it's late):
-                <br>
-                T_bert = mean_bert_before - mean_bert_after / sqrt(sd_bert_before^2/amount_before +
-                sd_bert_after^2/amount_after) = {bertQatarT}
-                <br>
-                T_vs = mean_vs_before - mean_vs_after / sqrt(sd_vs_before^2/amount_before +
-                sd_vs_after^2/amount_after) = {vsQatarT}
+                To confirm that the test result is actually significant, we have to pick a significance level and
+                two hypotheses. The null-hypothesis will be that the values do not differ. The alternative hypotheses
+                will be that the means will differ. (Please reload the page once if the math does not render correctly!).
             </p>
             <p>
-                As we can see, both values are way larger than the required '2.5758...' we needed in order to say the
+                {H0}
+            </p>
+            <p>
+                {H1}
+            </p>
+            <p>
+                Let's pick {p} because, why not. Then we write down the test statistic for the tests:
+                {T}
+                <br>
+                Plugging in the values we get:
+                <br>
+                {Tbert} {bertQatarT}
+                <br>
+                and
+                <br>
+                {Tvs} {vsQatarT}
+            </p>
+            <p>
+                As we can see, both values are way larger than the required {z} we needed in order to say the
                 findings are significant.
             </p>
         </Form>
