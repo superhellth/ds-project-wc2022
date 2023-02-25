@@ -43,9 +43,58 @@
     ];
     let showTopicSentDetails: boolean = false;
 
+    // Add qatar sentiment variables
+    let qatarSentiment = {
+        before: Array(8).fill("Waiting..."),
+        during: Array(8).fill("Waiting..."),
+        after: Array(8).fill("Waiting..."),
+    };
+
+    let qatarAmountTweets = {
+        before: 10000,
+        during: 100000,
+        after: 10000
+    }
+
+    let bertQatarT: number;
+    let vsQatarT: number;
+
     // Add transition variables
     let transDuration: number = 600;
 
+    // Function to get sentiment towards qatar over time
+    async function getQatarSentiment() {
+        const data = await provider.getQatarSentiment();
+
+        const keys = ['before', 'during', 'after'];
+        keys.forEach(key => {
+            const vs_sent = data[key]['vs_sent'];
+            const lrc_other = data[key]['lrc_other'];
+            const lrc_own = data[key]['lrc_own'];
+            const bert_sent = data[key]['bert_sent'];
+
+            qatarSentiment[key][0] = sliceString(vs_sent[0].toString());
+            qatarSentiment[key][1] = sliceString(vs_sent[1].toString());
+            qatarSentiment[key][2] = sliceString(lrc_other[0].toString());
+            qatarSentiment[key][3] = sliceString(lrc_other[1].toString());
+            qatarSentiment[key][4] = sliceString(lrc_own[0].toString());
+            qatarSentiment[key][5] = sliceString(lrc_own[1].toString());
+            qatarSentiment[key][6] = sliceString(bert_sent[0].toString());
+            qatarSentiment[key][7] = sliceString(bert_sent[1].toString());
+        });
+
+        qatarAmountTweets['before'] = data['before']['amount']
+        qatarAmountTweets['during'] = data['during']['amount']
+        qatarAmountTweets['after'] = data['after']['amount']
+
+        bertQatarT = (qatarSentiment['after'][6] - qatarSentiment['before'][6]) / (Math.sqrt(
+            (qatarSentiment['after'][7] / qatarAmountTweets['after']) + (qatarSentiment['before'][7] / qatarAmountTweets['before'])
+        ))
+
+        vsQatarT = (qatarSentiment['after'][0] - qatarSentiment['before'][0]) / (Math.sqrt(
+            (qatarSentiment['after'][1] / qatarAmountTweets['after']) + (qatarSentiment['before'][1] / qatarAmountTweets['before'])
+        ))
+    }
 
     // Function to get the sentiment by topic
     async function getSentimentByTopic() {
@@ -104,11 +153,31 @@
         return str.slice(0, 6);
     };
 
+    let MathJax;
+    let H0 = "$$ H_0: \\mu_{after} - \\mu_{before} = 0 $$";
+    let H1 = "$$ H_0: \\mu_{after} - \\mu_{before} \\neq 0 $$";
+    let p = '\\(p = 0.01\\)';
+    let T = "$$T = \\frac{\\mu_{after} - \\mu_{before}}{\\sqrt{\\frac{\\sigma^2_{after}}{n_{after}} + \\frac{\\sigma^2_{before}}{n_{before}}}}$$";
+    let Tbert = "\\(T_{bert} = \\)";
+    let Tvs = "\\(T_{vs} = \\)";
+    let z = "\\(\\varphi(0.99) = 2.5758\\)";
+
     onMount(() => {
         // Fill the mean sent, topic sent and trained model performance values on mount
         getMeanSent();
         getTrainedModelPerf();
         getSentimentByTopic();
+        getQatarSentiment();
+        let script = document.createElement('script');
+        script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+        document.head.append(script);
+
+        script.onload = () => {
+            MathJax = {
+                tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]},
+                svg: {fontCache: 'global'}
+            };
+        };
     })
 
 </script>
@@ -415,5 +484,158 @@
             </Row>
         </Form>
 
+        <Form>
+            <p></p>
+            <h4>Results</h4>
+            <p>
+                After all that analysis one question still remains. Did Qatar succeed in 'sportwashing'? Were they able
+                to make people look past the human rights abuse and buy into the illusion?
+            </p>
+            <p>
+                To definitively answer that question is very hard because it involves a lot of factors. There are many
+                reasons why the sentiment towards Qatar might have changed during the World Cup. Maybe the constant
+                scandals involving the iranian government took some heat of Qatar? Maybe the sentiment didn't change?
+                Or maybe people really fell for it?
+            </p>
+            <p>
+                Let's first take a look at the following three values as they show the sentiment of all Tweets that
+                mention 'qatar' before, during and after the World Cup.
+            </p>
+            <h5>'Qatar' mentions before, during and after the World Cup</h5>
+
+            <Row>
+                <Col>
+                    <Alert color="danger">
+                        <h5 style="color: black">Before</h5>
+                        <b>vaderSentiment</b>:
+                        <br>
+                        Mean: {qatarSentiment['before'][0]}
+                        <br>
+                        SD: {qatarSentiment['before'][1]}
+                        <br>
+                        <b>SGDClassifierOther</b>:
+                        <br>
+                        Mean: {qatarSentiment['before'][2]}
+                        <br>
+                        SD: {qatarSentiment['before'][3]}
+                        <br>
+                        <b>SGDClassifierOwn</b>:
+                        <br>
+                        Mean: {qatarSentiment['before'][4]}
+                        <br>
+                        SD: {qatarSentiment['before'][5]}
+                        <br>
+                        <b>BERT based Classifier</b>:
+                        <br>
+                        Mean: {qatarSentiment['before'][6]}
+                        <br>
+                        SD: {qatarSentiment['before'][7]}
+                        <br>
+                        <b>Amount Tweets</b>: {qatarAmountTweets['before']}
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="warning">
+                        <h5 style="color: black">During</h5>
+                        <b>vaderSentiment</b>:
+                        <br>
+                        Mean: {qatarSentiment['during'][0]}
+                        <br>
+                        SD: {qatarSentiment['during'][1]}
+                        <br>
+                        <b>SGDClassifierOther</b>:
+                        <br>
+                        Mean: {qatarSentiment['during'][2]}
+                        <br>
+                        SD: {qatarSentiment['during'][3]}
+                        <br>
+                        <b>SGDClassifierOwn</b>:
+                        <br>
+                        Mean: {qatarSentiment['during'][4]}
+                        <br>
+                        SD: {qatarSentiment['during'][5]}
+                        <br>
+                        <b>BERT based Classifier</b>:
+                        <br>
+                        Mean: {qatarSentiment['during'][6]}
+                        <br>
+                        SD: {qatarSentiment['during'][7]}
+                        <br>
+                        <b>Amount Tweets</b>: {qatarAmountTweets['during']}
+                    </Alert>
+                </Col>
+                <Col>
+                    <Alert color="success">
+                        <h5 style="color: black">After</h5>
+                        <b>vaderSentiment</b>:
+                        <br>
+                        Mean: {qatarSentiment['after'][0]}
+                        <br>
+                        SD: {qatarSentiment['after'][1]}
+                        <br>
+                        <b>SGDClassifierOther</b>:
+                        <br>
+                        Mean: {qatarSentiment['after'][2]}
+                        <br>
+                        SD: {qatarSentiment['after'][3]}
+                        <br>
+                        <b>SGDClassifierOwn</b>:
+                        <br>
+                        Mean: {qatarSentiment['after'][4]}
+                        <br>
+                        SD: {qatarSentiment['after'][5]}
+                        <br>
+                        <b>BERT based Classifier</b>:
+                        <br>
+                        Mean: {qatarSentiment['after'][6]}
+                        <br>
+                        SD: {qatarSentiment['after'][7]}
+                        <br>
+                        <b>Amount Tweets</b>: {qatarAmountTweets['after']}
+                    </Alert>
+                </Col>
+            </Row>
+            <p>
+                Given the limitations of our own trained models we will focus on the other two methods to answer this
+                question. The results couldn't be more clear. The two methods which are fine tuned for social media
+                sentiment analysis come to the same conclusion:
+            </p>
+            <h4 style="text-align: center">
+                Qatar's sportswashing (seems to have) worked!
+            </h4>
+            <p>
+                Both methods show a significant increase in sentiment after the world cup! (Of course this could be the
+                result of something that has nothing to do with Qatar, as mentioned before.) But is it really
+                significant?
+                Well, this gives me the opportunity to get out my old statistics book and check. Here we go:
+            </p>
+            <p>
+                To confirm that the test result is actually significant, we have to pick a significance level and
+                two hypotheses. The null-hypothesis will be that the values do not differ. The alternative hypotheses
+                will be that the means will differ. (Please reload the page once if the math does not render correctly!).
+            </p>
+            <p>
+                {H0}
+            </p>
+            <p>
+                {H1}
+            </p>
+            <p>
+                Let's pick {p} because, why not. Then we write down the test statistic for the tests:
+                {T}
+                <br>
+                Plugging in the values we get:
+                <br>
+                {Tbert} {bertQatarT}
+                <br>
+                and
+                <br>
+                {Tvs} {vsQatarT}
+            </p>
+            <p>
+                As we can see, both values are way larger than the required {z} we needed in order to say the
+                findings are significant.
+            </p>
+        </Form>
     </FormGroup>
 </div>

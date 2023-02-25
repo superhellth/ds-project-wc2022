@@ -266,6 +266,16 @@ async def get_sentiment_by_category():
     return data
 
 
+@app.get("/analysis/sentiment/qatarSentiment")
+async def get_qatar_sentiment():
+    """
+    Returns the sentiment of tweets that mention 'qatar' over time
+    """
+    with open(PATH_TO_SENTIMENT_DATA + 'qatar_sentiment.json') as f:
+        data = json.load(f)
+    return data
+
+
 ## word embedding
 @app.get("/analysis/embedding/exists")
 async def word_in_w2v_vocab(word: str):
