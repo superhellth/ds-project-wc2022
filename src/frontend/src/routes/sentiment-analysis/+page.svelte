@@ -155,7 +155,7 @@
 
     let MathJax;
     let H0 = "$$ H_0: \\mu_{after} - \\mu_{before} = 0 $$";
-    let H1 = "$$ H_0: \\mu_{after} - \\mu_{before} \\neq 0 $$";
+    let H1 = "$$ H_1: \\mu_{after} - \\mu_{before} \\neq 0 $$";
     let p = '\\(p = 0.01\\)';
     let T = "$$T = \\frac{\\mu_{after} - \\mu_{before}}{\\sqrt{\\frac{\\sigma^2_{after}}{n_{after}} + \\frac{\\sigma^2_{before}}{n_{before}}}}$$";
     let Tbert = "\\(T_{bert} = \\)";
