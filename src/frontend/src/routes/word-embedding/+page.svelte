@@ -41,8 +41,8 @@
 
     // Call the `checkIfExists` function when the component is rendered
     $: {
-        checkIfExists(checkIfExistsString, false);
         checkIfExists(checkIfExistsString2, true);
+        checkIfExists(checkIfExistsString, false);
     }
 
     onMount(async () => {
@@ -51,14 +51,18 @@
 
     // Async function to check if a string exists in the W2Vec vocabulary
     async function checkIfExists(checkIfExistsString: string, second: boolean) {
-        if (second) {
-            checkIfExistsValue2 = await provider.existsInW2vecVocabulary(
-                preprocessString(checkIfExistsString)
-            );
-        } else {
-            checkIfExistsValue = await provider.existsInW2vecVocabulary(
-                preprocessString(checkIfExistsString)
-            );
+        try {
+            if (second) {
+                checkIfExistsValue2 = await provider.existsInW2vecVocabulary(
+                    preprocessString(checkIfExistsString)
+                );
+            } else {
+                checkIfExistsValue = await provider.existsInW2vecVocabulary(
+                    preprocessString(checkIfExistsString)
+                );
+            }
+        } catch (error) {
+            console.log("");
         }
     }
 
@@ -69,12 +73,16 @@
 
     // Async function to check if a string does not match in the W2Vec vocabulary
     async function doesNotMatch(doesntMatchString: string) {
-        let words: string[] = doesntMatchString.split(",");
-        for (let i = 0; i < words.length; i++) {
-            words[i] = preprocessString(words[i]);
+        try {
+            let words: string[] = doesntMatchString.split(",");
+            for (let i = 0; i < words.length; i++) {
+                words[i] = preprocessString(words[i]);
+            }
+            let res = await provider.doesntMatch(words);
+            doesntMatchValue = res.replaceAll("_", " ");
+        } catch (error) {
+            console.log("");
         }
-        let res = await provider.doesntMatch(words);
-        doesntMatchValue = res.replaceAll("_", " ");
     }
 
     // Call the `x1IsToy2Likex2IsTo` function when the component is rendered
@@ -84,20 +92,24 @@
 
     // Async function to find the match given a relation and a new word
     async function x1IsToy2Likex2IsTo(x1: string, y1: string, x2: string) {
-        x1IsValid = await provider.existsInW2vecVocabulary(
-            preprocessString(x1)
-        );
-        y1IsValid = await provider.existsInW2vecVocabulary(
-            preprocessString(y1)
-        );
-        x2IsValid = await provider.existsInW2vecVocabulary(
-            preprocessString(x2)
-        );
-        if (x1IsValid && x2IsValid && y1IsValid) {
-            y2 = await provider.getSimilar(
-                [preprocessString(x2), preprocessString(y1)],
-                [preprocessString(x1)]
+        try {
+            x1IsValid = await provider.existsInW2vecVocabulary(
+                preprocessString(x1)
             );
+            y1IsValid = await provider.existsInW2vecVocabulary(
+                preprocessString(y1)
+            );
+            x2IsValid = await provider.existsInW2vecVocabulary(
+                preprocessString(x2)
+            );
+            if (x1IsValid && x2IsValid && y1IsValid) {
+                y2 = await provider.getSimilar(
+                    [preprocessString(x2), preprocessString(y1)],
+                    [preprocessString(x1)]
+                );
+            }
+        } catch (error) {
+            console.log("");
         }
     }
 
@@ -323,7 +335,7 @@
             a familiarity, however not a too close one. Furthermore let's just
             look at the close words of "Human Rights".
         </p>
-        <img src="human rights-tsne.png" style="width: 27em; height: 27em"/>
+        <img src="human rights-tsne.png" alt="human rights tsne" style="width: 27em; height: 27em"/>
         <p>
             There we can see many obvious neighbors like "Rights Abuses" and
             "Migrant Workers" which shows that criticsim on the host nations

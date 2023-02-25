@@ -193,7 +193,7 @@ class MiddlewareProvider extends Connection {
      */
     public async existsInW2vecVocabulary(word: string): Promise<boolean> {
         let queryURL: string = this.URL + "/analysis/embedding/exists?word=" + word;
-        const data = await fetch(queryURL).then((response) => response.text())
+        const data = await fetch(queryURL).then((response) => response.text());
         return data == "true";
     }
 
