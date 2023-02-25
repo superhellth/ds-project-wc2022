@@ -67,7 +67,7 @@
     });
 </script>
 
-<title>Text Analytics - Generate Tweet</title>
+<title>Experimental - Generate Tweet</title>
 <h1>Tweet Completion</h1>
 <Breadcrumb class="mb-4">
     <BreadcrumbItem>

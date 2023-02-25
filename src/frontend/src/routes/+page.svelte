@@ -70,6 +70,8 @@
     });
 </script>
 
+<title>Home</title>
+
 {#if visible}
     <div in:fly={{ y: 200, duration: 2000 }} out:fade>
         <img src="Qatar-2022-1536x798.png" class="banner"/>

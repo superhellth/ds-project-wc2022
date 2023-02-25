@@ -83,15 +83,6 @@
                         href="/word-embedding"
                         iconName="body-text"
                 />
-                <div class="sb-sidenav-menu-heading">Settings</div>
-                <SidebarItem
-                        on:press={() => {
-                        theme = "dark";
-                    }}
-                        text="Stream control"
-                        href="/settings"
-                        iconName="gear"
-                />
                 <div class="sb-sidenav-menu-heading">Experimental</div>
                 <SidebarItem
                         on:press={() => {
@@ -108,6 +99,15 @@
                         text="Scrap Yard"
                         href="/scrap-yard"
                         iconName="trash"
+                />
+                <div class="sb-sidenav-menu-heading">Settings</div>
+                <SidebarItem
+                        on:press={() => {
+                        theme = "dark";
+                    }}
+                        text="Stream control"
+                        href="/settings"
+                        iconName="gear"
                 />
             </Nav>
         </div>

@@ -1,7 +1,6 @@
 # big data files
 collocations*
 c_ws*.gexf
-*grams.json
 nes*.json
 *collocation_graph*.gexf
 *.emb
