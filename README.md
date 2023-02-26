@@ -18,9 +18,9 @@
 
 - For our dashboard we made use of this template (https://github.com/GeekyAnts/sb-admin-svelte)
   - We rewrote most of the code but copied some pieces that we liked a lot about the template
-- For the graph frontend (word graph and ne graph) we used code from the 'Explore' example from https://www.sigmajs.org/
-- For the graph clustering we used code from this https://stackoverflow.com/questions/62902871/how-can-i-cluster-a-graph-g-created-in-networkx
-- We used this as training and test data for our sentiment analysis https://www.kaggle.com/datasets/yasserh/twitter-tweets-sentiment-dataset
+- For the graph frontend (word graph and ne graph) we used code from the 'Explore' example from (https://www.sigmajs.org/)
+- For the graph clustering we used code from this (https://stackoverflow.com/questions/62902871/how-can-i-cluster-a-graph-g-created-in-networkx)
+- We used this as training and test data for our sentiment analysis (https://www.kaggle.com/datasets/yasserh/twitter-tweets-sentiment-dataset)
 - The TSNE plots on the embedding page are generated using Code from the IDSTA lecture 2022/23 at Heidelberg University, Assignment 3
 
 ## Utilized Libraries
@@ -38,6 +38,21 @@
 ## How to run our Dashboard
 ### Running frontend and middleware via Docker
 *Note: Our project is quite large*
+- In the root directory create a file called `.env`
+- In this file paste and complete:
+```
+PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT=8001
+PUBLIC_DATA_COLLECTION_MIDDLEWARE_PORT=8002
+PUBLIC_TWEET_GENERATION_MIDDLEWARE_PORT=8003
+SSH_HOST=[SSH Host of the server providing the data files that are too large for git. Format: username@IP]
+SSH_PASSWD=[SSH Password of the above mentioned server]
+PATH_TO_DATA_FILES=../../../data/
+ES_URL=http://[IP of the server running Elasticsearch]:9200
+ES_INDEX=tweets
+ES_USERNAME=[Username of the Elasticsearch instance used]
+ES_PASSWD=[Password of the Elasticsearch instance used]
+BEARER_TOKEN=[Bearer Token for the Twitter API]
+```
 - In the root of the project type `docker compose up`
 - Explore our
   - dashboard at `localhost:5173`
@@ -45,51 +60,31 @@
   - data-collection middleware at `localhost:8002/docs`
   - tweet-generation middleware at `localhost:8003/docs`
 
-### Running frontend and middleware separately (only recommended for dev purposes)
-#### Running the frontend
-- Navigate to the `src/frontend` directory
-- `npm install`
-- `npm run dev`
-#### Running the middleware
-- Open the `main.py` in the `src/middleware/middleware/data_retrieval` directory and change the path to the data files to the absolute path to the `src/data` directory
-*Only necessary if the default does not work*
-- Navigate to the `src/middleware` directory
-- `pip install [-e] .`
-- Navigate to the `src/middleware/middleware/data_retrieval` directory
-- `python[3] -m uvicorn main:app --reload`
-
-*Note for Dennis: Many of our data files are too large for git. So without these files some functionalities are unavailable(the middleware just doesn't respond). These functionalities include: Dispaly of n-grams, Tweet generation based on n-grams, Custom collocation-graph building*
-
 ## Planning State
-Our project currently features a fully functioning elasticsearch server that captured tweets about the FIFA World Cup in Qatar.
-Additionally, we have a dashboard prototype. We agreed on a design and text analytics features we want to implement. The base functionality of the core features have been implemented. Some of them are not yet displayed on the frontend.
+Our project currently features a fully functioning Elasticsearch server that captured tweets about the FIFA World Cup in Qatar. The Dashboard is fully implemented and the project has full Docker support.
 
 ### Future planning
-Moving forward, we plan to implement the following text analytics tasks as well as improve our dashboard to make it more visually appealing:
-- Wordclouds: Common words, Entities
-- Topic Modeling using NNMF/SVD to gain insights about topics discussed
-- word embeddings
-- basic stats about tweets and users (number of tweets/users, user with the most tweets/most followers, hashtags commonly used together...)
-- sentiment analysis on the whole corpus to filter out sentiment by location, follower count etc.
+If we had more time we would tackle the following points:
+- Improve UI
 
 ### High-level Architecture Description
 We split our project code into three parts. The **frontend** based on svelte, the **python middleware** for analysis tasks and as a connection to the **elasticsearch backend** that runs on our server.
 All requests to elasticsearch are handled by the middleware. The frontend only loads data from local files or from the middleware but never directly accesses elasticsearch. But as stated above the middleware does not only provide a connection to the backend but is also where all analysis tasks take place. Here we write scripts to analyse and process our data.
 
-### Already Done [27.01.2023]
+### Already Done [26.02.2023]
 - Data collection is done
 - We wrote a script the allows us to annotate our collected tweets with custom labels. We already labeled 1000 Tweets
 - Generated unigram, bigram, trigram and fourgram counts *(These files are not included in the repository since they are too large)*
 - Generated collocation counts for a window size of 2, 3 and 4 *(These files are not included in the repository since they are too large)*
-- Basic tweet completion tool based on n-grams
 - Word graph based on collocation counts
-- Sentiment analysis on a small user-defined set of tweets
-
-### Experiments
-We plan to implement a Tweet generator that uses more sophisticated machine learning methods.
+- Sentiment analysis on the whole corpus
+- SVD and NMF on >1,000,000 Tweets
+- Word embeddings using Word2Vec
+- Basic tweet completion tool based on n-grams
+- Tweet Generation using GPT-Neo
 
 ## Current Code State
-Our basic infrastructure is done. We can now comfortably access specific parts of our data an process it in parallel. The classes making up this infrastructure are well commented and (hopefully) understandably written. 
+Our functionality is done. Our classes are mostly well commented and (hopefully) understandably written. The frontend code still requires some refactoring.
 
 # Project Log
 ## November 2022
@@ -112,4 +107,8 @@ Our basic infrastructure is done. We can now comfortably access specific parts o
 - Add basic statistics about our tweets(e. g. age of accounts that posted tweets, their locations...)
 
 ## February 2023
+- Add an entity-collocation graph.
+- Implement Word Embeddings for our corpus. We now have a Word2Vec model trained on the whole corpus.
 - Implement SVD and NMF for topic modeling.
+- Extend Sentiment Analysis. Analysis was applied to the whole corpus split into topics.
+- Major UI Improvements.
