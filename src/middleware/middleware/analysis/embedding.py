@@ -89,6 +89,7 @@ class Embedder:
         w2v.train(stream, epochs=epochs, total_examples=w2v.corpus_count)
         return w2v
 
+    # This code is taken from Assignment 3 of the IDSTA lecture 2022/23 at Heidelberg University
     def tsneplot(self, model: Type[Word2Vec], word: str, num_closest: int = 10, num_furthest: int = 0):
         """Create TSNE plot for a word in a Word2Vec model.
 

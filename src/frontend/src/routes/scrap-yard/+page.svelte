@@ -25,9 +25,33 @@
         on the Document-Term-Matrix, where each tweet is considered as an individual document, performing
         transformations. NMF decomposes the Document-Term-Matrix into a Document-Topic matrix and a Topic-Term matrix.
     </p>
+    <Alert color="primary">
+        'listened pisses equal enter murders method partido burger'
+    </Alert>
+    <Alert color="secondary">
+        'andros verified pk dinamarca wallahi fit womenlifefreedom losers'
+    </Alert>
+    <Alert color="success">
+        'cultural massacred android stones ferdinand mistake truth annoyed'
+    </Alert>
+    <Alert color="danger">
+        'economy pe sexuality nftcollector luuk thigh tribes gift'
+    </Alert>
+    <Alert color="warning">
+        'investment executive fast clue palace arabs 20 atrocities'
+    </Alert>
+    <Alert color="info">
+        'labour thfc bio lifetime ferdinand luuk goalie fake'
+    </Alert>
+    <Alert color="light">
+        'englandsquad sexuality pe bio thigh enter worldcupticket fucking'
+    </Alert>
+    <Alert color="dark">
+        'dumfries emir fishing mar reality abudhabigp lifts pot'
+    </Alert>
     <p>
         It is easy to see that NMF does not provide easy-to-read topics in our application. This could be the case
-        for several reasons. First of all, it is likely a consequence of training NMF on the whole dataset, which
+        for several reasons. First of all, it is likely a consequence of training NMF on 1,000,000 Tweets, which
         includes a wide range of topics where many of them are not relevant, such as spam posts. Furthermore, NMF is a
         relatively simple algorithm compared to more sophisticated transformer-based models. Finally, we did not make a
         selection on the tweets, so it is likely that the amount of noise in the training dataset is high, which would

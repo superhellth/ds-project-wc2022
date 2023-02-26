@@ -26,8 +26,8 @@
 
     // Declaring variables to store the query, the validity of the query, options for size, sorting, and sentiment analysis.
     let query = `"query": {
-\t"match": {
-\t\t"text": "Infantino"
+\t"match_phrase": {
+\t\t"text": "Human rights"
 \t}
 }`;
     let isValid: boolean = true;
