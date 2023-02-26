@@ -39,7 +39,7 @@ services:
       ES_INDEX: $ES_INDEX
       ES_USERNAME: $ES_USERNAME
       ES_PASSWD: $ES_PASSWD
-  tweet-generation-middleware:
+  tweet-generating-middleware:
     ports:
       - $PUBLIC_TWEET_GENERATION_MIDDLEWARE_PORT:$PUBLIC_TWEET_GENERATION_MIDDLEWARE_PORT
     build:
