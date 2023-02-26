@@ -3,8 +3,11 @@
     import Loading from "src/svelte-components/Loading.svelte";
     import GenerateTweetProvider from "src/typescript/api_connections/generateTweetConnection";
     import {onMount} from "svelte";
-    import {Alert, Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Row, Tooltip} from "sveltestrap";
+    import {Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Row, Tooltip} from "sveltestrap";
     import {fly} from "svelte/transition";
+    import TweetCard from "../../svelte-components/TweetCard.svelte";
+    import Tweet from "../../typescript/tweet_management/tweet";
+    import TwitterUser from "../../typescript/tweet_management/twitter-user";
 
     // NGram variables
     let provider: GenerateTweetProvider = GenerateTweetProvider.getInstance();
@@ -19,7 +22,7 @@
 
     // GPT variables
     let textGPT: string = "";
-    let tweetsGPT: Array<string> = [];
+    let tweetsGPT: Array<Tweet> = [];
     let amountTweets: number = 4;
     let temperature: number = 0.7;
     let repetition_penalty: number = 1.2;
@@ -29,11 +32,14 @@
 
     let innerNGram: HTMLTextAreaElement;
     let innerGPT: HTMLTextAreaElement;
+    const twitterUser: TwitterUser = new TwitterUser(new Date(), "tsr", "rst", "rst", "Best User Ever",
+        "https://i0.wp.com/pbs.twimg.com/media/Efso_-yUwAAJpRV.jpg", 0, 0, 0, 0, "trs", "bestusernameever", false);
+
     const resize = () => {
-        innerNGram.style.height = "auto";
-        innerGPT.style.height = "auto";
-        innerNGram.style.height = 100 + innerNGram.scrollHeight + "px";
-        innerGPT.style.height = 100 + innerGPT.scrollHeight + "px";
+        // innerNGram.style.height = "auto";
+        // innerGPT.style.height = "auto";
+        // innerNGram.style.height = 100 + innerNGram.scrollHeight + "px";
+        // innerGPT.style.height = 100 + innerGPT.scrollHeight + "px";
     };
     // async function completeTweet() {
     //     if (text.split(" ").length >= n - 1) {
@@ -51,8 +57,12 @@
 
     async function completeTweet() {
         loadingGPT = true;
-        tweetsGPT = await provider.getFineTunedTweets(textGPT, temperature.toString(), repetition_penalty.toString(),
+        let tweet_texts = await provider.getFineTunedTweets(textGPT, temperature.toString(), repetition_penalty.toString(),
             length_penalty.toString(), amountTweets.toString());
+        for (let i = 0; i < tweet_texts.length; i++) {
+            tweetsGPT.push(new Tweet("", twitterUser, new Date(), "", "", "", false, 0, 0, 0, 0, tweet_texts[i], 0));
+        }
+        tweetsGPT = tweetsGPT;
         loadingGPT = false;
     }
 
@@ -169,6 +179,20 @@
                         on:input={resize}
                 />
             </FormGroup>
+            <p>
+                We used the python library 'aitextgen' which is a wrapper for finetuning language models. To finetune,
+                we used the GPT-neo model with 125m parameters
+                (<a href="https://huggingface.co/EleutherAI/gpt-neo-125M?text=Messi+is">Link</a>) since it was the
+                largest model that we could fine tune given the 10GB VRAM limitation of the used GPU. Finding proper
+                tweets to feed into the model proofed to be difficult. Not properly understanding what actually happened
+                in the background of the learning process didn't help either.
+            </p>
+            <p>
+                Because of these reasons we moved the tweet generation to the experimental section of our project.
+                <br>
+                Anyways, enjoy! A good starting point would be 'Messi is'. This seems to generate decent results (well,
+                at least sometimes^^).
+            </p>
             <Form inline>
                 <Form>
                     <Label for="amount-tweet-select">Amount of Tweets</Label>
@@ -244,13 +268,21 @@
             <Row cols={{ xl: 4, lg: 3, md: 2, sm: 1 }}>
                 {#each tweetsGPT as t}
                     <Col>
-                        <Alert color="primary">
-                            <h5 style="color: black">Tweet</h5>
-                            {t}
-                        </Alert>
+                        <TweetCard
+                                data={t}
+                                showDetails=""
+                                sentimentMethod="None"
+                                sentimentMethodIndex="10"
+                                sentimentScore="1"
+                        />
                     </Col>
                 {/each}
             </Row>
+        </Form>
+        <Form>
+            <p>
+                Sources: (Very authentic) profile picture from (https://i0.wp.com/pbs.twimg.com/media/Efso_-yUwAAJpRV.jpg [Accessed: 26.02.2023])
+            </p>
         </Form>
     </FormGroup>
 </div>
