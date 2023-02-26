@@ -1,6 +1,7 @@
 <script lang="ts">
     // Import Svelte components used in this script
     import {
+        Alert,
         Breadcrumb,
         BreadcrumbItem,
     } from "sveltestrap";
@@ -19,35 +20,77 @@
 <div in:fly={{ x: 400, duration: 400, delay: 200 }}>
     <h4>NMF</h4>
     <p>
-        NMF (Non-negative Matrix Factorization) originates from Linear Algebra and is a technique widely used in topic modeling. The goal of this algorithm is extracting the underlying topics of our dataset
-        It is one of the less sophisticated methods since it is operating onyl the Document-Term-Matrix, where each tweet is considered as an individual document, performing transformations.
-        NMF decomposes the Document-Term-Matrix into a Document-Topic matrix and a Topic-Term matrix.
-        <li></li>
-        As it is easy to see the NMF does not provide easy to read topics in our application. This could be the case for several reasons:
-        First of all this is probaly a consequence of traing the NMF on the whole dataset which includes a wide range of topics where many of them are not relevant e.g. spam post etc. 
-        Furthermore is NMF a releativly simple algorithm which is not as sophisticated as for example transformer-based models. Finally we did not made a selection on the tweets so it is likely that the amount of noise in the training datset is high which would defintely worsen the results.
-
+        NMF (Non-negative Matrix Factorization) is a technique widely used in topic modeling that originates from
+        Linear Algebra. The goal of this algorithm is to extract the underlying topics of a dataset. It operates only
+        on the Document-Term-Matrix, where each tweet is considered as an individual document, performing
+        transformations. NMF decomposes the Document-Term-Matrix into a Document-Topic matrix and a Topic-Term matrix.
+    </p>
+    <p>
+        It is easy to see that NMF does not provide easy-to-read topics in our application. This could be the case
+        for several reasons. First of all, it is likely a consequence of training NMF on the whole dataset, which
+        includes a wide range of topics where many of them are not relevant, such as spam posts. Furthermore, NMF is a
+        relatively simple algorithm compared to more sophisticated transformer-based models. Finally, we did not make a
+        selection on the tweets, so it is likely that the amount of noise in the training dataset is high, which would
+        definitely worsen the results.
     </p>
     <h4>SVD</h4>
     <p>
-        SVD (Singular Value Decomposition) originates from Linear Algebra and is a technique widely used in topic modeling. The goal of this algorithm is extracting the underlying topics of our dataset
-        It is one of the less sophisticated methods since it is operating onyl the Document-Term-Matrix, where each tweet is considered as an individual document, performing transformations.
-        After it has been trained on our whole dataset in order to extract the eigth most prominent topics discribed by fifteen words it provides the following information:
-
-        <li>'link live world cup vs fifaworldcup 2022 qatar2022 fifa qatar stream argentina worldcup2022 fifaworldcup2022 qatarworldcup2022'</li>
-        <li>'world cup qatar 2022 fifa nt win football team messi game opening time final england'</li>
-        <li>'live vs 2022 fifa stream cup world qatar2022 hd ceremony opening streaming ecuador watch retweet'</li>
-        <li>'fifaworldcup qatar2022 qatar argentina vs nt messi england game football worldcup2022 qatarworldcup2022 team match iran'</li>
-        <li>'qatar 2022 fifa ecuador opening ceremony worldcup senegal link fifaworldcup2022 worldcup2022 doha host rights massage'</li>
-        <li>'vs argentina nt qatar messi brazil england game netherlands croatia win mexico saudi team arabia'</li>
-        <li>'argentina messi fifa 2022 saudi mexico arabia lionel ceremony opening goat argentinavsmexico saudiarabia fifaworldcup2022 ronaldo'</li>
-        <li>'vs brazil england croatia argentina 2022 usa fifa netherlands worldcup2022 qatar2022 japan iran france wales'</li>
-
-        It is easy to see that the most important topics according to SVD are all strongly related to the World Championship with focus on the football itself.
-        Furthermore there are many countries highly prominent e.g. Argentinia or Saudi Arabia and some hashtags like #FIFAWORLDCUP2022. Additionally Messi is highly important since both Messi and Lionel appear.
-        However, the output you provided is not the best result because it lacks context and specificity. The topics generated are too broad and generic, which makes it difficult to gain any insights or draw meaningful conclusions from them.
-        This is probably a result of training the SVD on the whole dataset without further cleaning and preparation. This results for example in the appearance of words which are highly associated with spam tweets in our dataset e.g. streaming, live etc.
-        Additionally it is to mention that we used the truncated SVD, a less precise deviation from the original algorithm which has a better performance. This was necessary since our dataset is very extensive. This probably worsens our results as well.
-        In conclusion the SVD did not hold up much usefull isghts on the topics discussed in our dataset but is an important example for the dependency on cleaned and optimised input data for an algorithm in order to provide useful results.
+        SVD (Singular Value Decomposition) is a technique widely used in topic modeling that originates from Linear
+        Algebra.
+        The goal of this algorithm is to extract the underlying topics of a dataset. It operates only on the
+        Document-Term-Matrix, where each tweet is considered as an individual document, performing transformations.
+        After training on our whole dataset in order to extract the eight most prominent topics described by fifteen
+        words, it provides the following information:
+    </p>
+    <Alert color="primary">
+        'link live world cup vs fifaworldcup 2022 qatar2022 fifa qatar stream argentina worldcup2022
+            fifaworldcup2022 qatarworldcup2022'
+    </Alert>
+    <Alert color="secondary">
+        'world cup qatar 2022 fifa nt win football team messi game opening time final england'
+    </Alert>
+    <Alert color="success">
+        'live vs 2022 fifa stream cup world qatar2022 hd ceremony opening streaming ecuador watch retweet'
+    </Alert>
+    <Alert color="danger">
+        'fifaworldcup qatar2022 qatar argentina vs nt messi england game football worldcup2022 qatarworldcup2022
+            team match iran'
+    </Alert>
+    <Alert color="warning">
+        'qatar 2022 fifa ecuador opening ceremony worldcup senegal link fifaworldcup2022 worldcup2022 doha host
+            rights massage'
+    </Alert>
+    <Alert color="info">
+        'vs argentina nt qatar messi brazil england game netherlands croatia win mexico saudi team arabia'
+    </Alert>
+    <Alert color="light">
+        'argentina messi fifa 2022 saudi mexico arabia lionel ceremony opening goat argentinavsmexico saudiarabia
+            fifaworldcup2022 ronaldo'
+    </Alert>
+    <Alert color="dark">
+        'vs brazil england croatia argentina 2022 usa fifa netherlands worldcup2022 qatar2022 japan iran france
+            wales'
+    </Alert>
+    <p>
+        It is easy to see that the most important topics according to SVD are all strongly related to the World Cup
+        with a focus on football. Furthermore, many countries are highly prominent, such as Argentina and Saudi Arabia,
+        and some hashtags like #FIFAWORLDCUP2022. Additionally, Messi is highly important since both "Messi" and
+        "Lionel" appear.
+        <br>
+        However, the output provided is not the best result because it lacks context and specificity. The topics
+        generated are too broad and generic, making it difficult to gain any insights or draw meaningful conclusions
+        from them. This is probably a result of training SVD on the whole dataset without further.cleaning and
+        preparation. This results in the appearance of words that are highly associated with spam tweets in our dataset,
+        such as "streaming" and "live."
+        <br>
+        Additionally, it is worth noting that we used truncated SVD, a less precise deviation from the original
+        algorithm that has better performance but may have worsened our results. This was necessary since our dataset is
+        very extensive.
+        <br>
+        In conclusion, the SVD did not provide many useful insights on the topics discussed in our dataset. However, it
+        is an important example of the dependency on cleaned and optimized input data for an algorithm to provide useful
+        results. To improve the quality of the output, it is essential to conduct further cleaning and preparation of
+        the dataset and consider using more sophisticated algorithms, such as transformer-based models, for topic
+        modeling.
     </p>
 </div>

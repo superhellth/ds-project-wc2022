@@ -21,6 +21,7 @@
 - For the graph frontend (word graph and ne graph) we used code from the 'Explore' example from https://www.sigmajs.org/
 - For the graph clustering we used code from this https://stackoverflow.com/questions/62902871/how-can-i-cluster-a-graph-g-created-in-networkx
 - We used this as training and test data for our sentiment analysis https://www.kaggle.com/datasets/yasserh/twitter-tweets-sentiment-dataset
+- The TSNE plots on the embedding page are generated using Code from the IDSTA lecture 2022/23 at Heidelberg University, Assignment 3
 
 ## Utilized Libraries
 

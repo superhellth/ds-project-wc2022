@@ -1,7 +1,7 @@
 import TwitterUser from "./twitter-user";
 
 /**
- * Our ts class for Tweets. Stores and provied all data we have about a tweet. (Not yet though -_-)
+ * Our ts class for Tweets. Stores data we need about a tweet.
  */
 class Tweet {
 

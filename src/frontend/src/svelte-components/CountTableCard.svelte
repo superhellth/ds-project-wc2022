@@ -42,7 +42,7 @@
             </Input>
             {#if showStopWordSwitch}
                 <Input
-                        id="c3"
+                        id="j4"
                         type="switch"
                         label="Include Stop Words"
                         bind:checked={includeStopWords}
