@@ -53,8 +53,11 @@
         It is easy to see that NMF does not provide easy-to-read topics in our application. This could be the case
         for several reasons. First of all, it is likely a consequence of training NMF on 1,000,000 Tweets, which
         includes a wide range of topics where many of them are not relevant, such as spam posts. Furthermore, NMF is a
-        relatively simple algorithm compared to more sophisticated transformer-based models. Finally, we did not make a
-        selection on the tweets, so it is likely that the amount of noise in the training dataset is high, which would
+        relatively simple algorithm compared to more sophisticated transformer-based models.
+        Another limitation of NMF is that it assumes a linear relationship between the document-term matrix and the topics.
+        This assumption may not hold in the case of our tweet based dataset, especially since we are dealing with complex data such as text.
+        Moreover the stylistic of tweets is highly dependent on the individual user e.g. posts of private users about Lionel Messi shoting a goal in comparison to posts by professional users who are promoting their live streaming page.
+        Finally, we did not make a selection on the tweets, so it is likely that the amount of noise in the training dataset is high, which would
         definitely worsen the results.
     </p>
     <h4>SVD</h4>
@@ -103,7 +106,7 @@
         <br>
         However, the output provided is not the best result because it lacks context and specificity. The topics
         generated are too broad and generic, making it difficult to gain any insights or draw meaningful conclusions
-        from them. This is probably a result of training SVD on the whole dataset without further.cleaning and
+        from them. This is probably a result of training SVD on the whole dataset without further cleaning and
         preparation. This results in the appearance of words that are highly associated with spam tweets in our dataset,
         such as "streaming" and "live."
         <br>
