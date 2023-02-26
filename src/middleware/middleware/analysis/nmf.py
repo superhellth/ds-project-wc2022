@@ -39,6 +39,8 @@ class NMF_topic_modeling:
         return [' '.join(t) for t in topic_words]
 
     # method to print the results, i.e., the shape of the topic-term matrix and the top words for each topic
+    # num_topics = number of topics, num_top_words = Number of the most prominent topics which are geting extracted
+    # list(self.cv.vocabulary_.keys()) = vocabulary build on the loaded tweets transformed to a list
     def print_results(self, num_topics, num_top_words):
         print(self.topic_term_matrix.shape)
         print(self.topic_term_matrix[:2, :].shape)
