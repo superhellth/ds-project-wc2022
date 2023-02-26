@@ -52,7 +52,7 @@
                         theme = "dark";
                     }}
                     text="Unigrams insights"
-                    href="/statistics/unigram-insights"
+                    href="/unigram-insights"
                     iconName="input-cursor-text"
                 />
                 <div class="sb-sidenav-menu-heading">Text Analytics</div>

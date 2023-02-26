@@ -36,9 +36,6 @@
     <BreadcrumbItem>
         <a href=".">Dashboard</a>
     </BreadcrumbItem>
-    <BreadcrumbItem>
-        <a href="/statistics">Statistics</a>
-    </BreadcrumbItem>
     <BreadcrumbItem active>Unigrams</BreadcrumbItem>
 </Breadcrumb>
 <h4>Welcome to the unigram page!</h4>
