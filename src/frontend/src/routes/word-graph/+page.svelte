@@ -325,7 +325,7 @@
             embeddingSize,
             clusterAlg,
             nClusters,
-            nesOnly
+            false
         );
 
         const Graph = await import("graphology").then((m) => m.default);

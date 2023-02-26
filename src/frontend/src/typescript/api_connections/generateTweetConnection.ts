@@ -30,6 +30,23 @@ class GenerateTweetProvider extends Connection {
         const data = await fetch(queryURL).then((response) => response.json());
         return await data;
     }
+
+    /**
+     * Get completed Tweet. Completion based on n-grams.
+     * @param given Start of the tweet text. This string will be completed.
+     * @param tweetLength Number of tokens to append to given.
+     * @param n n in n-gram.
+     * @param topPercentage Number of n-grams to consider when completing the text. The higher this value more less frequent n-grams will be considered.
+     * @param allowRepition Allow repition of n-grams in completion.
+     * @returns The completed tweet as string.
+     */
+    public async getCompletedTweet(given: string, tweetLength: number, n: number, topPercentage: number, allowRepition: boolean): Promise<string> {
+        let repitionString: string = allowRepition ? "True" : "False"
+        let queryURL: string = this.URL + "/analysis/ngrams/generate?given=" + given + "&tweet_length=" + tweetLength + "&n=" + n
+            + "&percent_n_grams=" + topPercentage + "&allow_repitition=" + repitionString;
+        const data = await fetch(queryURL).then((response) => response.text());
+        return data.replaceAll('"', '');
+    }
 }
 
 export default GenerateTweetProvider;

@@ -36,24 +36,22 @@
         "https://i0.wp.com/pbs.twimg.com/media/Efso_-yUwAAJpRV.jpg", 0, 0, 0, 0, "trs", "bestusernameever", false);
 
     const resize = () => {
-        // innerNGram.style.height = "auto";
-        // innerGPT.style.height = "auto";
-        // innerNGram.style.height = 100 + innerNGram.scrollHeight + "px";
-        // innerGPT.style.height = 100 + innerGPT.scrollHeight + "px";
+        innerNGram.style.height = "auto";
+        innerNGram.style.height = 100 + innerNGram.scrollHeight + "px";
     };
-    // async function completeTweet() {
-    //     if (text.split(" ").length >= n - 1) {
-    //         loading = true;
-    //         textNGram = await provider.getCompletedTweet(
-    //             textNGram,
-    //             tweetLength,
-    //             n,
-    //             topPercentage,
-    //             allowRepition
-    //         );
-    //         loading = false;
-    //     }
-    // }
+    async function completeTweetNGram() {
+        if (textNGram.split(" ").length >= n - 1) {
+            loadingNGram = true;
+            textNGram = await provider.getCompletedTweet(
+                textNGram,
+                tweetLength,
+                n,
+                topPercentage,
+                allowRepition
+            );
+            loadingNGram = false;
+        }
+    }
 
     async function completeTweet() {
         loadingGPT = true;
@@ -94,7 +92,7 @@
                     id="tweet-input"
                     type="textarea"
                     bind:value={textNGram}
-                    bind:innerNGram
+                    bind:inner={innerNGram}
                     on:input={resize}
             />
             <div>
@@ -143,7 +141,7 @@
                     </Form>
                     <Form style="margin-left: 2em">
                         <Label>Complete Tweet</Label>
-                        <Button type="button" id="complete-button" on:click={() => completeTweet()}
+                        <Button type="button" id="complete-button" on:click={() => completeTweetNGram()}
                         >Complete
                         </Button
                         >
@@ -166,6 +164,7 @@
                     <br/> Also note that the first tweet generated for each n-gram size
                     is always the slowest, since the n-grams have to be loaded from file.
                 </p>
+                <p style="color: red">In the docker version of this page, you can only choose n=1, because the other n-gram files would be too large.</p>
             </div>
         </Form>
 
@@ -175,7 +174,7 @@
                 <Input
                         id="tweet-input-gptneo"
                         bind:value={textGPT}
-                        bind:innerGPT
+                        bind:inner={innerGPT}
                         on:input={resize}
                 />
             </FormGroup>
@@ -270,9 +269,9 @@
                     <Col>
                         <TweetCard
                                 data={t}
-                                showDetails=""
+                                showDetails={false}
                                 sentimentMethod="None"
-                                sentimentMethodIndex="10"
+                                sentimentMethodIndex={-1}
                                 sentimentScore="1"
                         />
                     </Col>

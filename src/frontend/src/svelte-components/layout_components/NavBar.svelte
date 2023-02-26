@@ -4,7 +4,7 @@
     import NavbarBrand from "sveltestrap/src/NavbarBrand.svelte";
 
     // Import the FormGroup and Input components from the svelte-strap library
-    import {Button, FormGroup, Icon, Input, NavbarToggler} from "sveltestrap";
+    import { Button, FormGroup, Icon, Input, NavbarToggler } from "sveltestrap";
 
     // Define a variable for the title of the NavbarBrand
     export let title: string;
@@ -28,24 +28,20 @@
 </script>
 
 <Navbar
-        class="sb-topnav navbar-expand"
-        style="background-color: var(--nav-bar-color)"
-        dark
-        expand="md"
+    class="sb-topnav navbar-expand"
+    style="background-color: var(--nav-bar-color)"
+    dark
+    expand="md"
 >
-    <Button style="background: transparent; border: 0" on:click={() => sideBarIsOpen = !sideBarIsOpen}
-    >
-        <Icon name="list"/>
-    </Button
-    >
+    <img src="favicon.png" style="width: 35px; height: 35px; margin-left: 15px" />
     <NavbarBrand style="color: var(--primary-color)">{title}</NavbarBrand>
     <FormGroup>
         <Input
-                id="c3"
-                type="switch"
-                label="Dark mode"
-                on:input={toggleTheme}
-                checked
+            id="c3"
+            type="switch"
+            label="Dark mode"
+            on:input={toggleTheme}
+            checked
         />
     </FormGroup>
 </Navbar>

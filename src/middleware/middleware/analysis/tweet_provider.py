@@ -1,4 +1,7 @@
+import os
+import sys
 import queue
+from dotenv import load_dotenv
 from elasticsearch import helpers, Elasticsearch
 from middleware.tweet_management import twitter_tweet
 
@@ -7,9 +10,28 @@ class TweetProvider:
     """This class provides tweets from ES either as tweet objects or as strings."""
 
     def __init__(self):
+        print("Trying to read preset environment variables...")
+        if os.getenv("ES_URL") is None:
+            print("Error.")
+            print("Trying to load local dotenv file...")
+            load_dotenv()
+
+        try:
+            es_url = os.getenv("ES_URL")
+            es_index = os.getenv("ES_INDEX")
+            es_username = os.getenv("ES_USERNAME")
+            es_passwd = os.getenv("ES_PASSWD")
+        except:
+            print("Error.")
+            print(
+                "You have to provide the following environment variables: PATH_TO_DATA_FILES, ES_URL, ES_INDEX, ES_USERNAME, ES_PASSWD either as dotenv file or by setting the manually.")
+            sys.exit()
+
+        print("Successfully read environment variables!")
+
         self.es_client = Elasticsearch(
-            "http://45.13.59.173:9200", http_auth=("elastic", "sicheristsicher"))
-        self.index = "tweets"
+            es_url, http_auth=(es_username, es_passwd))
+        self.index = es_index
         self.queue = queue.Queue()
 
     def get_tweet_list(self, size=100, body={"match_all": {}}):
