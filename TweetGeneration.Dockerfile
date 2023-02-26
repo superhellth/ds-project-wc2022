@@ -4,12 +4,21 @@ FROM python:3.8-slim-buster
 
 # define build args
 ARG PORT
+ARG SSH_HOST
+ARG SSH_PASSWD
 ENV PORT=${PORT}
+
+# install sshpass
+RUN apt-get update && \
+    apt-get install -y sshpass
 
 # project level
 WORKDIR /
 # copy data folder
 COPY ./src/data ./data
+RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/pytorch_model.bin ./data/generator-model
+
+# copy code
 COPY ./src/middleware /src
 
 WORKDIR /src

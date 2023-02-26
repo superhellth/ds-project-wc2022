@@ -47,6 +47,8 @@ services:
       dockerfile: TweetGeneration.Dockerfile
       args:
         PORT: $PUBLIC_TWEET_GENERATION_MIDDLEWARE_PORT
+        SSH_HOST: $SSH_HOST
+        SSH_PASSWD: $SSH_PASSWD
     environment:
       PATH_TO_DATA_FILES: ../../../data/
       BEARER_TOKEN: $BEARER_TOKEN
