@@ -13,7 +13,7 @@ COPY ./src/data ./data
 COPY ./src/middleware /src
 
 WORKDIR /src
-RUN pip install pytorch-lightning==1.7.7 fastapi[all] aitextgen uvicorn elasticsearch==7.17
+RUN pip install pytorch-lightning==1.7.7 fastapi[all] aitextgen uvicorn elasticsearch==7.17 scikit-learn
 
 # directory of fastapi script
 WORKDIR /src/middleware/tweet_generation

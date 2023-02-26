@@ -17,6 +17,8 @@ services:
       dockerfile: DataRetrieval.Dockerfile
       args:
         PORT: $PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT
+        SSH_HOST: $SSH_HOST
+        SSH_PASSWD: $SSH_PASSWD
     environment:
       PATH_TO_DATA_FILES: ../../../data/
       ES_URL: $ES_URL
