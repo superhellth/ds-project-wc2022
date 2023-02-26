@@ -19,10 +19,13 @@ COPY ./src/data ./data
 RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/collocations2.json ./data
 RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/collocations3.json ./data
 RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/collocations4.json ./data
-RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/w2v_epochs=100.emb ./data/word-embeddings
-RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/w2v_epochs=100.emb.syn1neg.npy ./data/word-embeddings
-RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/w2v_epochs=100.emb.wv.vectors.npy ./data/word-embeddings
-RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/pytorch_model.bin ./data/generator-model
+
+WORKDIR /data
+RUN mkdir word-embeddings
+RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/w2v_epochs=100.emb ./word-embeddings
+RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/w2v_epochs=100.emb.syn1neg.npy ./word-embeddings
+RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/w2v_epochs=100.emb.wv.vectors.npy ./word-embeddings
+RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/pytorch_model.bin ./generator-model
 
 # copy code
 COPY ./src/middleware /src
