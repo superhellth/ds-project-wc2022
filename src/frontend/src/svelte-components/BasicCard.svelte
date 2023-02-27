@@ -11,7 +11,7 @@
 <Card style="margin: 2px">
     <!-- The Card has a header, which displays the text passed to the "header" variable and a Twitter icon -->
     <CardHeader>
-        <h3 style="color: var(--primary-color)">{header}
+        <h3 style="color: var(--primary-color) !important">{header}
             <Icon name="twitter"/>
         </h3>
     </CardHeader>
