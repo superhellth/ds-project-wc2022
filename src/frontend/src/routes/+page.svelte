@@ -27,7 +27,6 @@
             50
         );
         for (const [key, value] of locations) {
-            console.log(key)
             let locationPos = await getCoordinates(key);
             if (locationPos.lat == 0 && locationPos.lng == 0) {
                 continue;

@@ -10,52 +10,61 @@
     --qatar-color: #630E2B;
 
     --primary-color: var(--twitter-dimmed-primary-color);
-    --secondary-color: var(--twitter-dimmed-secondary-color);
+    --secondary-color: var(--qatar-color);
+    --background-color: var(--twitter-dimmed-bg-color);
+    --surface-color: var(--twitter-dimmed-trends-color);
+    --text-color: #FFFFFF;
+    --link-color: var(--primary-color);
+
+    // custom components
     --nav-bar-color: var(--twitter-dimmed-search-color);
     --side-bar-color: var(--twitter-dimmed-trends-color);
-    --background-color: var(--twitter-dimmed-bg-color);
-    --text-color: #FFFFFF;
-    --inverse-text-color: #000000;
-    --tweet-card-background-color: var(--secondary-color);
-    --basic-card-background-color: #1c2f3d;
-    --breadcrumbs-background-color: rgb(0, 8, 32);
+    --basic-card-background-color: var(--surface-color);
+    --breadcrumbs-background-color: var(--surface-color);
 }
 
 :global([data-theme="light"]) {
-    --primary-color: var(--twitter-dimmed-primary-color);
-    --secondary-color: #FFFFFF;
-    --nav-bar-color: #343a40;
-    --side-bar-color: #212529;
-    --background-color: #FFFFFF;
     --text-color: #000000;
-    --inverse-text-color: #FFFFFF;
-    --tweet-card-background-color: #dae9f2;
+    --background-color: #FFFFFF;
+
+    --nav-bar-color: #DDDDDD;
+    --side-bar-color: #a8a8a8;
+    --surface-color: #EEEEEE;
     --basic-card-background-color: #FFFFFF;
-    --breadcrumbs-background-color: #e9ecef;
+    --breadcrumbs-background-color: #EEEEEE;
+    
+    --link-color: var(--primary-color);
 }
 
 :global([data-theme="dark"]) {
     --primary-color: var(--twitter-dimmed-primary-color);
-    --secondary-color: var(--twitter-dimmed-secondary-color);
+    --secondary-color: var(--qatar-color);
+    --background-color: var(--twitter-dimmed-bg-color);
+    --surface-color: var(--twitter-dimmed-trends-color);
+    --text-color: #FFFFFF;
+    --link-color: var(--primary-color);
+
+    // custom components
     --nav-bar-color: var(--twitter-dimmed-search-color);
     --side-bar-color: var(--twitter-dimmed-trends-color);
-    --background-color: var(--twitter-dimmed-bg-color);
-    --text-color: #FFFFFF;
-    --inverse-text-color: #000000;
-    --tweet-card-background-color: var(--secondary-color);
-    --basic-card-background-color: #1c2f3d;
-    --breadcrumbs-background-color: rgb(0, 8, 32);
+    --basic-card-background-color: var(--surface-color);
+    --breadcrumbs-background-color: var(--surface-color);
 }
 
-// set text color
+// text color
 p,
 h1,
 h2,
 h3,
 h4,
 h5,
+strong,
+.m-0,
 th,
+// a.nav-link,
+// div.sb-sidenav-menu-heading,
 td,
+li.active.breadcrumb-item,
 b.inv,
 li.s-GLbwxcRWqclP,
 li.s-ohTpp-SwD4s-,
@@ -66,13 +75,34 @@ label.form-check-label,
 div.card-body,
 div.card-footer,
 .mdc-deprecated-list-item__text {
-    color: var(--text-color);
+    color: var(--text-color) !important;
+}
+a {
+    color: var(--link-color);
 }
 
-// set text color to elements that stay white
-.progress-bar,
-h5.m-0 {
-    color: #000000;
+// primary color
+div.progress-bar,
+.spinner-border.ml-4.text-twitter-color,
+button.btn-secondary {
+    background-color: var(--primary-color);
+}
+
+// secondary color
+a.nav-link:hover {
+    color: var(--secondary-color) !important;
+}
+
+// surface color
+textarea,
+input,
+.btn-secondary:hover,
+.form-select,
+.accordion-button:not(.collapsed),
+.collapsed.accordion-button {
+    background-color: var(--surface-color) !important;
+    border: 1px solid var(--primary-color) !important;
+    color: var(--text-color) !important;
 }
 
 // set background colors
@@ -81,39 +111,18 @@ th,
 td,
 div.modal-content.svelte-q841md,
 table.table-dark {
-    background-color: var(--secondary-color);
+    background-color: var(--background-color) !important;
+    border: 1px solid var(--primary-color);
 }
+
 // cards
 div.card {
     background-color: var(--basic-card-background-color);
 }
-// buttons
-button.btn-secondary {
-    background-color: var(--primary-color);
-}
 // breadcrumbs
 .breadcrumb {
     background-color: var(--breadcrumbs-background-color);
-}
-li.active.breadcrumb-item {
-    color: var(--text-color);
-}
-
-// Tweet card stuff
-.bg-tweet {
-    background-color: var(--tweet-card-background-color) !important;
-}
-a.bg-tweet:hover,
-a.bg-tweet:focus,
-button.bg-tweet:hover,
-button.bg-tweet:focus {
-    background-color: #aad6f2 !important;
-}
-.bg-twitter-color {
-    background-color: #1DA1F2 !important;
-}
-.text-twitter-color {
-    color: #1DA1F2 !important;
+    border: 1px solid var(--primary-color) !important;
 }
 
 p.hint {

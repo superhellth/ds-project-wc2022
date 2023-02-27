@@ -146,8 +146,6 @@
         resize();
         visible = true;
         let queryInput = document.getElementById("query-input")!;
-        queryInput.style.backgroundColor = "var(--side-bar-color)";
-        queryInput.style.color = "#FFFFFF";
         queryInput.addEventListener("keydown", function (e) {
             if (e.key == "Tab") {
                 // Prevent the default behavior of the "Tab" key
