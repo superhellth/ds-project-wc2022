@@ -596,8 +596,7 @@
         </Form>
         <Button
                 type="button"
-                on:click={() => rebuildGraph()}
-                style="background: blue">Rebuild Graph
+                on:click={() => rebuildGraph()}>Rebuild Graph
         </Button
         >
         {#if loading}

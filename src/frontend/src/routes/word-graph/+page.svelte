@@ -685,7 +685,7 @@
         <Button
                 type="button"
                 on:click={() => rebuildGraph()}
-                style="background: blue">Rebuild Graph
+                >Rebuild Graph
         </Button
         >
         {#if loading}

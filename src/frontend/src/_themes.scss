@@ -1,6 +1,7 @@
 :root {
     --twitter-dimmed-bg-color: #15202B;
     --twitter-dimmed-primary-color: #1A8EDB;
+    --twitter-dimmed-primary-color-transparent: #1a8edb88;
     --twitter-dimmed-secondary-color: #1C2732;
     --twitter-dimmed-trends-color: #1E2732;
     --twitter-dimmed-search-color: #273340;
@@ -10,11 +11,15 @@
     --qatar-color: #630E2B;
 
     --primary-color: var(--twitter-dimmed-primary-color);
+    --primary-transparent: var(--twitter-dimmed-primary-color-transparent);
     --secondary-color: var(--qatar-color);
     --background-color: var(--twitter-dimmed-bg-color);
     --surface-color: var(--twitter-dimmed-trends-color);
     --text-color: #FFFFFF;
     --link-color: var(--primary-color);
+    --nav-link-color: rgba(255, 255, 255, 0.5);
+    --nav-link-color-hovered: var(--secondary-color);
+    --nav-link-heading-color: rgba(255, 255, 255, 0.25);
 
     // custom components
     --nav-bar-color: var(--twitter-dimmed-search-color);
@@ -26,13 +31,15 @@
 :global([data-theme="light"]) {
     --text-color: #000000;
     --background-color: #FFFFFF;
+    --nav-link-color: rgba(0, 0, 0, 0.75);
+    --nav-link-color-hovered: var(--primary-color);
+    --nav-link-heading-color: rgba(0, 0, 0, 0.5);
 
-    --nav-bar-color: #DDDDDD;
-    --side-bar-color: #a8a8a8;
-    --surface-color: #EEEEEE;
+    --nav-bar-color: #282A35;
+    --side-bar-color: #E7E9EB;
+    --surface-color: #E7E9EB;
     --basic-card-background-color: #FFFFFF;
     --breadcrumbs-background-color: #EEEEEE;
-    
     --link-color: var(--primary-color);
 }
 
@@ -43,12 +50,28 @@
     --surface-color: var(--twitter-dimmed-trends-color);
     --text-color: #FFFFFF;
     --link-color: var(--primary-color);
+    --nav-link-color: rgba(255, 255, 255, 0.5);
+    --nav-link-color-hovered: var(--secondary-color);
+    --nav-link-heading-color: rgba(255, 255, 255, 0.25);
 
     // custom components
     --nav-bar-color: var(--twitter-dimmed-search-color);
     --side-bar-color: var(--twitter-dimmed-trends-color);
     --basic-card-background-color: var(--surface-color);
     --breadcrumbs-background-color: var(--surface-color);
+}
+
+a.nav-link,
+div.sb-nav-link-icon {
+    color: var(--nav-link-color) !important;
+}
+
+div.sb-sidenav-menu-heading {
+    color: var(--nav-link-heading-color) !important;
+}
+// secondary color
+a.nav-link:hover {
+    color: var(--nav-link-color-hovered) !important;
 }
 
 // text color
@@ -61,8 +84,6 @@ h5,
 strong,
 .m-0,
 th,
-// a.nav-link,
-// div.sb-sidenav-menu-heading,
 td,
 li.active.breadcrumb-item,
 b.inv,
@@ -75,8 +96,9 @@ label.form-check-label,
 div.card-body,
 div.card-footer,
 .mdc-deprecated-list-item__text {
-    color: var(--text-color) !important;
+    color: var(--text-color);
 }
+
 a {
     color: var(--link-color);
 }
@@ -88,16 +110,13 @@ button.btn-secondary {
     background-color: var(--primary-color);
 }
 
-// secondary color
-a.nav-link:hover {
-    color: var(--secondary-color) !important;
-}
-
 // surface color
 textarea,
 input,
 .btn-secondary:hover,
 .form-select,
+div.accordion-item,
+div.modal-content,
 .accordion-button:not(.collapsed),
 .collapsed.accordion-button {
     background-color: var(--surface-color) !important;
@@ -105,10 +124,16 @@ input,
     color: var(--text-color) !important;
 }
 
+input.form-range {
+    border: none !important;
+    background-color: var(--background-color) !important;
+}
+
 // set background colors
 div.accordion-body,
 th,
 td,
+input.form-control:disabled,
 div.modal-content.svelte-q841md,
 table.table-dark {
     background-color: var(--background-color) !important;
@@ -118,7 +143,22 @@ table.table-dark {
 // cards
 div.card {
     background-color: var(--basic-card-background-color);
+    border: 1px solid var(--primary-color);
 }
+
+div.card-header {
+    padding-left: 30px;
+}
+
+// shadows
+.shadow {
+    box-shadow: 0 0.5rem 1rem var(--primary-color) !important;
+}
+
+select.form-select:focus {
+    box-shadow: 0 0 0 0.2rem var(--primary-transparent);
+}
+
 // breadcrumbs
 .breadcrumb {
     background-color: var(--breadcrumbs-background-color);
