@@ -339,7 +339,16 @@
                 <Row>
                     <SentimentByCard
                             header="Sentiment over time by different methods"
-                            footer="This graph clearly shows"
+                            footer="Looking at the graph, a few insights present themselves. First, the
+                            'SGDClassifierOther' seems to biased towards neutrality. This has to do something with our
+                            training data since the 'SGDClassifier' that is using our own data does not suffer from
+                            that bias. Another interesting observation is that the BERT based and the vaderSentiment
+                            are pretty similar. Again, this could teach the lesson that usually rule-based or
+                            statistics-based approaches do almost as well as transformer based-architecture approaches.
+                            In general the sentiment seems to be positive. The the only 'outlier' days was the 26.12.22
+                            and the day that England played 0-0 against the US in the group stage (25.11.22). The most
+                            positive days from a sentiment perspective happened around the finale (18.12.22) and the
+                            days after."
                     >
                     </SentimentByCard>
                 </Row>
@@ -612,7 +621,8 @@
             <p>
                 To confirm that the test result is actually significant, we have to pick a significance level and
                 two hypotheses. The null-hypothesis will be that the values do not differ. The alternative hypotheses
-                will be that the means will differ. (Please reload the page once if the math does not render correctly!).
+                will be that the means will differ. (Please reload the page once if the math does not render
+                correctly!).
             </p>
             <p>
                 {H0}
