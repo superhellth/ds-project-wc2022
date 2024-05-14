@@ -22,9 +22,11 @@ RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/d
 COPY ./src/middleware /src
 
 WORKDIR /src
+RUN pip install -U pip setuptools wheel
+RUN pip install -U spacy
+RUN python -m spacy download en_core_web_sm
 RUN pip install .
 RUN pip install pytorch-lightning==1.7.7 fastapi[all] aitextgen uvicorn elasticsearch==7.17
-RUN python3 -m spacy download en_core_web_sm
 
 # directory of fastapi script
 WORKDIR /src/middleware/tweet_generation
