@@ -16,7 +16,7 @@ class MiddlewareProvider extends Connection {
 
     public static getInstance(): MiddlewareProvider {
         if (!MiddlewareProvider.instance) {
-            MiddlewareProvider.instance = new MiddlewareProvider("http://0.0.0.0:" + PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT);
+            MiddlewareProvider.instance = new MiddlewareProvider("http://localhost:" + PUBLIC_DATA_RETRIEVAL_MIDDLEWARE_PORT);
         }
         return MiddlewareProvider.instance;
     }
