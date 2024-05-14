@@ -8,7 +8,6 @@ from sklearn.decomposition import TruncatedSVD
 class SVD:
     # Initialize variables and object instances
     def __init__(self):
-        self.document_term_matrix = None
         self.u_matrix = None
         self.s_matrix = None
         self.v_matrix = None
