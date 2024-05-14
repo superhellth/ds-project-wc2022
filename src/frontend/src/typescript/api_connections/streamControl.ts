@@ -16,7 +16,7 @@ class StreamControl extends Connection {
 
     public static getInstance(): StreamControl {
         if (!StreamControl.instance) {
-            StreamControl.instance = new StreamControl("http://localhost:" + PUBLIC_DATA_COLLECTION_MIDDLEWARE_PORT);
+            StreamControl.instance = new StreamControl("http://0.0.0.0:" + PUBLIC_DATA_COLLECTION_MIDDLEWARE_PORT);
         }
         return StreamControl.instance;
     }

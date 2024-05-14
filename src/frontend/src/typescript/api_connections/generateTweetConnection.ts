@@ -15,7 +15,7 @@ class GenerateTweetProvider extends Connection {
 
     public static getInstance(): GenerateTweetProvider {
         if (!GenerateTweetProvider.instance) {
-            GenerateTweetProvider.instance = new GenerateTweetProvider("http://localhost:" + PUBLIC_TWEET_GENERATION_MIDDLEWARE_PORT);
+            GenerateTweetProvider.instance = new GenerateTweetProvider("http://0.0.0.0:" + PUBLIC_TWEET_GENERATION_MIDDLEWARE_PORT);
         }
         return GenerateTweetProvider.instance;
     }
