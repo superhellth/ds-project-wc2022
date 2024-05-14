@@ -10,4 +10,4 @@ corpus_analyzer = nlp_support.CorpusAnalyzer()
 
 ne_collocations = corpus_analyzer.generate_collocation_counts(window_size=4, num_threads=8, batch_size=10000)
 
-write_to_file(ne_collocations, "./../../../../src/data/collocations4.json")
+# write_to_file(ne_collocations, "./../../../../src/data/collocations4.json")

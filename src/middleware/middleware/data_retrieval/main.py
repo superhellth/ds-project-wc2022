@@ -57,7 +57,7 @@ LOAD_N_GRAMS_ON_STARTUP = False
 ## elasticsearch connection
 INDEX_NAME = ES_INDEX
 es_client = elasticsearch.Elasticsearch(
-    ES_URL, http_auth=(ES_USERNAME, ES_PASSWD))
+    ES_URL, http_auth=(ES_USERNAME, ES_PASSWD), use_ssl=True, verify_certs=False, ssl_show_warn=False)
 
 ## fastapi config
 app = FastAPI()
