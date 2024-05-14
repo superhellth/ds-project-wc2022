@@ -1,4 +1,13 @@
-from middleware.analysis import collocation_graph
+import ujson
+from middleware.analysis import nlp_support
 
-graph_generator = collocation_graph.CollocationGraphGenerator("./src/data/", "./src/data/word-graph/")
-graph_generator.generate_and_cluster(0, 50000, False, 2, 128, "agglomerative", 12, only_nes=True)
+def write_to_file(counts, write_to: str):
+    """Write the count dict to file."""
+    with open(write_to, "w", encoding="utf_8") as file:
+        file.write(ujson.dumps(counts))
+
+corpus_analyzer = nlp_support.CorpusAnalyzer()
+
+ne_collocations = corpus_analyzer.generate_collocation_counts(window_size=4, num_threads=8, batch_size=10000)
+
+write_to_file(ne_collocations, "./../../../../src/data/collocations4.json")

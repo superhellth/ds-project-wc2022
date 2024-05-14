@@ -30,7 +30,7 @@ class TweetProvider:
         print("Successfully read environment variables!")
 
         self.es_client = Elasticsearch(
-            es_url, http_auth=(es_username, es_passwd))
+            es_url, http_auth=(es_username, es_passwd), use_ssl=True, verify_certs=False, ssl_show_warn=False)
         self.index = es_index
         self.queue = queue.Queue()
 
