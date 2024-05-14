@@ -1,5 +1,6 @@
 FROM node:19 AS build
 
+RUN apt-get update
 WORKDIR /
 
 COPY /src/frontend/package.json ./src/

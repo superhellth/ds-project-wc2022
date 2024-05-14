@@ -6,6 +6,8 @@ FROM python:3.8-slim-buster
 ARG PORT
 ENV PORT=${PORT}
 
+RUN apt-get update
+
 # project level
 WORKDIR /
 
