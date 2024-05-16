@@ -15,8 +15,8 @@ WORKDIR /
 COPY . ./src
 
 WORKDIR /src
-RUN pip install -U pip setuptools wheel
-RUN pip install -U spacy
+RUN pip install -U pip==23.0.1 setuptools==67.5.0 wheel==0.40.0
+RUN pip install -U spacy==3.5.1
 RUN python -m spacy download en_core_web_sm
 RUN pip install -e .
 

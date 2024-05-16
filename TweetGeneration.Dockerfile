@@ -22,8 +22,8 @@ RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/d
 COPY ./src/middleware /src
 
 WORKDIR /src
-RUN pip install -U pip setuptools wheel
-RUN pip install -U spacy
+RUN pip install -U pip==23.0.1 setuptools==67.5.0 wheel==0.40.0
+RUN pip install -U spacy==3.5.1
 RUN python -m spacy download en_core_web_sm
 RUN pip install .
 RUN pip install pytorch-lightning==1.7.7 fastapi[all] aitextgen uvicorn elasticsearch==7.17
