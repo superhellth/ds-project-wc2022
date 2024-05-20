@@ -26,7 +26,6 @@ RUN pip install -U pip==23.0.1 setuptools==67.5.0 wheel==0.40.0
 RUN pip install -U spacy==3.5.1
 RUN python -m spacy download en_core_web_sm
 RUN pip install .
-RUN pip install pytorch-lightning==1.7.7 fastapi[all] aitextgen uvicorn elasticsearch==7.17
 
 # directory of fastapi script
 WORKDIR /src/middleware/tweet_generation
