@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.8-slim-buster
+FROM python:3.8-bullseye
 
 # define build args
 ARG PORT
@@ -8,15 +8,14 @@ ARG SSH_HOST
 ARG SSH_PASSWD
 ENV PORT=${PORT}
 
-# install sshpass
-RUN apt-get update && \
-    apt-get install -y sshpass
+# update
+RUN apt-get update
 
 # project level
 WORKDIR /
 # copy data folder
 COPY ./src/data ./data
-RUN sshpass -p ${SSH_PASSWD} scp -o StrictHostKeyChecking=no ${SSH_HOST}:/home/data/pytorch_model.bin ./data/generator-model
+COPY ./data/pytorch_model.bin ./data/generator-model/
 
 # copy code
 COPY ./src/middleware /src
