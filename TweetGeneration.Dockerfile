@@ -15,7 +15,7 @@ RUN apt-get update
 WORKDIR /
 # copy data folder
 COPY ./src/data ./data
-COPY ./data/pytorch_model.bin ./data/generator-model/
+# COPY ./data/pytorch_model.bin ./data/generator-model/
 
 # copy code
 COPY ./src/middleware /src
