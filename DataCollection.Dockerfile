@@ -16,8 +16,8 @@ COPY . ./src
 
 WORKDIR /src
 RUN pip install -U pip==25.0.1 setuptools==67.5.0 wheel==0.40.0
-COPY en_core_web_sm-3.5.0-py3-none-any.whl .
-RUN pip install ./en_core_web_sm-3.5.0-py3-none-any.whl
+COPY *.whl /tmp/
+RUN pip install /tmp/*.whl
 RUN pip install -U spacy==3.5.1
 RUN python -m spacy download en_core_web_sm
 RUN pip install -e .
