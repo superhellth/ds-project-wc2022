@@ -29,7 +29,7 @@ COPY ./src/middleware /src
 
 WORKDIR /src
 RUN pip install -U pip==25.0.1 setuptools==67.5.0 wheel==0.40.0
-RUN pip install ./en_core_web_sm-3.5.0-py3-none-any.whl
+RUN pip install en_core_web_sm-3.5.0-py3-none-any.whl
 RUN pip install -U spacy==3.5.1
 RUN pip install -e .
 
